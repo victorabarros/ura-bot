@@ -1,11 +1,10 @@
 import express from 'express'
 import routes from './routes'
+import config from '../config'
 
 const app = express()
+const { port } = config
 
 app.use(routes)
 
-// TODO move port to env
-app.listen(3101, () => {
-    console.log("server runnnig")
-})
+app.listen(port, () => console.log(`runnnig on port ${port}`))
