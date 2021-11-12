@@ -24,6 +24,16 @@ dev:
 	@echo "\e[1m\033[33mRunning ${APP_NAME} on port ${PORT}\e[0m"
 	@make docker-command COMMAND="yarn dev"
 
+build:
+	@make docker-command COMMAND="rm -rf ./dist/*"
+	@echo "\e[1m\033[33mBuilding project\e[0m"
+	@make docker-command COMMAND="yarn build"
+	@make remove-containers
+
+run: build
+	@echo "\e[1m\033[33mBuilding project\e[0m"
+	@make docker-command COMMAND="yarn start"
+
 healthcheck:
 	@curl ${URL}health
 

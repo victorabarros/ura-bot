@@ -3,7 +3,6 @@ import httpStatus from "http-status"
 import routes from "./routes"
 import config from "../config"
 
-const app = express()
 const { port, apiKey } = config
 
 const middleware = (req: Request, res: Response, next: NextFunction) => {
@@ -20,7 +19,7 @@ const middleware = (req: Request, res: Response, next: NextFunction) => {
   next()
 }
 
-app.use(middleware)
-app.use(routes)
-
-app.listen(port, () => console.log(`runnnig on port ${port}`))
+express()
+  .use(middleware)
+  .use(routes)
+  .listen(port, () => console.log(`runnnig on port ${port}`))
