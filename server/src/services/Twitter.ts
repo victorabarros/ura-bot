@@ -1,5 +1,5 @@
 import Twitter from "twitter-lite"
-import config from "../../config"
+import config from "../config"
 
 const { apiKey, apiKeySecret, accessToken, accessTokenSecret } = config.twitter
 

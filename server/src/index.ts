@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express"
 import httpStatus from "http-status"
 import routes from "./routes"
-import config from "../config"
+import config from "./config"
 
 const { port, apiKey } = config
 
