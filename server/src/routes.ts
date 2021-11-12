@@ -1,6 +1,9 @@
 import { Router } from 'express'
+import httpStatus from 'http-status'
+import TwitterService from './services/Twitter'
 
 const routes = Router()
+const twitter = new TwitterService()
 
 routes.post('/twit', async (req, res) => {
   console.log("POST /twit trigged")
@@ -16,16 +19,23 @@ routes.post('/twit', async (req, res) => {
     // TODO add font/vendor
   ].join("\n")
 
-  console.log(message)
-  const { id } = { id: "1234" } // TODO request to twitter
+  const { id } = await twitter.writeTwit(message)
 
-  return res.json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
+  return res
+    .status(httpStatus.OK)
+    .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
 })
 
-routes.get('/health', (req, res) => {
-  // TODO ping dependencies
+routes.get('/health', async (req, res) => {
+  // TODO ping vendor
   console.log("GET /health trigged")
-  return res.json({ health: 'check' })
+
+  await twitter.check()
+  // TODO improve response
+
+  return res
+    .status(httpStatus.OK)
+    .json({ health: 'check' })
 })
 
 export default routes
