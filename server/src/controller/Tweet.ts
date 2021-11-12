@@ -7,19 +7,13 @@ export default {
   async postStock(req: Request, res: Response) {
     const now = new Date()
 
-    // TODO add trycatch
     const { symbol, price } = await FinnHubService.getQuoteRealTime()
 
-    const message = [
-      symbol,
-      `USD ${price}`,
-      now.toString(),
-      // TODO idea: https://twitter.com/DolarBipolar/status/1458801696017113093
-      // TODO add font/vendor
-    ].join("\n")
+    const header = symbol
+    const body = `USD ${price}`
+    const footer = now.toString()
 
-    // TODO add trycatch
-    const { id } = await TwitterService.writeTweet(message)
+    const { id } = await TwitterService.writeTweet(`${header}\n${body}\n${footer}`)
 
     return res
       .status(httpStatus.OK)

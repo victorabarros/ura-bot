@@ -1,9 +1,9 @@
 APP_NAME=ura-bot
 APP_DIR=/${APP_NAME}/src
-PORT=3101
 DOCKER_BASE_IMAGE=node:16.13
 URL?=http://localhost:${PORT}/
-API_KEY?=McChickenPromo
+PORT=3101
+API_KEY=McChickenPromo
 
 remove-containers:
 ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
