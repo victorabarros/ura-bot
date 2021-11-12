@@ -5,7 +5,7 @@ import TwitterService from "./services/Twitter"
 const routes = Router()
 const twitter = new TwitterService()
 
-routes.post("/twit", async (req, res) => {
+routes.post("/tweet", async (req, res) => {
   // TODO authorization middleware
   const now = new Date()
   const { symbol, price } = { symbol: "URA", price: 30.89 } // TODO fetch from vendor
@@ -18,7 +18,7 @@ routes.post("/twit", async (req, res) => {
     // TODO add font/vendor
   ].join("\n")
 
-  const { id } = await twitter.writeTwit(message)
+  const { id } = await twitter.writeTweet(message)
 
   return res
     .status(httpStatus.OK)

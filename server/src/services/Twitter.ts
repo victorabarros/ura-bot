@@ -3,12 +3,12 @@ import config from "../../config"
 
 const { apiKey, apiKeySecret, accessToken, accessTokenSecret } = config.twitter
 
-interface IWriteTwitResponse {
+interface IWriteTweetResponse {
   id: string
 }
 
 interface ITwitterService {
-  writeTwit(message: string): Promise<IWriteTwitResponse>
+  writeTweet(message: string): Promise<IWriteTweetResponse>
   check(): Promise<boolean>
 }
 
@@ -20,7 +20,7 @@ const client = new Twitter({
 })
 
 class TwitterService implements ITwitterService {
-  async writeTwit(message: string): Promise<IWriteTwitResponse> {
+  async writeTweet(message: string): Promise<IWriteTweetResponse> {
     const { id_str } = await client.post("statuses/update", { status: message })
     return { id: id_str }
   }

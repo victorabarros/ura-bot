@@ -9,6 +9,7 @@ app.use((req, res, next) => {
   const { method, url } = req
   console.log(`${new Date().toISOString()} ${method} "${url}" trigged`)
   next()
+  console.log(`${new Date().toISOString()} ${method} "${url}" finished`)
 })
 
 app.use(routes)
