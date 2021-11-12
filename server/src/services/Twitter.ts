@@ -1,4 +1,3 @@
-import { response } from "express"
 import Twitter from "twitter-lite"
 import config from "../../config"
 
