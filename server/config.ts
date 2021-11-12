@@ -8,4 +8,8 @@ export default {
     accessToken: process.env.TWITTER_ACCESS_TOKEN || throwMissingVariable("TWITTER_ACCESS_TOKEN"),
     accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET || throwMissingVariable("TWITTER_ACCESS_TOKEN_SECRET"),
   },
+  finnhub: {
+    address: process.env.FINNHUB_ADDRESS || throwMissingVariable("FINNHUB_ADDRESS"),
+    apiKey: process.env.FINNHUB_API_KEY || throwMissingVariable("FINNHUB_API_KEY"),
+  },
 }
