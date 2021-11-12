@@ -1,17 +1,23 @@
 import express, { NextFunction, Request, Response } from "express"
+import httpStatus from "http-status"
 import routes from "./routes"
 import config from "../config"
 
 const app = express()
-const { port } = config
+const { port, apiKey } = config
 
 const middleware = (req: Request, res: Response, next: NextFunction) => {
   const { method, url } = req
   console.log(`${new Date().toISOString()} ${method} "${url}" started`)
 
-  next()
+  if (url !== "/health") {
+    const { authorization } = req.headers
+    if (authorization !== apiKey) {
+      return res.status(httpStatus.UNAUTHORIZED).json({ errorMessage: "Invalid token" })
+    }
+  }
 
-  console.log(`${new Date().toISOString()} ${method} "${url}" finished`)
+  next()
 }
 
 app.use(middleware)

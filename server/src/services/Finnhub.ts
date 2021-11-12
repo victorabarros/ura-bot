@@ -5,7 +5,7 @@ const { address, apiKey } = config.finnhub
 
 interface IGetQuoteResponse {
   symbol: string
-  price: string
+  price: number
   // TODO add more relevant data from https://finnhub.io/docs/api/quote
 }
 
@@ -18,7 +18,7 @@ class FinnHubService implements IFinnHubService {
     const params = { symbol: symbol, token: apiKey }
     const { data } = await axios.get(`${address}quote`, { params })
 
-    return { symbol, price: data.c, }
+    return { symbol, price: data.c.toFixed(2) }
   }
 }
 

@@ -3,6 +3,7 @@ APP_DIR=/${APP_NAME}/src
 PORT=3101
 DOCKER_BASE_IMAGE=node:16.13
 URL?=http://localhost:${PORT}/
+API_KEY?=McChickenPromo
 
 remove-containers:
 ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
@@ -12,7 +13,9 @@ endif
 
 docker-command: remove-containers
 	@docker run -it -v $(shell pwd):${APP_DIR} -w ${APP_DIR} \
-    --env-file .env --env PORT=${PORT} \
+    --env-file .env \
+    --env PORT=${PORT} \
+    --env API_KEY=${API_KEY} \
 		-p ${PORT}:${PORT} --name ${APP_NAME} \
 		${DOCKER_BASE_IMAGE} bash -c "${COMMAND}"
 
@@ -25,4 +28,4 @@ healthcheck:
 	@curl ${URL}health
 
 tweet:
-	@curl -X POST ${URL}tweet
+	@curl -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet

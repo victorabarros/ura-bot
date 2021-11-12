@@ -2,6 +2,7 @@ const throwMissingVariable = (name: string) => { throw new Error(`missing requir
 
 export default {
   port: process.env.PORT || throwMissingVariable("PORT"),
+  apiKey: process.env.API_KEY || throwMissingVariable("API_KEY"),
   twitter: {
     apiKey: process.env.TWITTER_API_KEY || throwMissingVariable("TWITTER_API_KEY"),
     apiKeySecret: process.env.TWITTER_API_KEY_SECRET || throwMissingVariable("TWITTER_API_KEY_SECRET"),

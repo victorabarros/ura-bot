@@ -35,6 +35,6 @@ class TwitterService implements ITwitterService {
   }
 }
 
-const twitter = new TwitterService()
+const service = new TwitterService()
 
-export default twitter
+export default service
