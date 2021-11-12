@@ -1,34 +1,16 @@
-import { Router } from "express"
+import { Request, Response, Router } from 'express'
 import httpStatus from "http-status"
+import Tweet from "./controller/Tweet"
 import TwitterService from "./services/Twitter"
 
 const routes = Router()
-const twitter = new TwitterService()
 
-routes.post("/tweet", async (req, res) => {
-  // TODO authorization middleware
-  const now = new Date()
-  const { symbol, price } = { symbol: "URA", price: 30.89 } // TODO fetch from vendor
+routes.post("/tweet", Tweet.postStock)
 
-  const message = [
-    symbol,
-    `USD ${price.toFixed(2)}`,
-    now.toString(),
-    // TODO idea: https://twitter.com/DolarBipolar/status/1458801696017113093
-    // TODO add font/vendor
-  ].join("\n")
-
-  const { id } = await twitter.writeTweet(message)
-
-  return res
-    .status(httpStatus.OK)
-    .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
-})
-
-routes.get("/health", async (req, res) => {
+routes.get("/health", async (req: Request, res: Response) => {
   // TODO ping vendor
 
-  await twitter.check()
+  await TwitterService.check()
   // TODO improve response
 
   return res

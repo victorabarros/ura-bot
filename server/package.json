@@ -2,6 +2,8 @@
   "name": "ura-bot-server",
   "version": "1.0.0",
   "license": "MIT",
+  "description": "Twitter bot to share uranium info.",
+  "homepage": "https://github.com/victorabarros/ura-bot",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",

@@ -10,3 +10,4 @@ Page dedicated to share uranium market stock prices, analyses and relevant news.
 - code climate
 - tests
 - tweet relevant news (understand what's better hour and schedule it)
+- husky with eslint
