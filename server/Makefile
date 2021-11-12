@@ -23,3 +23,6 @@ dev:
 
 healthcheck:
 	@curl ${URL}health
+
+twit:
+	@curl -X POST ${URL}twit
