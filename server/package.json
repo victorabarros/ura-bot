@@ -14,6 +14,8 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "twitter-lite": "^1.1.0",
+    "http-status": "1.5.0"
   }
 }
