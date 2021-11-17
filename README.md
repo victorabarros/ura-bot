@@ -1,5 +1,7 @@
 # UraBot
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/apps/ura-bot-server)
+
 https://twitter.com/UraniumStockBot
 
 Page dedicated to share uranium market stock prices, analyses and relevant news.
@@ -16,4 +18,3 @@ Page dedicated to share uranium market stock prices, analyses and relevant news.
 - code climate
 - tests
 - CI with terraform
-- husky with eslint
