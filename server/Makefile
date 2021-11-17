@@ -39,3 +39,6 @@ healthcheck:
 
 tweet:
 	@curl -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet
+
+prod-healthcheck:
+	@make healthcheck URL=https://ura-bot-server.herokuapp.com/
