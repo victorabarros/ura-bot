@@ -11,9 +11,9 @@ Page dedicated to share uranium market stock prices, analyses and relevant news.
 ## Improvements
 
 - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 and add font/vendor)
+- tweet relevant news (understand what's better hour and schedule it)
 - cover image
 - code climate
 - tests
 - CI with terraform
-- tweet relevant news (understand what's better hour and schedule it)
 - husky with eslint
