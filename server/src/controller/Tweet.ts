@@ -1,7 +1,7 @@
-import { Request, Response } from 'express'
+import { Request, Response } from "express"
 import httpStatus from "http-status"
-import FinnHubService from '../services/Finnhub'
-import TwitterService from '../services/Twitter'
+import FinnHubService from "../services/Finnhub"
+import TwitterService from "../services/Twitter"
 
 export default {
   async postStock(req: Request, res: Response) {

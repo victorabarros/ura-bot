@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Request, Response, Router } from "express"
 import httpStatus from "http-status"
 import Tweet from "./controller/Tweet"
 import TwitterService from "./services/Twitter"

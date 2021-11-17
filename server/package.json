@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "precommit": "yarn run eslint --fix .",
+    "precommit": "clear && yarn run eslint --fix .",
     "prepare-husky": "cd .. && husky install server/.husky"
   },
   "devDependencies": {
