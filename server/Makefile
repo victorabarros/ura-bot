@@ -20,11 +20,6 @@ docker-command: remove-containers
 		-p ${PORT}:${PORT} --name ${APP_NAME} \
 		${DOCKER_BASE_IMAGE} bash -c "${COMMAND}"
 
-dev:
-	@clear
-	@echo "\e[1m\033[33mRunning ${APP_NAME} on port ${PORT}\e[0m"
-	@make docker-command COMMAND="yarn dev"
-
 build:
 	@make docker-command COMMAND="rm -rf ./dist/*"
 	@echo "\e[1m\033[33mBuilding project\e[0m"
@@ -32,8 +27,19 @@ build:
 	@make remove-containers
 
 run: build
-	@echo "\e[1m\033[33mBuilding project\e[0m"
+	@clear
+	@echo "\e[1m\033[33mRunning project\e[0m"
 	@make docker-command COMMAND="yarn start"
+
+dev:
+	@clear
+	@echo "\e[1m\033[33mRunning ${APP_NAME} on port ${PORT}\e[0m"
+	@make docker-command COMMAND="yarn dev"
+
+tests: build
+	@echo "\e[1m\033[33mTesting\e[0m"
+	@make docker-command COMMAND="yarn test"
+	@echo "\e[1m\033[33mDone\e[0m"
 
 healthcheck:
 	@curl ${URL}health
