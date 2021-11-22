@@ -5,6 +5,8 @@
 # UraBot
 
 <p>
+  <!-- badgets -->
+
   <a href="https://www.easycron.com/user">
     <img height="35px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
   </a>
