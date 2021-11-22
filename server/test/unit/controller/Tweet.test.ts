@@ -5,11 +5,13 @@ const mockResponse = {
   json: (body: unknown) => ({ data: body, ...mockResponse })
 }
 
+// Finnhub Mock
 jest.mock("../../../src/services/Finnhub", () => ({
   __esModule: true,
   default: { getQuoteRealTime: jest.fn((symbol: string) => ({ symbol: symbol || "URA", price: 30.85 })) },
 }))
 
+// Twitter Mock
 jest.mock("../../../src/services/Twitter", () => ({
   __esModule: true,
   default: {
@@ -17,7 +19,7 @@ jest.mock("../../../src/services/Twitter", () => ({
       console.log(msg)
       return { id: "mock" }
     })
-  },
+  }
 }))
 
 describe("Test Controller Tweet", () => {
