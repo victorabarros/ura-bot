@@ -37,9 +37,10 @@ dev:
 	@echo "\e[1m\033[33mRunning ${APP_NAME} on port ${PORT}\e[0m"
 	@make docker-command COMMAND="yarn dev"
 
-tests-unit: build
+tests-unit:
+	@make build ENV_FILE=".env.example "
 	@echo "\e[1m\033[33mTesting\e[0m"
-	@make docker-command ENV_FILE=".env.example " COMMAND="yarn test"
+	@make docker-command ENV_FILE=".env.example" COMMAND="yarn test"
 	@echo "\e[1m\033[33mDone\e[0m"
 
 healthcheck:

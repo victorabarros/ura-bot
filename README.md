@@ -11,6 +11,8 @@ Page dedicated to share uranium market stock prices, analyses and relevant news.
 
 You can find all commands on [./server/Makefile](https://github.com/victorabarros/ura-bot/blob/main/server/Makefile)
 
+write .env file similar to .env.example
+
 ```sh
 # locally run with hot reload
 make dev
