@@ -1,9 +1,22 @@
+<p align="center">
+  <img width="70%" src="https://raw.githubusercontent.com/victorabarros/ura-bot/main/assets/UraBot_profile01.png" />
+</p>
+
 # UraBot
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/apps/ura-bot-server)
-<!-- https://www.easycron.com/user -->
+<p>
+  <a href="https://www.easycron.com/user">
+    <img height="35px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
+  </a>
 
-https://twitter.com/UraniumStockBot
+  <a href="https://dashboard.heroku.com/apps/ura-bot-server">
+    <img src="https://www.herokucdn.com/deploy/button.svg" />
+  </a>
+
+  <a href="https://twitter.com/UraniumStockBot">
+    <img height="35px" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3d/Twitter_logo_2012.svg/1200px-Twitter_logo_2012.svg.png" />
+  </a>
+</p>
 
 Page dedicated to share uranium market stock prices, analyses and relevant news.
 
@@ -42,8 +55,6 @@ make run
 - CI
 - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 and add font/vendor)
 - tweet relevant news (understand what's better hour and schedule it)
-- cover image
-- code climate
-- tests
-- terraform
+- code climate https://codeclimate.com/github/victorabarros/ura-bot
+- integration tests
 -->
