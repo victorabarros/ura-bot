@@ -2,6 +2,7 @@ APP_NAME=ura-bot
 APP_DIR=/${APP_NAME}/src
 DOCKER_BASE_IMAGE=node:16.13
 URL?=http://localhost:${PORT}/
+ENV_FILE?=.env
 COMMAND?=bash
 PORT=3101
 API_KEY=McChickenPromo
@@ -14,7 +15,7 @@ endif
 
 docker-command: remove-containers
 	@docker run -it -v $(shell pwd):${APP_DIR} -w ${APP_DIR} \
-    --env-file .env \
+    --env-file ${ENV_FILE} \
     --env PORT=${PORT} \
     --env API_KEY=${API_KEY} \
 		-p ${PORT}:${PORT} --name ${APP_NAME} \
@@ -36,9 +37,10 @@ dev:
 	@echo "\e[1m\033[33mRunning ${APP_NAME} on port ${PORT}\e[0m"
 	@make docker-command COMMAND="yarn dev"
 
-tests: build
+tests-unit:
+	@make build ENV_FILE=".env.example "
 	@echo "\e[1m\033[33mTesting\e[0m"
-	@make docker-command COMMAND="yarn test"
+	@make docker-command ENV_FILE=".env.example" COMMAND="yarn test"
 	@echo "\e[1m\033[33mDone\e[0m"
 
 healthcheck:
