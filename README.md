@@ -1,4 +1,5 @@
 <p align="center">
+  <!-- cover image -->
   <img width="70%" src="https://raw.githubusercontent.com/victorabarros/ura-bot/main/assets/UraBot_profile01.png" />
 </p>
 
@@ -6,21 +7,25 @@
 
 <p>
   <!-- badgets -->
-
   <a href="https://www.easycron.com/user">
-    <img height="35px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
+    <img height="30px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
   </a>
-
   <a href="https://dashboard.heroku.com/apps/ura-bot-server">
-    <img src="https://www.herokucdn.com/deploy/button.svg" />
+    <img height="30px" src="https://www.herokucdn.com/deploy/button.svg" />
   </a>
-
-  <a href="https://twitter.com/UraniumStockBot">
-    <img height="35px" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3d/Twitter_logo_2012.svg/1200px-Twitter_logo_2012.svg.png" />
+  <a href="https://codeclimate.com/github/victorabarros/ura-bot">
+  <!-- TODO add to CI -->
+    <img src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" />
   </a>
 </p>
 
 Page dedicated to share uranium market stock prices, analyses and relevant news.
+
+<p align="center">
+  <a href="https://twitter.com/UraniumStockBot">
+    <img height="50px" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3d/Twitter_logo_2012.svg/1200px-Twitter_logo_2012.svg.png" />
+  </a>
+</p>
 
 ## How to run
 
@@ -54,9 +59,13 @@ make run
 <!--
 ## Improvements
 
+- message:
+  - ad more stock of uranium market
+  - add Good Morning! -> when is the first tweet of the day
+  - add See ya! -> when is the last tweet of the day
+  - add Have a nice and sunny weekend! -> when is the last tweet of friday
+  - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 and add font/vendor)
+  - tweet relevant news (understand what's better hour and schedule it)
 - CI
-- improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 and add font/vendor)
-- tweet relevant news (understand what's better hour and schedule it)
-- code climate https://codeclimate.com/github/victorabarros/ura-bot
-- integration tests
+- integration tests - get QA credentials
 -->
