@@ -26,12 +26,13 @@ class TwitterService implements ITwitterService {
   }
 
   async check(): Promise<boolean> {
-    return client.getBearerToken()
-      .then(() => true)
-      .catch(resp => {
-        console.log(resp)
-        return false
-      })
+    try {
+      await client.getBearerToken()
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
   }
 }
 
