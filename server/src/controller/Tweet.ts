@@ -3,7 +3,8 @@ import httpStatus from "http-status"
 import FinnHubService from "../services/Finnhub"
 import TwitterService from "../services/Twitter"
 
-const dateFormat = {
+const STOCKS = ["URA", "CCJ", "URNM", "DNN", "PDN", "SRUUF"]
+const DATE_FORMAT = {
   // weekday: "long",
   // year: "numeric",
   // month: "long",
@@ -18,18 +19,15 @@ const dateFormat = {
 
 export default {
   async postStock(req: Request, res: Response) {
-    // TODO parametrize stock symbol from request body
-    // TODO parametrize message => if first of the day say good morning; if last of the day say report day
     const now = new Date()
 
-    const { symbol, price } = await FinnHubService.getQuoteRealTime()
+    const header = "Stocks"
 
-    const header = `${symbol} Stock`
-    const body = `$USD ${price}`
-    const footer = `${now.toLocaleString("en-US", dateFormat)} ${dateFormat.timeZone}\n#Uranium`
-    // TODO add delta variation
-    // add uranium/nuclear/energy icon
-    // 📉
+    const quotes = await Promise.all(STOCKS.map(FinnHubService.getQuoteRealTime))
+
+    const body = quotes.map(({ symbol, price }) => `${symbol} - $USD ${price}`).join("\n")
+
+    const footer = `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Uranium`
 
     const { id } = await TwitterService.writeTweet(`${header}\n\n${body}\n\n${footer}`)
 

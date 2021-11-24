@@ -8,7 +8,11 @@ const mockResponse = {
 // Finnhub Mock
 jest.mock("../../../src/services/Finnhub", () => ({
   __esModule: true,
-  default: { getQuoteRealTime: jest.fn((symbol: string) => ({ symbol: symbol || "URA", price: 30.85 })) },
+  default: {
+    getQuoteRealTime: jest.fn((symbol: string) =>
+      ({ symbol: symbol || "URA", price: (Math.random() * 40).toFixed(2) })
+    )
+  },
 }))
 
 // Twitter Mock

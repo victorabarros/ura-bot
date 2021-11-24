@@ -38,6 +38,7 @@ dev:
 	@make docker-command COMMAND="yarn dev"
 
 tests:
+	@clear
 	@make build ENV_FILE=".env.test"
 	@echo "\e[1m\033[33mTesting\e[0m"
 	@make docker-command ENV_FILE=".env.test" COMMAND="yarn test"

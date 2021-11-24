@@ -54,18 +54,20 @@ make run
 |verb|endpoint|description|
 |:-:|:-:|:-:|
 |GET|/health|healthcheck|
-|POST|/tweet|tweet URA stock price in real time|
+|POST|/tweet|tweet Uranium market stocks price in real time|
 
 <!--
 ## Improvements
 
 - message:
-  - ad more stock of uranium market
+  - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
+  - add uranium/nuclear/energy icon 📉
   - add Good Morning! -> when is the first tweet of the day
   - add See ya! -> when is the last tweet of the day
   - add Have a nice and sunny weekend! -> when is the last tweet of friday
   - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 and add font/vendor)
   - tweet relevant news (understand what's better hour and schedule it)
+- codecov https://app.codecov.io/gh/victorabarros/ura-bot
 - CI
 - integration tests - get QA credentials
 -->
