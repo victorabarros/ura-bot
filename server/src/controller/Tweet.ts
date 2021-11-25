@@ -4,11 +4,11 @@ import FinnHubService from "../services/Finnhub"
 import TwitterService from "../services/Twitter"
 
 export const STOCKS = [
-  "URA",  // ETF: 23%-CCJ/Cameco 20%-KAP/kazatomprom(largest producer, listen on London. Kazakhistan goverment is major partner. 40% of global market share)
-  "CCJ",  // Cameco: second largest producer. from Canada
+  "URA",  // ETF: 23%-Cameco 20%-Kazatomprom 50%-(out of uranium market)
+  "CCJ",  // Cameco: second largest producer
   "URNM", // ETF
-  "UEC",  // Uranium Energy Corp: from Texas. High debt and costs. no revenue
-  "NXE",  // Next Gen Energy: development> 1.4Bi evaluation with no revenue. It's a promise
+  "UEC",  // Uranium Energy Corp
+  "NXE",  // Next Gen Energy
   // "DNN",
   // "PDN",
   // "SRUUF",
