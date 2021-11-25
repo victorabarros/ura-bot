@@ -18,7 +18,7 @@ class FinnHubService implements IFinnHubService {
     const params = { symbol: symbol, token: apiKey }
     const { data } = await axios.get(`${address}quote`, { params })
 
-    return { symbol, price: data.c.toFixed(2) }
+    return { symbol, price: parseFloat(data.c.toFixed(2)) }
   }
 }
 

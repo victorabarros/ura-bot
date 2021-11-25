@@ -13,7 +13,7 @@ describe("Test Services Finhub", () => {
     it("success", async () => {
       const { symbol, price } = await FinnHubService.getQuoteRealTime()
       expect(symbol).toBe("URA")
-      expect(price).toBe("28.61")
+      expect(price).toBe(28.61)
     })
   })
 })

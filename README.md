@@ -19,7 +19,7 @@
   </a>
 </p>
 
-Page dedicated to share uranium market stock prices, analyses and relevant news.
+Twitter page dedicated to sharing uranium market stock prices, analyses and relevant news.
 
 <p align="center">
   <a href="https://twitter.com/UraniumStockBot">

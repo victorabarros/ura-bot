@@ -10,7 +10,7 @@ jest.mock("../../../src/services/Finnhub", () => ({
   __esModule: true,
   default: {
     getQuoteRealTime: jest.fn((symbol: string) =>
-      ({ symbol: symbol || "URA", price: (Math.random() * 40).toFixed(2) })
+      ({ symbol: symbol || "URA", price: (Math.random() * 90).toFixed(2) })
     )
   },
 }))
