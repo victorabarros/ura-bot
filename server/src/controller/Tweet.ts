@@ -9,7 +9,9 @@ export const STOCKS = [
   "URNM", // ETF
   "UEC",  // Uranium Energy Corp
   "NXE",  // Next Gen Energy
-  // "DNN",
+  // "HURA", // ETF
+  "UUUU", // Energy Fuels
+  "DNN",
   // "PDN",
   // "SRUUF",
   // "LIT",  // Lithium(battery)

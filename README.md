@@ -42,7 +42,7 @@ make healthcheck
 make tweet
 
 # automation tests
-make tests-unit
+make tests
 
 # build and run production version
 make build
@@ -60,6 +60,40 @@ make run
 ## Improvements
 
 - message:
+  - pin introduce tweet to world and share on linkedin:
+
+```
+Ladies and Gentlemen,
+
+
+I introduce you to my new child:
+
+
+twitter.com/uraniumStockBot
+
+---
+
+Dias atrás eu estava buscando aprender sobre a tese de uranio para investimentos, sob influência do @FernandoUlrich.
+Pensando em fazer disto algo mais divertido, pensei como envolver programação na brincadeira.
+Então que tive a ideia de desenvolver um bot que me atualiza com os preços em real-time das ações.
+Daí que nasceu o UraBot. Escolhi a linguagem typescript, pois queria aperfeicoar-me e inclui bastante testes no projeto.
+
+---
+
+Hello Folks!
+
+These last week I have been learning about Uranium investiments and looking for relevants pages about that to make me update with news.
+As any developer passionate about automate any thing, I had this idea of developing a bot to update me with stock prices and news from uranium market. So,
+
+Ladies and Gentlements,
+
+I introduce you my new child:
+UraBot
+
+Also was a opportunity to improve my programming skills, so I choose typescript to learn more about and developed it with automation tests.
+It was a very funny journey.
+```
+
   - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
   - add uranium/nuclear/energy icon 📉
   - add Good Morning! -> when is the first tweet of the day
@@ -70,4 +104,6 @@ make run
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
 - CI
 - integration tests - get QA credentials
+- better https://github.com/FeedHive/twitter-api-client ?
+- read https://www.infoq.com/news/2021/11/twitter-api-v2
 -->
