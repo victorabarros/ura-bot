@@ -13,6 +13,9 @@
   <a href="https://dashboard.heroku.com/apps/ura-bot-server">
     <img height="30px" src="https://www.herokucdn.com/deploy/button.svg" />
   </a>
+  <a href="https://customer.elephantsql.com/">
+    <img height="30px" src="https://pbs.twimg.com/profile_images/2661035254/f1797e21af006ca889d3e5f39293fca1_400x400.png" />
+  </a>
   <a href="https://codeclimate.com/github/victorabarros/ura-bot">
   <!-- TODO add to CI -->
     <img src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" />
