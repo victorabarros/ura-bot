@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import FinnHubService from "../services/Finnhub"
 import TwitterService from "../services/Twitter"
+import Stock from "../models/Stock"
 
 export const STOCKS = [
   "URA",  // ETF: 23%-Cameco 20%-Kazatomprom 50%-(out of uranium market)
@@ -35,6 +36,9 @@ export default {
     const now = new Date()
 
     const quotes = await Promise.all(STOCKS.map(FinnHubService.getQuoteRealTime))
+
+    Stock.bulkCreate(quotes)
+
     const quotesHandled = quotes.map(({ symbol, price }) =>
       `${symbol} ${" ".repeat(4 - symbol.length)}- $USD ${" ".repeat(5 - price.toString().length)}${price}`
     )
