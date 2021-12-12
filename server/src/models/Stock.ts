@@ -36,7 +36,7 @@ Stock.init(
   },
   {
     sequelize: connection,
-    tableName: "stockPriceHistoric", // TODO change to stockPrice
+    tableName: "stockPrice",
   }
 )
 
