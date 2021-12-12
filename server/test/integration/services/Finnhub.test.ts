@@ -13,4 +13,23 @@ describe("Test Services Finhub", () => {
     })
 
   })
+
+  describe("get quote candles", () => {
+
+    it("success", async () => {
+      await Promise.all(STOCKS.map(async stock => {
+        const from = new Date(2021, 11, 10, 19, 30).getTime() / 1000
+        const to = new Date(2021, 11, 10, 20, 0).getTime() / 1000
+
+        const candles = await FinnHubService.getQuoteCandles(stock, from, to)
+
+        candles.map(({ timestamp }) => {
+          expect(timestamp).toBeGreaterThanOrEqual(from)
+          expect(timestamp).toBeLessThanOrEqual(to)
+        })
+
+      }))
+    })
+
+  })
 })
