@@ -25,8 +25,9 @@
 Twitter page dedicated to sharing uranium market stock prices, analyses and relevant news.
 
 <p align="center">
-  <a href="https://twitter.com/UraniumStockBot">
-    <img height="50px" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3d/Twitter_logo_2012.svg/1200px-Twitter_logo_2012.svg.png" />
+  <a href="https://twitter.com/UraniumStockBot/status/1470423280712654850">
+    <img src="./assets/Tweet.png" />
+    <!-- <img height="50px" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3d/Twitter_logo_2012.svg/1200px-Twitter_logo_2012.svg.png" /> -->
   </a>
 </p>
 
@@ -60,29 +61,24 @@ make run
 |POST|/tweet|tweet Uranium market stocks price in real time|
 
 <!--
-## Improvements
-
-- message:
-  - pin introduce tweet to world and share on linkedin:
-
 ```
 Ladies and Gentlemen,
-
-
 I introduce you to my new child:
-
-
 twitter.com/uraniumStockBot
+```
 
 ---
 
+```
 Dias atrás eu estava buscando aprender sobre a tese de uranio para investimentos, sob influência do @FernandoUlrich.
 Pensando em fazer disto algo mais divertido, pensei como envolver programação na brincadeira.
 Então que tive a ideia de desenvolver um bot que me atualiza com os preços em real-time das ações.
 Daí que nasceu o UraBot. Escolhi a linguagem typescript, pois queria aperfeicoar-me e inclui bastante testes no projeto.
+```
 
 ---
 
+```
 Hello Folks!
 
 These last week I have been learning about Uranium investiments and looking for relevants pages about that to make me update with news.
@@ -97,10 +93,11 @@ Also was a opportunity to improve my programming skills, so I choose typescript 
 It was a very funny journey.
 ```
 
+TODO:
   - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
   - add uranium/nuclear/energy icon 📉
   - add Good Morning! -> when is the first tweet of the day
-  - add See ya! -> when is the last tweet of the day
+  - add See ya! -> when is the last tweet of the day with D-1 delta variation
   - add Have a nice and sunny weekend! -> when is the last tweet of friday
   - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 and add font/vendor)
   - tweet relevant news (understand what's better hour and schedule it)
