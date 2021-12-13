@@ -36,12 +36,17 @@ export default {
     const now = new Date()
 
     const quotes = await Promise.all(STOCKS.map(FinnHubService.getQuoteRealTime))
+    const pastStockPrices = await Stock.findAll({ order: [["createdAt", "DESC"]], limit: STOCKS.length })
 
-    Stock.bulkCreate(quotes)
-
-    const quotesHandled = quotes.map(({ symbol, price }) =>
-      `${symbol} ${" ".repeat(4 - symbol.length)}- $USD ${" ".repeat(5 - price.toString().length)}${price}`
-    )
+    const quotesHandled = quotes.map(({ symbol, price }) => {
+      const idx = pastStockPrices.findIndex(({ symbol: symbolPast }) => symbolPast === symbol)
+      if (idx !== -1) {
+        const oldPrice = pastStockPrices[idx].price
+        const delta = 100 * (price - oldPrice) / oldPrice
+        return `${symbol} ${" ".repeat(4 - symbol.length)}- $USD ${" ".repeat(5 - price.toString().length)}${price} ${delta < 0 ? "" : "+"}${delta.toFixed(3)}%`
+      }
+      return `${symbol} ${" ".repeat(4 - symbol.length)} $USD ${" ".repeat(5 - price.toString().length)}${price}`
+    })
 
     const message = [
       "Stock prices",
@@ -50,6 +55,8 @@ export default {
     ].join("\n\n")
 
     const { id } = await TwitterService.writeTweet(message)
+
+    Stock.bulkCreate(quotes)
 
     return res
       .status(httpStatus.OK)
