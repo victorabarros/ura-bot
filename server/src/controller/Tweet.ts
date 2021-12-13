@@ -39,13 +39,19 @@ export default {
     const pastStockPrices = await Stock.findAll({ order: [["createdAt", "DESC"]], limit: STOCKS.length })
 
     const quotesHandled = quotes.map(({ symbol, price }) => {
+      const message = `${symbol} ${" ".repeat(4 - symbol.length)}` +
+        ` $USD ${" ".repeat(5 - price.toString().length)}${price}`
+
       const idx = pastStockPrices.findIndex(({ symbol: symbolPast }) => symbolPast === symbol)
       if (idx !== -1) {
         const oldPrice = pastStockPrices[idx].price
         const delta = 100 * (price - oldPrice) / oldPrice
-        return `${symbol} ${" ".repeat(4 - symbol.length)}- $USD ${" ".repeat(5 - price.toString().length)}${price} ${delta < 0 ? "" : "+"}${delta.toFixed(3)}%`
+        const deltaString = delta.toFixed(3)
+        const deltaMessage = `${" ".repeat(8 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
+        return `${message} ${deltaMessage}`
       }
-      return `${symbol} ${" ".repeat(4 - symbol.length)} $USD ${" ".repeat(5 - price.toString().length)}${price}`
+
+      return message
     })
 
     const message = [
