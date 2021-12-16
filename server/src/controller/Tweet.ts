@@ -4,21 +4,6 @@ import FinnHubService from "../services/Finnhub"
 import TwitterService from "../services/Twitter"
 import Stock from "../models/Stock"
 
-export const STOCKS = [
-  "CCJ",  // Cameco: second largest producer
-  "DNN",
-  "NXE",  // Next Gen Energy
-  "U.UN", // Sprott: physical uranium trust
-  "UEC",  // Uranium Energy Corp
-  "URA",  // ETF: 23%-Cameco 20%-Kazatomprom 50%-(out of uranium market)
-  "URNM", // ETF
-  "UUUU", // Energy Fuels
-  "UXC", // Future Contract
-  // "HURA", // ETF
-  // "PDN",
-  // "SRUUF",
-]
-
 const DATE_FORMAT = {
   // weekday: "long",
   // year: "numeric",
@@ -31,6 +16,27 @@ const DATE_FORMAT = {
   // second: "2-digit",
   hour12: false
 } as Intl.DateTimeFormatOptions
+
+const NYSE_STOCKS = [
+  "CCJ",  // Cameco: second largest producer
+  "DNN",
+  "NXE",  // Next Gen Energy
+  "UEC",  // Uranium Energy Corp
+  "URA",  // ETF: 23%-Cameco 20%-Kazatomprom 50%-(out of uranium market)
+  "URNM", // ETF
+  "UUUU", // Energy Fuels
+]
+
+const OTHER_STOCKS = [
+  // TODO look where find these prices
+  "U.UN", // Sprott: physical uranium trust
+  "UXC", // Future Contract
+  "HURA", // ETF
+  "PDN",
+  "SRUUF",
+]
+
+export const STOCKS = NYSE_STOCKS
 
 export default {
   async postStock(req: Request, res: Response) {
