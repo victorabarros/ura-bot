@@ -5,17 +5,18 @@ import TwitterService from "../services/Twitter"
 import Stock from "../models/Stock"
 
 export const STOCKS = [
-  "URA",  // ETF: 23%-Cameco 20%-Kazatomprom 50%-(out of uranium market)
   "CCJ",  // Cameco: second largest producer
-  "URNM", // ETF
-  "UEC",  // Uranium Energy Corp
-  "NXE",  // Next Gen Energy
-  // "HURA", // ETF
-  "UUUU", // Energy Fuels
   "DNN",
+  "NXE",  // Next Gen Energy
+  "U.UN", // Sprott: physical uranium trust
+  "UEC",  // Uranium Energy Corp
+  "URA",  // ETF: 23%-Cameco 20%-Kazatomprom 50%-(out of uranium market)
+  "URNM", // ETF
+  "UUUU", // Energy Fuels
+  "UXC", // Future Contract
+  // "HURA", // ETF
   // "PDN",
   // "SRUUF",
-  // "LIT",  // Lithium(battery)
 ]
 
 const DATE_FORMAT = {
