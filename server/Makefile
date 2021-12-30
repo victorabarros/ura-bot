@@ -22,32 +22,32 @@ docker-command: remove-containers
 		${DOCKER_BASE_IMAGE} bash -c "${COMMAND}"
 
 build:
-	@make docker-command COMMAND="rm -rf ./dist/*"
+	@make -s docker-command COMMAND="rm -rf ./dist/*"
 	@echo "\e[1m\033[33mBuilding project\e[0m"
-	@make docker-command COMMAND="yarn build"
-	@make remove-containers
+	@make -s docker-command COMMAND="yarn build"
+	@make -s remove-containers
 
 run: build
 	@clear
 	@echo "\e[1m\033[33mRunning project\e[0m"
-	@make docker-command ENV_FILE=.env COMMAND="yarn start"
+	@make -s docker-command ENV_FILE=.env COMMAND="yarn start"
 
 dev:
 	@clear
 	@echo "\e[1m\033[33mRunning ${APP_NAME} on port ${PORT}\e[0m"
-	@make docker-command ENV_FILE=.env COMMAND="yarn dev"
+	@make -s docker-command ENV_FILE=.env COMMAND="yarn dev"
 
 tests:
 	@clear
-	@make build ENV_FILE=".env.test"
+	@make -s build ENV_FILE=".env.test"
 	@echo "\e[1m\033[33mTesting\e[0m"
-	@make docker-command COMMAND="yarn test"
+	@make -s docker-command COMMAND="yarn test"
 	@echo "\e[1m\033[33mDone\e[0m"
 
 migration:
 	@clear
 	@echo "\e[1m\033[33mExecuting Migrations\e[0m"
-	@make docker-command COMMAND="yarn sequelize db:migrate"
+	@make -s docker-command COMMAND="yarn sequelize db:migrate"
 
 healthcheck:
 	@curl ${URL}health
@@ -56,4 +56,4 @@ tweet:
 	@curl -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet
 
 prod-healthcheck:
-	@make healthcheck URL=https://ura-bot-server.herokuapp.com/
+	@make -s healthcheck URL=https://ura-bot-server.herokuapp.com/
