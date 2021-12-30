@@ -12,4 +12,5 @@ module.exports = {
     timestamps: true,
   },
   dialectOptions: { decimalNumbers: true },
+  logging: false,
 }

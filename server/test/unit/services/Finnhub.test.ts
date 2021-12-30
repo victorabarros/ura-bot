@@ -13,7 +13,7 @@ jest.mock("axios", () => ({
           h: 32.49,
           l: 17.19,
           o: 21.03,
-          pc: 20.98,
+          pc: 21.02,
         }
       }
       if (address.endsWith("stock/candle")) return {
@@ -35,9 +35,11 @@ describe("Test Services Finhub", () => {
   describe("get quote real time", () => {
 
     it("success", async () => {
-      const { symbol, price } = await FinnHubService.getQuoteRealTime()
+      const { symbol, price, highPrice, lowPrice } = await FinnHubService.getQuoteRealTime()
       expect(symbol).toBe("URA")
       expect(price).toBe(28.61)
+      expect(highPrice).toBeGreaterThan(price)
+      expect(price).toBeGreaterThan(lowPrice)
     })
   })
 
