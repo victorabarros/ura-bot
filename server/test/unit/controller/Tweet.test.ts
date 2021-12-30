@@ -1,4 +1,4 @@
-import Tweet, { evenningMessage, morningMessage } from "../../../src/controller/Tweet"
+import Tweet, { evenningMessage, fridayMessage, morningMessage } from "../../../src/controller/Tweet"
 
 const mockResponse = {
   status: (code: number) => ({ statusCode: code, ...mockResponse }),
@@ -46,6 +46,14 @@ describe("Test Controller Tweet", () => {
     it("success", async () => {
       const marketClosing = new Date(77400000) // 1970-01-01T21:30:00.000Z
       expect(evenningMessage(marketClosing).startsWith("Good Night")).toBeTruthy()
+    })
+  })
+
+  describe("friday message", () => {
+    it("success", async () => {
+      const fridayMarketClosing = new Date(163800000) // 1970-01-02T21:30:00.000Z
+      expect(fridayMessage(fridayMarketClosing)).toBe("Have a nice and sunny weekend")
+      expect(evenningMessage(fridayMarketClosing)).toContain("Have a nice and sunny weekend")
     })
   })
 

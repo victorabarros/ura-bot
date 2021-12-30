@@ -71,7 +71,12 @@ export const morningMessage = (now: Date): string => (
 
 export const evenningMessage = (now: Date): string => (
   (now.getHours() === 21 && now.getMinutes() === 30) ?
-    "Good Night, everyone!" : ""
+    `Good Night, guys! ${fridayMessage(now)}\nSee ya` : ""
+)
+
+export const fridayMessage = (now: Date): string => (
+  (now.getDay() === 5) ?
+    "Have a nice and sunny weekend" : ""
 )
 
 const handleQuotes = (quotes: Array<IGetQuoteResponse>, pastStockPrices: Array<Stock>): string[] =>
