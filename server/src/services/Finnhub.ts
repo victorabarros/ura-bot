@@ -3,7 +3,7 @@ import config from "../config"
 
 const { address, apiKey } = config.finnhub
 
-interface IGetQuoteResponse {
+export interface IGetQuoteResponse {
   symbol: string
   price: number
   highPrice: number

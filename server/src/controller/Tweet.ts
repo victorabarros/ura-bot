@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import FinnHubService from "../services/Finnhub"
+import FinnHubService, { IGetQuoteResponse } from "../services/Finnhub"
 import TwitterService from "../services/Twitter"
 import Stock from "../models/Stock"
 
@@ -45,26 +45,13 @@ export default {
     const quotes = await Promise.all(STOCKS.map(FinnHubService.getQuoteRealTime))
     const pastStockPrices = await Stock.findAll({ order: [["createdAt", "DESC"]], limit: STOCKS.length })
 
-    const quotesHandled = quotes.map(({ symbol, price }) => {
-      const message = `${symbol} ${" ".repeat(4 - symbol.length)}` +
-        ` $USD ${" ".repeat(5 - price.toString().length)}${price}`
-
-      const idx = pastStockPrices.findIndex(({ symbol: symbolPast }) => symbolPast === symbol)
-      if (idx !== -1) {
-        const oldPrice = pastStockPrices[idx].price
-        const delta = 100 * (price - oldPrice) / oldPrice
-        const deltaString = delta.toFixed(3)
-        const deltaMessage = `${" ".repeat(8 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
-        return `${message} ${deltaMessage}`
-      }
-
-      return message
-    })
+    const quotesHandled = handleQuotes(quotes, pastStockPrices)
 
     const message = [
-      "Stock prices",
+      morningMessage(now),
       quotesHandled.join("\n"),
       `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Uranium`,
+      evenningMessage(now),
     ].join("\n\n")
 
     const { id } = await TwitterService.writeTweet(message)
@@ -76,3 +63,30 @@ export default {
       .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
   }
 }
+
+export const morningMessage = (now: Date): string => (
+  (now.getHours() === 14 && now.getMinutes() === 0) ?
+    "Good Morning, everyone!" : ""
+)
+
+export const evenningMessage = (now: Date): string => (
+  (now.getHours() === 21 && now.getMinutes() === 30) ?
+    "Good Night, everyone!" : ""
+)
+
+const handleQuotes = (quotes: Array<IGetQuoteResponse>, pastStockPrices: Array<Stock>): string[] =>
+  quotes.map(({ symbol, price }) => {
+    const message = `${symbol} ${" ".repeat(4 - symbol.length)}` +
+      ` $USD ${" ".repeat(5 - price.toString().length)}${price}`
+
+    const idx = pastStockPrices.findIndex(({ symbol: symbolPast }) => symbolPast === symbol)
+    if (idx !== -1) {
+      const oldPrice = pastStockPrices[idx].price
+      const delta = 100 * (price - oldPrice) / oldPrice
+      const deltaString = delta.toFixed(2)
+      const deltaMessage = `${" ".repeat(8 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
+      return `${message} ${deltaMessage}`
+    }
+
+    return message
+  })

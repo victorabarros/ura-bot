@@ -1,4 +1,4 @@
-import Tweet from "../../../src/controller/Tweet"
+import Tweet, { evenningMessage, morningMessage } from "../../../src/controller/Tweet"
 
 const mockResponse = {
   status: (code: number) => ({ statusCode: code, ...mockResponse }),
@@ -34,4 +34,19 @@ describe("Test Controller Tweet", () => {
       await Tweet.postStock({} as any, mockResponse as any)
     })
   })
+
+  describe("is first", () => {
+    it("success", async () => {
+      const marketOpenning = new Date(50400000) // 1970-01-01T14:00:00.000Z
+      expect(morningMessage(marketOpenning).startsWith("Good Morning")).toBeTruthy()
+    })
+  })
+
+  describe("is last", () => {
+    it("success", async () => {
+      const marketClosing = new Date(77400000) // 1970-01-01T21:30:00.000Z
+      expect(evenningMessage(marketClosing).startsWith("Good Night")).toBeTruthy()
+    })
+  })
+
 })
