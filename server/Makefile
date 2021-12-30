@@ -57,7 +57,3 @@ tweet:
 
 prod-healthcheck:
 	@make healthcheck URL=https://ura-bot-server.herokuapp.com/
-
-prod-tweet:
-	@make tweet API_KEY=McChickenWithBacon URL=https://ura-bot-server.herokuapp.com/
-  # TODO delete tweet
