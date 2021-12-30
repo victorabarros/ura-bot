@@ -7,7 +7,15 @@ jest.mock("axios", () => ({
   default: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     get: jest.fn((address: string, options: unknown) => {
-      if (address.endsWith("quote")) return { data: { c: 28.61 } }
+      if (address.endsWith("quote")) return {
+        data: {
+          c: 28.61,
+          h: 32.49,
+          l: 17.19,
+          o: 21.03,
+          pc: 20.98,
+        }
+      }
       if (address.endsWith("stock/candle")) return {
         data: {
           s: "ok",

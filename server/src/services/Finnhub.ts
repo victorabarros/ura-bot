@@ -6,7 +6,10 @@ const { address, apiKey } = config.finnhub
 interface IGetQuoteResponse {
   symbol: string
   price: number
-  // TODO add more relevant data from https://finnhub.io/docs/api/quote
+  highPrice: number
+  lowPrice: number
+  openPrice: number
+  previousClosePrice: number
 }
 
 interface IGetQuoteCandlesResponse {
@@ -26,9 +29,16 @@ interface IFinnHubService {
 class FinnHubService implements IFinnHubService {
   async getQuoteRealTime(symbol = "URA"): Promise<IGetQuoteResponse> {
     const params = { symbol: symbol, token: apiKey }
-    const { data } = await axios.get(`${address}quote`, { params })
+    const { data: { c, h, l, o, pc, } } = await axios.get(`${address}quote`, { params })
 
-    return { symbol, price: parseFloat(data.c.toFixed(2)) }
+    return {
+      symbol,
+      price: parseFloat(c.toFixed(2)),
+      highPrice: parseFloat(h.toFixed(2)),
+      lowPrice: parseFloat(l.toFixed(2)),
+      openPrice: parseFloat(o.toFixed(2)),
+      previousClosePrice: parseFloat(pc.toFixed(2)),
+    }
   }
 
   async getQuoteCandles(symbol: string, from: number, to: number): Promise<Array<IGetQuoteCandlesResponse>> {
