@@ -3,10 +3,14 @@ import Twitter from "twitter-lite"
 import TwitterService from "../../../src/services/Twitter"
 
 // Twitter Mock
-jest.mock("twitter-lite", () => ((params: unknown) => ({
-  post: (path: string, data: unknown) => ({ id_str: "xpto" }),
-  getBearerToken: () => "token",
-})))
+jest.mock("twitter-lite",
+  () => jest.fn().mockImplementation(() => (
+    {
+      post: (path: string, data: unknown) => ({ id_str: "xpto" }),
+      getBearerToken: () => "token",
+    }
+  ))
+)
 
 describe("Test Services Twitter", () => {
 

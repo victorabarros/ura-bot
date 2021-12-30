@@ -2,7 +2,7 @@ APP_NAME=ura-bot
 APP_DIR=/${APP_NAME}/src
 DOCKER_BASE_IMAGE=node:16.13
 URL?=http://localhost:${PORT}/
-ENV_FILE?=.env
+ENV_FILE?=.env.test
 COMMAND?=bash
 PORT=3101
 API_KEY=McChickenPromo
@@ -30,19 +30,24 @@ build:
 run: build
 	@clear
 	@echo "\e[1m\033[33mRunning project\e[0m"
-	@make docker-command COMMAND="yarn start"
+	@make docker-command ENV_FILE=.env COMMAND="yarn start"
 
 dev:
 	@clear
 	@echo "\e[1m\033[33mRunning ${APP_NAME} on port ${PORT}\e[0m"
-	@make docker-command COMMAND="yarn dev"
+	@make docker-command ENV_FILE=.env COMMAND="yarn dev"
 
 tests:
 	@clear
 	@make build ENV_FILE=".env.test"
 	@echo "\e[1m\033[33mTesting\e[0m"
-	@make docker-command ENV_FILE=".env.test" COMMAND="yarn test"
+	@make docker-command COMMAND="yarn test"
 	@echo "\e[1m\033[33mDone\e[0m"
+
+migration:
+	@clear
+	@echo "\e[1m\033[33mExecuting Migrations\e[0m"
+	@make docker-command COMMAND="yarn sequelize db:migrate"
 
 healthcheck:
 	@curl ${URL}health
@@ -52,3 +57,7 @@ tweet:
 
 prod-healthcheck:
 	@make healthcheck URL=https://ura-bot-server.herokuapp.com/
+
+prod-tweet:
+	@make tweet API_KEY=McChickenWithBacon URL=https://ura-bot-server.herokuapp.com/
+  # TODO delete tweet
