@@ -38,6 +38,7 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.12.0-beta.3",
+    "tsc": "^2.0.4",
     "twitter-lite": "1.1.0"
   }
 }
