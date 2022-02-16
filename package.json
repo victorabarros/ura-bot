@@ -6,13 +6,12 @@
   "author": "VictorBarros <victorbarros1130@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "heroku-prebuild": "cd server && yarn install -D",
-    "postinstall": "cd server && yarn build",
-    "start": "cd server && yarn start",
-    "dev": "cd server && yarn dev"
+    "heroku-prebuild": "cd server && npm install --only=dev && npm install",
+    "postinstall": "cd server && npm run build",
+    "start": "cd server && npm run start",
+    "dev": "cd server && npm run dev"
   },
   "engines": {
-    "node": "16.14.0",
-    "yarn": "1.22.17"
+    "node": "16.14.0"
   }
 }

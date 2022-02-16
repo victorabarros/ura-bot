@@ -37,7 +37,7 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.12.0-beta.3",
-    "typescript": "4.4.4",
-    "twitter-lite": "1.1.0"
+    "twitter-lite": "1.1.0",
+    "typescript": "4.4.4"
   }
 }

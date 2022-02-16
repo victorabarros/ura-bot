@@ -1,6 +1,6 @@
 APP_NAME=ura-bot
 APP_DIR=/${APP_NAME}/src
-DOCKER_BASE_IMAGE=node:16.13
+DOCKER_BASE_IMAGE=node:16.14.0
 URL?=http://localhost:${PORT}/
 ENV_FILE?=.env.test
 COMMAND?=bash
