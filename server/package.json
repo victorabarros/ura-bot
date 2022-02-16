@@ -5,8 +5,7 @@
   "description": "Twitter bot to share uranium info.",
   "homepage": "https://github.com/victorabarros/ura-bot",
   "scripts": {
-    "build": "npm run tsc",
-    "tsc": "./node_modules/typescript/bin/tsc",
+    "build": "tsc",
     "start": "node dist/src/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "precommit": "clear && yarn run eslint --fix .",
