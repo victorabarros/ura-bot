@@ -59,6 +59,31 @@ make run
 |GET|/health|healthcheck|
 |POST|/tweet|tweet Uranium market stocks price in real time|
 
+## Flow
+
+```mermaid
+    flowchart LR;
+
+      %% components
+      cron[fa:fa-clock-o<br>easycron];
+      server[fa:fa-server<br>heroku];
+      finhub[fa:fa-money<br>finhub];
+      db[(fa:fa-table<br>elephantSQL)];
+      client[fa:fa-twitter<br>twitter];
+
+      %% flow
+      cron--->
+      server-->
+      client;
+
+      finhub<-..->server;
+      db<-.->server;
+
+      %% styles
+      classDef box fill-opacity:.5, stroke:grey, stroke-width:.5px;
+      class cron,server,finhub,db,client box
+```
+
 <!--
 ```
 Ladies and Gentlemen,
@@ -94,6 +119,7 @@ It was a very funny journey.
 
 TODO:
   - add sponsoring https://www.google.com/search?channel=fs&client=ubuntu&q=how+add+sponsor+to+github+project
+  - diminuir frequencia de tweet p de hora em hora
   - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
   - move good Morning and Good Evenning message to query param: curl -X POST ${URL}tweet?prefixMessage="GoodMorning"&posfixMessage="Good Evenning"
   - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is heroku (akita has a video) or fly.io); part 3 - add query params and cron with goodmorning/evenning.
