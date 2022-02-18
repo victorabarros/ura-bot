@@ -65,10 +65,10 @@ make run
     flowchart LR;
 
       %% components
-      cron[easy<br>cron];
-      server[heroku];
+      cron[cron];
+      server[UraBot<br>Server];
       finhub[finhub];
-      db[(elephant<br>SQL)];
+      db[(DB)];
       client[twitter];
 
       %% flow
