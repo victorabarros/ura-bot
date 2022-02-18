@@ -73,11 +73,11 @@ make run
 
       %% flow
       cron--->
-      server-->
+      server--->
       client;
 
-      finhub<-..->server;
-      db<-.->server;
+      finhub----server;
+      db-..-server;
 
       %% styles
       classDef box fill-opacity:.5, stroke:grey, stroke-width:.5px;
