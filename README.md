@@ -65,11 +65,11 @@ make run
     flowchart LR;
 
       %% components
-      cron[fa:fa-clock-o<br>easycron];
-      server[fa:fa-server<br>heroku];
-      finhub[fa:fa-money<br>finhub];
-      db[(fa:fa-table<br>elephantSQL)];
-      client[fa:fa-twitter<br>twitter];
+      cron[easy<br>cron];
+      server[heroku];
+      finhub[finhub];
+      db[(elephant<br>SQL)];
+      client[twitter];
 
       %% flow
       cron--->
