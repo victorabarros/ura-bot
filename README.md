@@ -118,11 +118,14 @@ It was a very funny journey.
 ```
 
 TODO:
+  - https://github.com/victorabarros/ura-bot/issues/2
+  - https://twitter.com/NuclearDorito/status/1503743597941862405
+  - add code climate https://codeclimate.com/github/victorabarros/travel-routes-optimizer
   - add sponsoring https://www.google.com/search?channel=fs&client=ubuntu&q=how+add+sponsor+to+github+project
   - diminuir frequencia de tweet p de hora em hora
   - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
   - move good Morning and Good Evenning message to query param: curl -X POST ${URL}tweet?prefixMessage="GoodMorning"&posfixMessage="Good Evenning"
-  - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is heroku (akita has a video) or fly.io); part 3 - add query params and cron with goodmorning/evenning.
+  - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.heroku.com/postgres (akita has a video) or https://fly.io/ or https://www.cockroachlabs.com/pricing/); part 3 - add query params and cron with goodmorning/evenning.
   - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
   - add uranium/nuclear/energy icon 📉
   - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)

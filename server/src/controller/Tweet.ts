@@ -28,7 +28,7 @@ const NYSE_STOCKS = [
 ]
 
 const OTHER_STOCKS = [
-  // TODO look where find these prices
+  // TODO look where find these prices -> try IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
   "U.UN", // Sprott: physical uranium trust
   "UXC", // Future Contract
   "HURA", // ETF
