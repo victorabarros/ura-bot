@@ -85,20 +85,8 @@ make run
 ```
 
 <!--
-```
-Ladies and Gentlemen,
-I introduce you to my new child:
-twitter.com/uraniumStockBot
-```
 
----
-
-```
-Dias atrás eu estava buscando aprender sobre a tese de uranio para investimentos, sob influência do @FernandoUlrich.
-Pensando em fazer disto algo mais divertido, pensei como envolver programação na brincadeira.
-Então que tive a ideia de desenvolver um bot que me atualiza com os preços em real-time das ações.
-Daí que nasceu o UraBot. Escolhi a linguagem typescript, pois queria aperfeicoar-me e inclui bastante testes no projeto.
-```
+Goal: From a side project to lear more about uranium industry and apply knolegment in programming to 1 thousend followers on twitter.
 
 ---
 
@@ -118,14 +106,15 @@ It was a very funny journey.
 ```
 
 TODO:
+  - heroku will die =/  https://www.linkedin.com/feed/update/urn:li:activity:6968658686705610752/ ; try aws cloudformation ./server/.infra/ ; https://twitter.com/urielsouza29/status/1567889830012403713
   - https://github.com/victorabarros/ura-bot/issues/2
   - https://twitter.com/NuclearDorito/status/1503743597941862405
   - add code climate https://codeclimate.com/github/victorabarros/travel-routes-optimizer
-  - add sponsoring https://www.google.com/search?channel=fs&client=ubuntu&q=how+add+sponsor+to+github+project
+  - add sponsoring https://www.google.com/search?channel=fs&client=ubuntu&q=how+add+sponsor+to+github+project https://victorabarros.herokuapp.com/wallet
   - diminuir frequencia de tweet p de hora em hora
   - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
   - move good Morning and Good Evenning message to query param: curl -X POST ${URL}tweet?prefixMessage="GoodMorning"&posfixMessage="Good Evenning"
-  - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.heroku.com/postgres (akita has a video) or https://fly.io/ or https://www.cockroachlabs.com/pricing/); part 3 - add query params and cron with goodmorning/evenning.
+  - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.heroku.com/postgres (akita has a video) or https://fly.io/ or https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
   - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
   - add uranium/nuclear/energy icon 📉
   - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
