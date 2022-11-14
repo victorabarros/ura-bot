@@ -106,7 +106,7 @@ It was a very funny journey.
 ```
 
 TODO:
-  - heroku will die =/  https://www.linkedin.com/feed/update/urn:li:activity:6968658686705610752/ ; try aws cloudformation ./server/.infra/ ; https://twitter.com/urielsouza29/status/1567889830012403713
+  - heroku will die =/  https://www.linkedin.com/feed/update/urn:li:activity:6968658686705610752/ ; try alternatives likw  aws cloudformation ./server/.infra/ ; https://twitter.com/urielsouza29/status/1567889830012403713 or https://render.com/pricing ; https://github.com/Engagespot/heroku-free-alternatives
   - https://github.com/victorabarros/ura-bot/issues/2
   - https://twitter.com/NuclearDorito/status/1503743597941862405
   - add code climate https://codeclimate.com/github/victorabarros/travel-routes-optimizer
@@ -124,4 +124,5 @@ TODO:
 - integration tests - get QA credentials
 - better https://github.com/FeedHive/twitter-api-client ?
 - read https://www.infoq.com/news/2021/11/twitter-api-v2
+- data supplier alternative https://alpaca.markets/
 -->
