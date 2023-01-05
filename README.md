@@ -10,9 +10,6 @@
   <a href="https://www.easycron.com/user">
     <img height="30px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
   </a>
-  <a href="https://dashboard.heroku.com/apps/ura-bot-server">
-    <img height="30px" src="https://www.herokucdn.com/deploy/button.svg" />
-  </a>
   <a href="https://customer.elephantsql.com/">
     <img height="30px" src="https://pbs.twimg.com/profile_images/2661035254/f1797e21af006ca889d3e5f39293fca1_400x400.png" />
   </a>
@@ -40,7 +37,7 @@ write .env file similar to .env.example
 # locally run with hot reload
 make dev
 
-# test endoint
+# test endpoints
 make healthcheck
 make tweet
 
@@ -59,47 +56,55 @@ make run
 |GET|/health|healthcheck|
 |POST|/tweet|tweet Uranium market stocks price in real time|
 
+## Flow
+
+```mermaid
+    flowchart LR;
+
+      %% components
+      cron[cron];
+      server[UraBot<br>Server];
+      finhub[finhub];
+      db[(DB)];
+      client[twitter];
+
+      %% flow
+      cron--->
+      server--->
+      client;
+
+      finhub----server;
+      db-..-server;
+
+      %% styles
+      classDef box fill-opacity:.5, stroke:grey, stroke-width:.5px;
+      class cron,server,finhub,db,client box
+```
+
 <!--
-```
-Ladies and Gentlemen,
-I introduce you to my new child:
-twitter.com/uraniumStockBot
-```
+
+Goal: From a side project to lear more about uranium industry and apply knolegment in programming to 1 thousend followers on twitter.
 
 ---
-
-```
-Dias atrás eu estava buscando aprender sobre a tese de uranio para investimentos, sob influência do @FernandoUlrich.
-Pensando em fazer disto algo mais divertido, pensei como envolver programação na brincadeira.
-Então que tive a ideia de desenvolver um bot que me atualiza com os preços em real-time das ações.
-Daí que nasceu o UraBot. Escolhi a linguagem typescript, pois queria aperfeicoar-me e inclui bastante testes no projeto.
-```
-
----
-
-```
-Hello Folks!
-
-These last week I have been learning about Uranium investiments and looking for relevants pages about that to make me update with news.
-As any developer passionate about automate any thing, I had this idea of developing a bot to update me with stock prices and news from uranium market. So,
-
-Ladies and Gentlements,
-
-I introduce you my new child:
-UraBot
-
-Also was a opportunity to improve my programming skills, so I choose typescript to learn more about and developed it with automation tests.
-It was a very funny journey.
-```
 
 TODO:
+  - heroku will die =/  https://www.linkedin.com/feed/update/urn:li:activity:6968658686705610752/ ; try alternatives likw  aws cloudformation ./server/.infra/ ; https://twitter.com/urielsouza29/status/1567889830012403713 or https://render.com/pricing ; https://github.com/Engagespot/heroku-free-alternatives
+  - https://github.com/victorabarros/ura-bot/issues/2
+  - https://twitter.com/NuclearDorito/status/1503743597941862405
+  - add code climate https://codeclimate.com/github/victorabarros/travel-routes-optimizer
+  - add sponsoring https://www.google.com/search?channel=fs&client=ubuntu&q=how+add+sponsor+to+github+project https://victorabarros.herokuapp.com/wallet
+  - diminuir frequencia de tweet p de hora em hora
+  - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
+  - move good Morning and Good Evenning message to query param: curl -X POST ${URL}tweet?prefixMessage="GoodMorning"&posfixMessage="Good Evenning"
+  - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.heroku.com/postgres (akita has a video) or https://fly.io/ or https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
   - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
   - add uranium/nuclear/energy icon 📉
-  - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 and add font/vendor)
+  - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
   - tweet relevant news (understand what's better hour and schedule it)
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
 - CI
 - integration tests - get QA credentials
 - better https://github.com/FeedHive/twitter-api-client ?
 - read https://www.infoq.com/news/2021/11/twitter-api-v2
+- data supplier alternative https://alpaca.markets/
 -->
