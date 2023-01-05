@@ -10,9 +10,6 @@
   <a href="https://www.easycron.com/user">
     <img height="30px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
   </a>
-  <a href="https://dashboard.heroku.com/apps/ura-bot-server">
-    <img height="30px" src="https://www.herokucdn.com/deploy/button.svg" />
-  </a>
   <a href="https://customer.elephantsql.com/">
     <img height="30px" src="https://pbs.twimg.com/profile_images/2661035254/f1797e21af006ca889d3e5f39293fca1_400x400.png" />
   </a>
@@ -40,7 +37,7 @@ write .env file similar to .env.example
 # locally run with hot reload
 make dev
 
-# test healthcheck and tweet endpoint
+# test endpoints
 make healthcheck
 make tweet
 
@@ -89,21 +86,6 @@ make run
 Goal: From a side project to lear more about uranium industry and apply knolegment in programming to 1 thousend followers on twitter.
 
 ---
-
-```
-Hello Folks!
-
-These last week I have been learning about Uranium investiments and looking for relevants pages about that to make me update with news.
-As any developer passionate about automate any thing, I had this idea of developing a bot to update me with stock prices and news from uranium market. So,
-
-Ladies and Gentlements,
-
-I introduce you my new child:
-UraBot
-
-Also was a opportunity to improve my programming skills, so I choose typescript to learn more about and developed it with automation tests.
-It was a very funny journey.
-```
 
 TODO:
   - heroku will die =/  https://www.linkedin.com/feed/update/urn:li:activity:6968658686705610752/ ; try alternatives likw  aws cloudformation ./server/.infra/ ; https://twitter.com/urielsouza29/status/1567889830012403713 or https://render.com/pricing ; https://github.com/Engagespot/heroku-free-alternatives

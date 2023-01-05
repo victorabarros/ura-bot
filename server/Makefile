@@ -7,8 +7,8 @@ COMMAND?=bash
 PORT=3101
 API_KEY=McChickenPromo
 
-YELLOW=\e[1m\033[33m
-COLOR_OFF=\e[0m
+YELLOW=$(shell printf '\033[0;1;33m')
+COLOR_OFF=$(shell printf '\033[0;1;0m')
 
 remove-containers:
 ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
@@ -22,10 +22,10 @@ docker-command: remove-containers
     --env PORT=${PORT} \
     --env API_KEY=${API_KEY} \
 		-p ${PORT}:${PORT} --name ${APP_NAME} \
-		${DOCKER_BASE_IMAGE} bash -c "${COMMAND}"
+		${DOCKER_BASE_IMAGE} bash -c "yarn && ${COMMAND}"
 
 build:
-	@make -s docker-command COMMAND="rm -rf ./dist/*"
+	@rm -rf ./dist/*
 	@echo "${YELLOW}Building project${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn build"
 	@make -s remove-containers
@@ -45,7 +45,6 @@ tests:
 	@make -s build ENV_FILE=".env.test"
 	@echo "${YELLOW}Testing${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn test"
-	@echo "${YELLOW}Done${COLOR_OFF}"
 
 migration:
 	@clear
@@ -57,9 +56,3 @@ healthcheck:
 
 tweet:
 	@curl -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet
-
-prod-healthcheck:
-	@make -s healthcheck URL=https://ura-bot-server.herokuapp.com/
-
-prod-tweet:
-	@make -s tweet API_KEY=McChickenWithBacon URL=https://ura-bot-server.herokuapp.com/
