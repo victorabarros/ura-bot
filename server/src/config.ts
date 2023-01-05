@@ -1,7 +1,7 @@
 const throwMissingVariable = (name: string) => { throw new Error(`missing required env variable "${name}"`) }
 
 export default {
-  port: process.env.PORT || "3101",
+  port: process.env.PORT || "80`",
   apiKey: process.env.API_KEY || throwMissingVariable("API_KEY"),
   version: process.env.VERSION || "1.3.6",
   twitter: {
