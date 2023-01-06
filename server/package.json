@@ -5,6 +5,8 @@
   "description": "Twitter bot to share uranium info.",
   "homepage": "https://github.com/victorabarros/ura-bot",
   "scripts": {
+    "preinstall": "rm -rf node_modules dist/*",
+    "postinstall": "npm run build",
     "build": "tsc",
     "start": "node dist/src/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",

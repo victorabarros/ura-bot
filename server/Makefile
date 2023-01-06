@@ -10,12 +10,6 @@ API_KEY=McChickenPromo
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
 
-remove-containers:
-ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
-	@echo "${YELLOW}Removing containers${COLOR_OFF}"
-	@docker ps -a --filter "name=${APP_NAME}" -aq | xargs docker rm -f
-endif
-
 docker-command: remove-containers
 	@docker run -it -v $(shell pwd):${APP_DIR} -w ${APP_DIR} \
     --env-file ${ENV_FILE} \
@@ -24,10 +18,15 @@ docker-command: remove-containers
 		-p ${PORT}:${PORT} --name ${APP_NAME} \
 		${DOCKER_BASE_IMAGE} bash -c "yarn && ${COMMAND}"
 
+remove-containers:
+ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
+	@echo "${YELLOW}Removing containers${COLOR_OFF}"
+	@docker ps -a --filter "name=${APP_NAME}" -aq | xargs docker rm -f
+endif
+
 build:
-	@rm -rf ./dist/*
 	@echo "${YELLOW}Building project${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn build"
+	@make -s docker-command COMMAND="yarn install"
 	@make -s remove-containers
 
 run: build
