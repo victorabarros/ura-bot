@@ -7,8 +7,11 @@
 
 <p>
   <!-- badgets -->
-  <a href="https://www.easycron.com/user">
+  <a href="https://www.easycron.com/">
     <img height="30px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
+  </a>
+  <a href="https://railway.app/">
+    <img height="30px" src="https://railway.app/button.svg" />
   </a>
   <a href="https://customer.elephantsql.com/">
     <img height="30px" src="https://pbs.twimg.com/profile_images/2661035254/f1797e21af006ca889d3e5f39293fca1_400x400.png" />
@@ -88,7 +91,6 @@ Goal: From a side project to lear more about uranium industry and apply knolegme
 ---
 
 TODO:
-  - heroku will die =/  https://www.linkedin.com/feed/update/urn:li:activity:6968658686705610752/ ; try alternatives likw  aws cloudformation ./server/.infra/ ; https://twitter.com/urielsouza29/status/1567889830012403713 or https://render.com/pricing ; https://github.com/Engagespot/heroku-free-alternatives
   - https://github.com/victorabarros/ura-bot/issues/2
   - https://twitter.com/NuclearDorito/status/1503743597941862405
   - add code climate https://codeclimate.com/github/victorabarros/travel-routes-optimizer

@@ -50,7 +50,7 @@ migration:
 	@make -s docker-command COMMAND="yarn sequelize db:migrate"
 
 healthcheck:
-	@curl ${URL}health
+	curl ${URL}health
 
 tweet:
 	@curl -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet
