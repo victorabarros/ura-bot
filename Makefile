@@ -16,7 +16,7 @@ docker-command: remove-containers
     --env PORT=${PORT} \
     --env API_KEY=${API_KEY} \
 		-p ${PORT}:${PORT} --name ${APP_NAME} \
-		${DOCKER_BASE_IMAGE} bash -c "yarn && ${COMMAND}"
+		${DOCKER_BASE_IMAGE} bash -c "${COMMAND}"
 
 remove-containers:
 ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
@@ -26,10 +26,10 @@ endif
 
 build:
 	@echo "${YELLOW}Building project${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn install"
+	@yarn
 	@make -s remove-containers
 
-run: build
+run:
 	@clear
 	@echo "${YELLOW}Running project${COLOR_OFF}"
 	@make -s docker-command ENV_FILE=.env COMMAND="yarn start"
@@ -41,7 +41,6 @@ dev:
 
 tests:
 	@clear
-	@make -s build ENV_FILE=".env.test"
 	@echo "${YELLOW}Testing${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn test"
 

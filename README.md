@@ -29,7 +29,7 @@ Twitter page dedicated to sharing uranium market stock prices, analyses and rele
 
 ## How to run
 
-You can find all commands on [./server/Makefile](https://github.com/victorabarros/ura-bot/blob/main/server/Makefile)
+You can find all commands on [./Makefile](https://github.com/victorabarros/ura-bot/blob/main/Makefile)
 
 write .env file similar to .env.example
 
