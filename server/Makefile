@@ -1,10 +1,10 @@
 APP_NAME=ura-bot
 APP_DIR=/${APP_NAME}/src
 DOCKER_BASE_IMAGE=node:16.14.0
+PORT=8080
 URL?=http://localhost:${PORT}/
 ENV_FILE?=.env.test
 COMMAND?=bash
-PORT=3101
 API_KEY=McChickenPromo
 
 YELLOW=$(shell printf '\033[0;1;33m')
