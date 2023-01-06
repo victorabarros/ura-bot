@@ -12,8 +12,5 @@
     "build": "cd server && tsc",
     "start": "cd server && npm run start",
     "dev": "cd server && npm run dev"
-  },
-  "engines": {
-    "node": "16.14.0"
   }
 }
