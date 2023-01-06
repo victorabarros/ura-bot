@@ -1,5 +1,5 @@
 {
-  "name": "ura-bot-server",
+  "name": "ura-bot",
   "version": "1.0.0",
   "license": "MIT",
   "description": "Twitter bot to share uranium info.",
@@ -11,7 +11,7 @@
     "start": "node dist/src/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "precommit": "clear && yarn run eslint --fix .",
-    "prepare-husky": "cd .. && husky install server/.husky",
+    "prepare-husky": "husky install server/.husky",
     "test": "jest"
   },
   "devDependencies": {
