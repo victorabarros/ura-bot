@@ -93,7 +93,6 @@ Goal: From a side project to lear more about uranium industry and apply knolegme
 TODO:
   - https://github.com/victorabarros/ura-bot/issues/2
   - https://twitter.com/NuclearDorito/status/1503743597941862405
-  - add code climate https://codeclimate.com/github/victorabarros/travel-routes-optimizer
   - add sponsoring https://www.google.com/search?channel=fs&client=ubuntu&q=how+add+sponsor+to+github+project https://victorabarros.herokuapp.com/wallet
   - diminuir frequencia de tweet p de hora em hora
   - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
