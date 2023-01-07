@@ -45,7 +45,7 @@ class FinnHubService implements IFinnHubService {
     const params = { symbol: symbol, token: apiKey, resolution: 1, from, to }
     const { data } = await axios.get(`${address}stock/candle`, { params })
 
-    if (data.s === "no_data") throw new Error("get stock candles from finnhub return empty")
+    if (data.s === "no_data") throw new Error(`get stock "${symbol}" candles from finnhub return empty`)
 
     const resp = data.t.map((t: number, idx: number): IGetQuoteCandlesResponse => ({
       timestamp: t,

@@ -25,15 +25,17 @@ const NYSE_STOCKS = [
   "URA",  // ETF: 23%-Cameco 20%-Kazatomprom 50%-(out of uranium market)
   "URNM", // ETF
   "UUUU", // Energy Fuels
+  "SRUUF",
 ]
 
 const OTHER_STOCKS = [
   // TODO look where find these prices -> try IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
+  // "U.U",
+  // "SPUT",
   "U.UN", // Sprott: physical uranium trust
   "UXC", // Future Contract
   "HURA", // ETF
   "PDN",
-  "SRUUF",
 ]
 
 export const STOCKS = NYSE_STOCKS
@@ -81,7 +83,7 @@ export const fridayMessage = (now: Date): string => (
 
 const handleQuotes = (quotes: Array<IGetQuoteResponse>, pastStockPrices: Array<Stock>): string[] =>
   quotes.map(({ symbol, price }) => {
-    const message = `${symbol} ${" ".repeat(4 - symbol.length)}` +
+    const message = `${symbol} ${" ".repeat(6 - symbol.length)}` +
       ` $USD ${" ".repeat(5 - price.toString().length)}${price}`
 
     const idx = pastStockPrices.findIndex(({ symbol: symbolPast }) => symbolPast === symbol)

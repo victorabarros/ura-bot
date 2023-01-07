@@ -19,6 +19,7 @@ routes.get("/health", async (req: Request, res: Response) => {
     twitter: {
       success: true,
     },
+    // TODO add db ping
   }
 
   await FinHubService.getQuoteRealTime()

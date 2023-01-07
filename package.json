@@ -12,7 +12,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "precommit": "clear && yarn run eslint --fix .",
     "prepare-husky": "husky install server/.husky",
-    "pretest": "npm run build",
+    "pretest": "yarn build",
     "test": "jest"
   },
   "devDependencies": {
