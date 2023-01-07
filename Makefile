@@ -52,4 +52,4 @@ healthcheck:
 	curl ${URL}health
 
 tweet:
-	@curl -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet
+	curl -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet

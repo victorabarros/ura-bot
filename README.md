@@ -7,9 +7,10 @@
 
 <p>
   <!-- badgets -->
-  <a href="https://www.easycron.com/">
+  <!-- <a href="https://www.easycron.com/">
     <img height="30px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
-  </a>
+  </a> -->
+  <!-- TODO add https://cron-job.org/en/ badgets -->
   <a href="https://railway.app/">
     <img height="30px" src="https://railway.app/button.svg" />
   </a>
@@ -91,8 +92,8 @@ Goal: From a side project to lear more about uranium industry and apply knolegme
 ---
 
 TODO:
-  - https://github.com/victorabarros/ura-bot/issues/2
-  - https://twitter.com/NuclearDorito/status/1503743597941862405
+  - https://github.com/victorabarros/ura-bot/issues/2 =>  / weekly report on friday night or Monday morning / monthly report on last day of month / quarter report
+  - https://twitter.com/NuclearDorito/status/1503743597941862405 => include $U.U ( $U.UN / #SPUT)
   - add sponsoring https://www.google.com/search?channel=fs&client=ubuntu&q=how+add+sponsor+to+github+project https://victorabarros.herokuapp.com/wallet
   - diminuir frequencia de tweet p de hora em hora
   - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
