@@ -97,15 +97,14 @@ make run
 
 <!--
 TODO:
-  - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
-  - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
-  - https://github.com/victorabarros/ura-bot/issues/2 =>  / weekly report on friday night or Monday morning / monthly report on last day of month / quarter report
-  - https://twitter.com/NuclearDorito/status/1503743597941862405 => include $U.U ( $U.UN / #SPUT)
-  - add github actions => run tests
-  - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
-  - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
-  - add uranium/nuclear/energy icon 📉
-  - tweet relevant news (understand what's better hour and schedule it)
+- improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
+- https://github.com/victorabarros/ura-bot/issues/2 =>  / weekly report on friday night or Monday morning / monthly report on last day of month / quarter report
+- https://twitter.com/NuclearDorito/status/1503743597941862405 => include $U.U ( $U.UN / #SPUT)
+- add github actions => run tests
+- write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
+- variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
+- add uranium/nuclear/energy icon 📉
+- tweet relevant news (understand what's better hour and schedule it)
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
 - integration tests - get QA credentials
 - read https://www.infoq.com/news/2021/11/twitter-api-v2

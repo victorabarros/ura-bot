@@ -6,9 +6,10 @@ describe("Test Services Finhub", () => {
 
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
-        const { symbol, price } = await FinnHubService.getQuoteRealTime(stock)
+        const { symbol, price, openPrice } = await FinnHubService.getQuoteRealTime(stock)
         expect(symbol).toBe(stock)
         expect(price).toBeGreaterThan(0)
+        expect(openPrice).toBeGreaterThan(0)
       })
     }))
 

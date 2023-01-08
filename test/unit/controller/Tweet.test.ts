@@ -10,7 +10,11 @@ jest.mock("../../../src/services/Finnhub", () => ({
   __esModule: true,
   default: {
     getQuoteRealTime: jest.fn((symbol: string) =>
-      ({ symbol: symbol || "URA", price: (Math.random() * 90).toFixed(2) })
+    ({
+      symbol: symbol || "URA",
+      price: (Math.random() * 90).toFixed(2),
+      openPrice: (Math.random() * 90).toFixed(2),
+    })
     )
   },
 }))
@@ -44,14 +48,14 @@ describe("Test Controller Tweet", () => {
 
   describe("is last", () => {
     it("success", async () => {
-      const marketClosing = new Date(77400000) // 1970-01-01T21:30:00.000Z
+      const marketClosing = new Date(75600000) // 1970-01-01T21:00:00.000Z
       expect(evenningMessage(marketClosing).startsWith("Good Night")).toBeTruthy()
     })
   })
 
   describe("friday message", () => {
     it("success", async () => {
-      const fridayMarketClosing = new Date(163800000) // 1970-01-02T21:30:00.000Z
+      const fridayMarketClosing = new Date(162000000) // 1970-01-02T21:00:00.000Z
       expect(fridayMessage(fridayMarketClosing)).toBe("Have a nice and sunny weekend")
       expect(evenningMessage(fridayMarketClosing)).toContain("Have a nice and sunny weekend")
     })

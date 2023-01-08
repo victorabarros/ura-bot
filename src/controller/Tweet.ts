@@ -44,9 +44,8 @@ export default {
     const now = new Date()
 
     const quotes = await Promise.all(STOCKS.map(FinnHubService.getQuoteRealTime))
-    const pastStockPrices = await Stock.findAll({ order: [["createdAt", "DESC"]], limit: STOCKS.length })
-
-    const quotesHandled = handleQuotes(quotes, pastStockPrices)
+    // const pastStockPrices = await Stock.findAll({ order: [["createdAt", "DESC"]], limit: STOCKS.length })
+    const quotesHandled = handleQuotes(quotes)
 
     const message = [
       morningMessage(now),
@@ -71,7 +70,7 @@ export const morningMessage = (now: Date): string => (
 )
 
 export const evenningMessage = (now: Date): string => (
-  (now.getHours() === 21 && now.getMinutes() === 30) ?
+  (now.getHours() === 21 && now.getMinutes() === 0) ?
     `Good Night, guys! ${fridayMessage(now)}\nSee ya` : ""
 )
 
@@ -80,19 +79,13 @@ export const fridayMessage = (now: Date): string => (
     "Have a nice and sunny weekend" : ""
 )
 
-const handleQuotes = (quotes: Array<IGetQuoteResponse>, pastStockPrices: Array<Stock>): string[] =>
-  quotes.map(({ symbol, price }) => {
+const handleQuotes = (quotes: Array<IGetQuoteResponse>): string[] =>
+  quotes.map(({ symbol, price, openPrice }) => {
     const message = `${symbol} ${" ".repeat(6 - symbol.length)}` +
       ` $USD ${" ".repeat(5 - price.toString().length)}${price}`
 
-    const idx = pastStockPrices.findIndex(({ symbol: symbolPast }) => symbolPast === symbol)
-    if (idx !== -1) {
-      const oldPrice = pastStockPrices[idx].price
-      const delta = 100 * (price - oldPrice) / oldPrice
-      const deltaString = delta.toFixed(2)
-      const deltaMessage = `${" ".repeat(8 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
-      return `${message} ${deltaMessage}`
-    }
-
-    return message
+    const delta = 100 * (price - openPrice) / openPrice
+    const deltaString = delta.toFixed(2)
+    const deltaMessage = `${" ".repeat(8 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
+    return `${message} ${deltaMessage}`
   })
