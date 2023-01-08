@@ -11,13 +11,13 @@
     <img height="30px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
   </a> -->
   <!-- TODO add https://cron-job.org/en/ badgets -->
-  <a href="https://railway.app/">
+  <a href="https://railway.app/" target="_blank">
     <img height="30px" src="https://railway.app/button.svg" />
   </a>
-  <a href="https://customer.elephantsql.com/">
+  <a href="https://customer.elephantsql.com/" target="_blank">
     <img height="30px" src="https://pbs.twimg.com/profile_images/2661035254/f1797e21af006ca889d3e5f39293fca1_400x400.png" />
   </a>
-  <a href="https://codeclimate.com/github/victorabarros/ura-bot">
+  <a href="https://codeclimate.com/github/victorabarros/ura-bot" target="_blank">
     <img src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" />
   </a>
 </p>
@@ -85,28 +85,29 @@ make run
       class cron,server,finhub,db,client box
 ```
 
+<p>
+  <a href="https://www.buymeacoffee.com/victorbarros" target="_blank">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px">
+  </a>
+
+  <a href="https://website.victorbarros.dev/wallet" target="_blank">
+    <img src="https://bitcoin.org/img/icons/logotop.svg?1671880122" height="40px">
+  </a>
+</p>
+
 <!--
-
-Goal: From a side project to lear more about uranium industry and apply knolegment in programming to 1 thousend followers on twitter.
-
----
-
 TODO:
+  - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
+  - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
   - https://github.com/victorabarros/ura-bot/issues/2 =>  / weekly report on friday night or Monday morning / monthly report on last day of month / quarter report
   - https://twitter.com/NuclearDorito/status/1503743597941862405 => include $U.U ( $U.UN / #SPUT)
-  - add sponsoring https://www.google.com/search?channel=fs&client=ubuntu&q=how+add+sponsor+to+github+project https://victorabarros.herokuapp.com/wallet
-  - diminuir frequencia de tweet p de hora em hora
-  - explicity the delta from percentage. to avoid this mistake https://twitter.com/the_growler_man/status/1485679069199048714
-  - move good Morning and Good Evenning message to query param: curl -X POST ${URL}tweet?prefixMessage="GoodMorning"&posfixMessage="Good Evenning"
-  - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.heroku.com/postgres (akita has a video) or https://fly.io/ or https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
+  - add github actions => run tests
+  - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
   - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
   - add uranium/nuclear/energy icon 📉
-  - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
   - tweet relevant news (understand what's better hour and schedule it)
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
-- CI
 - integration tests - get QA credentials
-- better https://github.com/FeedHive/twitter-api-client ?
 - read https://www.infoq.com/news/2021/11/twitter-api-v2
-- data supplier alternative https://alpaca.markets/
+- data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
 -->
