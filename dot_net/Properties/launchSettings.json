@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "urabot_dot_net": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7168",
+      "launchBrowser": false
+    }
+  }
+}
+
