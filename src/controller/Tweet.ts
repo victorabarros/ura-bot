@@ -26,19 +26,21 @@ const NYSE_STOCKS = [
   "URNM", // ETF
   "UUUU", // Energy Fuels
   "SRUUF",
-  "UROY",
 ]
 
 const OTHER_STOCKS = [
   // "U.U",
   // "SPUT",
-  "U.UN", // Sprott: physical uranium trust
-  "UXC", // Future Contract
-  "HURA", // ETF
+  // "U.UN", // Sprott: physical uranium trust
+  // "UXC", // Future Contract
+  // "HURA", // ETF
+  // TODO find another api that supports the stocks above
+
   "PDN",
+  "UROY",
 ]
 
-export const STOCKS = NYSE_STOCKS
+export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 
 export default {
   async postStock(req: Request, res: Response) {
@@ -48,7 +50,12 @@ export default {
     const tasks = STOCKS.map(
       async (stock: string): Promise<IGetQuoteResponse | undefined> => {
         try {
-          return await FinnHubService.getQuoteRealTime(stock)
+          const q = await FinnHubService.getQuoteRealTime(stock)
+
+          if (q.price === 0)
+            throw new Error(`stock ${stock} is not available`)
+
+          return q
         } catch (error) {
           fail = true
           console.error(error)
@@ -106,11 +113,10 @@ export const fridayMessage = (now: Date): string => (
 
 const handleQuotes = (quotes: Array<IGetQuoteResponse>): string[] =>
   quotes.map(({ symbol, price, openPrice }) => {
-    const message = `$${symbol}${" ".repeat(6 - symbol.length)}` +
-      ` USD ${" ".repeat(5 - price.toString().length)}${price}`
+    const message = `$${symbol}${" ".repeat(6 - symbol.length)}${price}`
 
     const delta = 100 * (price - openPrice) / openPrice
     const deltaString = delta.toFixed(2)
-    const deltaMessage = `${" ".repeat(6 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
+    const deltaMessage = `${" ".repeat(5 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
     return `${message} ${deltaMessage}`
   })

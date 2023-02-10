@@ -9,13 +9,14 @@ const mockResponse = {
 jest.mock("../../../src/services/Finnhub", () => ({
   __esModule: true,
   default: {
-    getQuoteRealTime: jest.fn((symbol: string) =>
-    ({
-      symbol: symbol || "URA",
-      price: (Math.random() * 90).toFixed(2),
-      openPrice: (Math.random() * 90).toFixed(2),
+    getQuoteRealTime: jest.fn((symbol: string) => {
+      const p = (Math.random() * 90)
+      return {
+        symbol: symbol || "URA",
+        price: p.toFixed(2),
+        openPrice: (((-1) ** Math.random()) * p * (1 + Math.random())).toFixed(2),
+      }
     })
-    )
   },
 }))
 
