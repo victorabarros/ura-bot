@@ -22,12 +22,12 @@ interface IGetQuoteCandlesResponse {
 }
 
 interface IFinnHubService {
-  getQuoteRealTime(symbol?: string): Promise<IGetQuoteResponse>
+  getQuoteRealTime(symbol: string): Promise<IGetQuoteResponse>
   getQuoteCandles(symbol: string, from: number, to: number): Promise<Array<IGetQuoteCandlesResponse>>
 }
 
 class FinnHubService implements IFinnHubService {
-  async getQuoteRealTime(symbol = "URA"): Promise<IGetQuoteResponse> {
+  async getQuoteRealTime(symbol: string): Promise<IGetQuoteResponse> {
     const params = { symbol: symbol, token: apiKey }
     const { data: { c, h, l, o, pc, } } = await axios.get(`${address}quote`, { params })
 

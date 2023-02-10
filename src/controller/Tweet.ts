@@ -26,6 +26,7 @@ const NYSE_STOCKS = [
   "URNM", // ETF
   "UUUU", // Energy Fuels
   "SRUUF",
+  "UROY",
 ]
 
 const OTHER_STOCKS = [
@@ -41,26 +42,50 @@ export const STOCKS = NYSE_STOCKS
 
 export default {
   async postStock(req: Request, res: Response) {
+    let fail = false
     const now = new Date()
 
-    const quotes = await Promise.all(STOCKS.map(FinnHubService.getQuoteRealTime))
-    // const pastStockPrices = await Stock.findAll({ order: [["createdAt", "DESC"]], limit: STOCKS.length })
-    const quotesHandled = handleQuotes(quotes)
+    const tasks = STOCKS.map(
+      async (stock: string): Promise<IGetQuoteResponse | undefined> => {
+        try {
+          return await FinnHubService.getQuoteRealTime(stock)
+        } catch (error) {
+          fail = true
+          console.error(error)
+        }
+      }
+    )
+
+    const quotes = (await Promise.all(tasks))
+      .filter(quote => quote !== undefined) as IGetQuoteResponse[]
+
+    if (quotes.length === 0) {
+      return res
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({})
+    }
 
     const message = [
       morningMessage(now),
-      quotesHandled.join("\n"),
+      handleQuotes(quotes).join("\n"),
       `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Uranium`,
       evenningMessage(now),
     ].join("\n\n")
 
-    const { id } = await TwitterService.writeTweet(message)
 
-    Stock.bulkCreate(quotes)
+    try {
+      const { id } = await TwitterService.writeTweet(message)
+      Stock.bulkCreate(quotes)
 
-    return res
-      .status(httpStatus.OK)
-      .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
+      return res
+        .status(fail ? httpStatus.PARTIAL_CONTENT : httpStatus.OK)
+        .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
+    } catch (error) {
+      console.error(error)
+      return res
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({})
+    }
   }
 }
 
@@ -81,11 +106,11 @@ export const fridayMessage = (now: Date): string => (
 
 const handleQuotes = (quotes: Array<IGetQuoteResponse>): string[] =>
   quotes.map(({ symbol, price, openPrice }) => {
-    const message = `${symbol} ${" ".repeat(6 - symbol.length)}` +
-      ` $USD ${" ".repeat(5 - price.toString().length)}${price}`
+    const message = `$${symbol}${" ".repeat(6 - symbol.length)}` +
+      ` USD ${" ".repeat(5 - price.toString().length)}${price}`
 
     const delta = 100 * (price - openPrice) / openPrice
     const deltaString = delta.toFixed(2)
-    const deltaMessage = `${" ".repeat(8 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
+    const deltaMessage = `${" ".repeat(5 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
     return `${message} ${deltaMessage}`
   })
