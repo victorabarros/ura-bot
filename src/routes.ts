@@ -22,7 +22,7 @@ routes.get("/health", async (req: Request, res: Response) => {
     // TODO add db ping
   }
 
-  await FinHubService.getQuoteRealTime()
+  await FinHubService.getQuoteRealTime("URA")
     .catch((err: unknown) => {
       console.log(err)
       responseStatus = httpStatus.SERVICE_UNAVAILABLE

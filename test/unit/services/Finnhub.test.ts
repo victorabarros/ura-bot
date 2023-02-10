@@ -35,7 +35,7 @@ describe("Test Services Finhub", () => {
   describe("get quote real time", () => {
 
     it("success", async () => {
-      const { symbol, price, highPrice, lowPrice } = await FinnHubService.getQuoteRealTime()
+      const { symbol, price, highPrice, lowPrice } = await FinnHubService.getQuoteRealTime("URA")
       expect(symbol).toBe("URA")
       expect(price).toBe(28.61)
       expect(highPrice).toBeGreaterThan(price)
