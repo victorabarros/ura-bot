@@ -8,6 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="README %28copy%29.md" />
+    <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
@@ -17,5 +18,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 </Project>
