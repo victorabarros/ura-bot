@@ -10,8 +10,7 @@
   <!-- <a href="https://www.easycron.com/">
     <img height="30px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
   </a> -->
-  <!-- TODO add https://cron-job.org/en/ badgets -->
-  <!-- TODO add reference to https://github.com/draftbit/twitter-lite -->
+  <!-- TODO add https://cron-job.org/en/ badgets and reference to https://github.com/draftbit/twitter-lite -->
   <a href="https://railway.app/" target="_blank">
     <img height="30px" src="https://railway.app/button.svg" />
   </a>
@@ -100,7 +99,6 @@ make run
 TODO:
 - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
 - https://github.com/victorabarros/ura-bot/issues/2 =>  / weekly report on friday night or Monday morning / monthly report on last day of month / quarter report
-- https://twitter.com/NuclearDorito/status/1503743597941862405 => include $U.U ( $U.UN / #SPUT)
 - add github actions => run tests
 - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
 - variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
