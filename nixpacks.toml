@@ -4,7 +4,7 @@ providers = ["node"]
 nixPkgs = ['nodejs', 'yarn']
 
 [phases.install]
-cmds = ["yarn install"]
+cmds = ["yarn install --frozen-lockfile"]
 
 [phases.build]
 cmds = ["yarn build"]
