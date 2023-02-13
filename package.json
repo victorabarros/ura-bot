@@ -10,7 +10,8 @@
     "build": "tsc",
     "start": "node dist/src/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "precommit": "clear && yarn run eslint --fix .",
+    "lint": "clear && yarn run eslint --fix .",
+    "precommit": "yarn lint",
     "prepare-husky": "husky install server/.husky",
     "pretest": "yarn build",
     "test": "jest"
