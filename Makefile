@@ -18,6 +18,8 @@ docker-command: remove-containers
 		-p ${PORT}:${PORT} --name ${APP_NAME} \
 		${DOCKER_BASE_IMAGE} bash -c "${COMMAND}"
 
+debug: docker-command
+
 remove-containers:
 ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
 	@echo "${YELLOW}Removing containers${COLOR_OFF}"

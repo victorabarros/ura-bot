@@ -1,0 +1,14 @@
+providers = ["node"]
+
+[phases.setup]
+nixPkgs = ['nodejs', 'yarn']
+
+[phases.build]
+cmds = ["yarn build"]
+
+[phases.test]
+cmds = ["yarn test"]
+dependsOn = ["build"]
+
+[start]
+cmd = "./start.sh"
