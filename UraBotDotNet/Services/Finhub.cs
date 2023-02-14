@@ -1,11 +1,6 @@
 using System;
-using System.IO;
-using System.Net;
 using System.Threading.Tasks;
-using System.Text;
-using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using UraBotDotNet.Models;
 
@@ -18,23 +13,15 @@ public class Finhub
   private readonly string token =
     Environment.GetEnvironmentVariable("FINNHUB_API_KEY");
   private HttpClient httpClient = new();
-  private ILogger log;
-
-  public Finhub(ILogger log)
-  {
-    this.log = log;
-  }
 
   public async Task<Quote> GetQuote(string symbol)
   {
-    var url = $"{baseAddress}quote?symbol={symbol}&token={token}";
-    HttpResponseMessage response = await httpClient.GetAsync(url);
+    HttpResponseMessage response = await httpClient.GetAsync(
+      $"{baseAddress}quote?symbol={symbol}&token={token}");
 
     response.EnsureSuccessStatusCode();
 
     var responseString = await response.Content.ReadAsStringAsync();
-    log.LogInformation(responseString);
-
     var resp = JsonSerializer.Deserialize<GetQuoteResponse>(responseString);
 
     return new Quote(resp) { symbol = symbol };

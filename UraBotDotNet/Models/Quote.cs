@@ -1,4 +1,3 @@
-using System;
 using UraBotDotNet.Services;
 
 namespace UraBotDotNet.Models
@@ -12,14 +11,17 @@ namespace UraBotDotNet.Models
     public decimal openPrice { get; set; }
     public decimal previousClosePrice { get; set; }
 
+    public Quote()
+    {
+    }
+
     public Quote(GetQuoteResponse getQuoteResponse)
     {
-      price = getQuoteResponse.c;
-      highPrice = getQuoteResponse.h;
-      lowPrice = getQuoteResponse.l;
-      openPrice = getQuoteResponse.o;
-      previousClosePrice = getQuoteResponse.pc;
+      this.price = getQuoteResponse.c;
+      this.highPrice = getQuoteResponse.h;
+      this.lowPrice = getQuoteResponse.l;
+      this.openPrice = getQuoteResponse.o;
+      this.previousClosePrice = getQuoteResponse.pc;
     }
   }
 }
-
