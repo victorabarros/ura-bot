@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using UraBotDotNet.Services;
 
@@ -16,11 +15,13 @@ public class UraBot
     };
 
     [FunctionName("UraBot")]
-    public async Task Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log)
+    public async Task Run([TimerTrigger("0 0 14-21 * * 1-5")]TimerInfo myTimer, ILogger log)
     {
-        log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+        log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}, {myTimer}");
 
-        var fin = new Finhub();
-        await fin.GetQuote("URA");
-    }
+        var fin = new Finhub(log);
+        var quote = await fin.GetQuote("URA");
+
+        log.LogInformation(quote.ToString());
+  }
 }
