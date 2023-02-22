@@ -16,9 +16,11 @@ public class UraBot
   };
 
   [FunctionName("UraBot")]
-  public async Task Run([TimerTrigger("0 0 14-21 * * 1-5")] TimerInfo myTimer, ILogger log)
+  public async Task Run(
+    [TimerTrigger("0 0 14-21 * * 1-5")] TimerInfo myTimer, ILogger log)
   {
-    log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}, {myTimer}");
+    log.LogInformation(
+      $"C# Timer trigger function executed at: {DateTime.Now}, {myTimer}");
 
     var fin = new Finhub();
     var tasks = new List<Task<Quote>>();
@@ -41,6 +43,12 @@ public class UraBot
 
     var quotes = await Task.WhenAll(tasks);
 
-    log.LogInformation(quotes.ToString());
+    foreach (var q in quotes)
+    {
+      log.LogInformation(q.symbol, q.price);
+    }
+
+    var twetter = new Twitter();
+    await twetter.PublishTweet();
   }
 }
