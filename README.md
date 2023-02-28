@@ -7,27 +7,21 @@
 
 <p>
   <!-- badgets -->
-  <!-- <a href="https://www.easycron.com/">
-    <img height="30px" src="https://www.easycron.com/apple-touch-icon-180x180.png" />
-  </a> -->
-  <!-- TODO add https://cron-job.org/en/ badgets and reference to https://github.com/draftbit/twitter-lite -->
   <a href="https://railway.app/" target="_blank">
     <img height="30px" src="https://railway.app/button.svg" />
   </a>
-  <a href="https://customer.elephantsql.com/" target="_blank">
-    <img height="30px" src="https://pbs.twimg.com/profile_images/2661035254/f1797e21af006ca889d3e5f39293fca1_400x400.png" />
   </a>
   <a href="https://codeclimate.com/github/victorabarros/ura-bot" target="_blank">
     <img src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" />
   </a>
 </p>
 
-Twitter page dedicated to sharing uranium market stock prices, analyses and relevant news.
+[Twitter](https://twitter.com/UraniumStockBot) page dedicated to sharing uranium market stock prices, analyses and relevant news.
 
 <p align="center">
+  <!-- Update screenshot with one more recent -->
   <a href="https://twitter.com/UraniumStockBot/status/1470423280712654850">
     <img src="./assets/Tweet.png" />
-    <!-- <img height="50px" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3d/Twitter_logo_2012.svg/1200px-Twitter_logo_2012.svg.png" /> -->
   </a>
 </p>
 
@@ -69,7 +63,6 @@ make run
       cron[cron];
       server[UraBot<br>Server];
       finhub[finhub];
-      db[(DB)];
       client[twitter];
 
       %% flow
@@ -77,13 +70,22 @@ make run
       server--->
       client;
 
-      finhub----server;
-      db-..-server;
+      finhub-..-server;
 
       %% styles
       classDef box fill-opacity:.5, stroke:grey, stroke-width:.5px;
       class cron,server,finhub,db,client box
 ```
+
+## Monitoring
+
+To monitor the bot's server, it's using the [Uptime Kuma](https://uptime.kuma.pet/), a self-hosted monitoring tool.
+It has integration with Telegram, so if a heartbeat fails, it must send me a message on telegram.
+
+## Support
+
+I'm more than happy to be honored with your support.
+
 
 <p>
   <a href="https://www.buymeacoffee.com/victorbarros" target="_blank">
@@ -97,6 +99,10 @@ make run
 
 <!--
 TODO:
+- add https://cron-job.org/en/ badgets
+- add https://uptime.kuma.pet/ badgets
+- add reference to https://github.com/draftbit/twitter-lite
+- The server is no longer using DB. Remove from description and flow
 - improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
 - https://github.com/victorabarros/ura-bot/issues/2 =>  / weekly report on friday night or Monday morning / monthly report on last day of month / quarter report
 - add github actions => run tests
