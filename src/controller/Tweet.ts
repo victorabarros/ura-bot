@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
 import FinnHubService, { IGetQuoteResponse } from "../services/Finnhub"
+import CurrencyService from "../services/Currency"
 import TwitterService from "../services/Twitter"
 import Stock from "../models/Stock"
 
@@ -43,7 +44,7 @@ const OTHER_STOCKS = [
 export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 
 export default {
-  async postStock(req: Request, res: Response) {
+  async postUraStock(req: Request, res: Response) {
     let fail = false
     const now = new Date()
 
@@ -82,7 +83,7 @@ export default {
 
     try {
       const { id } = await TwitterService.writeTweet(message)
-      Stock.bulkCreate(quotes)
+      // Stock.bulkCreate(quotes)
 
       return res
         .status(fail ? httpStatus.PARTIAL_CONTENT : httpStatus.OK)
@@ -93,6 +94,35 @@ export default {
         .status(httpStatus.INTERNAL_SERVER_ERROR)
         .json({})
     }
+  },
+  async postBrlStock(req: Request, res: Response) {
+    const now = new Date()
+    const currencies = await CurrencyService.getCurrencies()
+
+    const message = [
+      `${(currencies.usd.value * currencies.brl.value).toFixed(2)} ${currencies.usd.name}`,
+      `${(currencies.eur.value * currencies.brl.value).toFixed(2)} ${currencies.eur.name}`,
+      `${(currencies.cad.value * currencies.brl.value).toFixed(2)} ${currencies.cad.name}`,
+      `${(currencies.gbp.value * currencies.brl.value).toFixed(2)} ${currencies.gbp.name}`,
+      `${(currencies.chf.value * currencies.brl.value).toFixed(2)} ${currencies.chf.name}`,
+      `${(currencies.jpy.value * currencies.brl.value).toFixed(2)} ${currencies.jpy.name}`,
+    ].join("\n")
+
+    try {
+      // TODO tweet on brlbot account
+      // const { id } = await TwitterService.writeTweet(message)
+      const id = "MOCK"
+
+      return res
+        .status(httpStatus.OK)
+        .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
+    } catch (error) {
+      console.error(error)
+      return res
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({})
+    }
+
   }
 }
 

@@ -36,7 +36,7 @@ describe("Test Controller Tweet", () => {
 
     it("success", async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await Tweet.postStock({} as any, mockResponse as any)
+      await Tweet.postUraStock({} as any, mockResponse as any)
     })
   })
 
