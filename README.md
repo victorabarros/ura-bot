@@ -8,11 +8,11 @@
 <p>
   <!-- badgets -->
   <a href="https://railway.app/" target="_blank">
-    <img height="30px" src="https://railway.app/button.svg" />
+    <img height="25px" src="https://railway.app/button.svg" />
   </a>
   </a>
   <a href="https://codeclimate.com/github/victorabarros/ura-bot" target="_blank">
-    <img src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" />
+    <img height="25px" src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" />
   </a>
 </p>
 
@@ -86,7 +86,6 @@ It has integration with Telegram, so if a heartbeat fails, it must send me a mes
 
 I'm more than happy to be honored with your support.
 
-
 <p>
   <a href="https://www.buymeacoffee.com/victorbarros" target="_blank">
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px">
@@ -95,6 +94,13 @@ I'm more than happy to be honored with your support.
   <a href="https://website.victorbarros.dev/wallet" target="_blank">
     <img src="https://bitcoin.org/img/icons/logotop.svg?1671880122" height="40px">
   </a>
+</p>
+
+<p align="center">
+  <br/>
+  Made in Brazil
+  <br/>
+  <img src="https://user-images.githubusercontent.com/42843223/222024964-9494cd55-849c-40a3-8121-8fa00d575475.png" height="30px"/>
 </p>
 
 <!--
