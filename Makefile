@@ -53,5 +53,8 @@ migration:
 healthcheck:
 	curl ${URL}health
 
-tweet:
+tweet-ura:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet
+
+tweet-brl:
+	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brl/tweet

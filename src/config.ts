@@ -14,4 +14,7 @@ export default {
     address: process.env.FINNHUB_ADDRESS || throwMissingVariable("FINNHUB_ADDRESS"),
     apiKey: process.env.FINNHUB_API_KEY || throwMissingVariable("FINNHUB_API_KEY"),
   },
+  currency: {
+    address: process.env.CURRENCY_ADDRESS || throwMissingVariable("CURRENCY_ADDRESS"),
+  }
 }
