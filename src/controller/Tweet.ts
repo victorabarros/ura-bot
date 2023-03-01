@@ -95,7 +95,7 @@ export default {
         .json({})
     }
   },
-  async postBrlStock(req: Request, res: Response) {
+  async postBrlPrice(req: Request, res: Response) {
     const now = new Date()
     const currencies = await CurrencyService.getCurrencies()
 
