@@ -43,7 +43,7 @@ dev:
 tests:
 	@clear
 	@echo "${YELLOW}Testing${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn test"
+	@make -s docker-command COMMAND="yarn build && yarn test"
 
 migration:
 	@clear
@@ -55,6 +55,3 @@ healthcheck:
 
 tweet-ura:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet
-
-tweet-brl:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brl/tweet
