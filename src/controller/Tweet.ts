@@ -75,7 +75,7 @@ export default {
     const message = [
       morningMessage(now),
       handleQuotes(quotes).join("\n"),
-      `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Uranium`,
+      `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Uranium ☢️`,
       evenningMessage(now),
     ].join("\n\n")
 
