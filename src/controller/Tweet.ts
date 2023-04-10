@@ -127,13 +127,11 @@ export default {
 }
 
 export const morningMessage = (now: Date): string => (
-  // TODO fix correct time to send
   (now.getHours() === 14 && now.getMinutes() === 0) ?
     "Good Morning, everyone!" : ""
 )
 
 export const evenningMessage = (now: Date): string => (
-  // TODO fix correct time to send
   (now.getHours() === 21 && now.getMinutes() === 0) ?
     `Good Night, guys! ${fridayMessage(now)}\nSee ya` : ""
 )
@@ -149,6 +147,6 @@ const handleQuotes = (quotes: Array<IGetQuoteResponse>): string[] =>
 
     const delta = 100 * (price - openPrice) / openPrice
     const deltaString = delta.toFixed(2)
-    const deltaMessage = `${" ".repeat(5 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}%`
+    const deltaMessage = `${" ".repeat(5 - deltaString.length)}${delta < 0 ? "📉  " : "📈 +"}${deltaString}%`
     return `${message} ${deltaMessage}`
   })
