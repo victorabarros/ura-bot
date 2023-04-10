@@ -39,5 +39,3 @@ Stock.init(
     tableName: "stockPrice",
   }
 )
-
-export default Stock

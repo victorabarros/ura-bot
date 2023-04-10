@@ -3,6 +3,15 @@ import config from "../config"
 
 const { address, apiKey } = config.finnhub
 
+export interface ISearchQuoteResponse {
+  count: number,
+  result: Array<{
+    description: string
+    displaySymbol: string
+    symbol: string
+    type: string
+  }>
+}
 export interface IGetQuoteResponse {
   symbol: string
   price: number
@@ -22,11 +31,18 @@ interface IGetQuoteCandlesResponse {
 }
 
 interface IFinnHubService {
+  searchQuote(symbol: string): Promise<ISearchQuoteResponse>
   getQuoteRealTime(symbol: string): Promise<IGetQuoteResponse>
   getQuoteCandles(symbol: string, from: number, to: number): Promise<Array<IGetQuoteCandlesResponse>>
 }
 
 class FinnHubService implements IFinnHubService {
+  async searchQuote(symbol: string): Promise<ISearchQuoteResponse> {
+    const params = { q: symbol, token: apiKey }
+    const { data } = await axios.get(`${address}search`, { params })
+    return data
+  }
+
   async getQuoteRealTime(symbol: string): Promise<IGetQuoteResponse> {
     const params = { symbol: symbol, token: apiKey }
     const { data: { c, h, l, o, pc, } } = await axios.get(`${address}quote`, { params })

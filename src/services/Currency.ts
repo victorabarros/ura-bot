@@ -3,13 +3,13 @@ import config from "../config"
 
 const { address } = config.currency
 
-interface Currency {
+export interface Currency {
   value: number
   symbol: string
   name: string
 }
 
-interface IGetCurrenciesResponse {
+interface GetCurrenciesResponse {
   brl: Currency // Brazil Real
   usd: Currency // US Dollar
   eur: Currency // European Euro
@@ -19,18 +19,23 @@ interface IGetCurrenciesResponse {
   cad: Currency // Canadian Dollar
 }
 
-class CurrencyService {
-  async getCurrencies(): Promise<IGetCurrenciesResponse> {
-    const { data: { s: { r: rates } } } = await axios.get(address)
+interface ICurrencyService {
+  getBrlValues(): Promise<GetCurrenciesResponse>
+}
+
+class CurrencyService implements ICurrencyService {
+  async getBrlValues(): Promise<GetCurrenciesResponse> {
+    const { data } = await axios.get(address)
+    const { s: { r: rates } } = data
 
     return {
-      brl: { value: rates.BRL, symbol: "BRL", name: "Real Brasileiro" },
-      usd: { value: rates.USD, symbol: "USD", name: "Dolar Americano" },
-      eur: { value: rates.EUR, symbol: "EUR", name: "Euro" },
-      jpy: { value: rates.JPY, symbol: "JPY", name: "Yen Japones" },
-      gbp: { value: rates.GBP, symbol: "GBP", name: "Pound Britanico" },
-      chf: { value: rates.CHF, symbol: "CHF", name: "Franco Suiço" },
-      cad: { value: rates.CAD, symbol: "CAD", name: "Dolar Canadense" },
+      brl: { value: parseFloat(rates.BRL), symbol: "BRL", name: "Real Brasileiro" },
+      usd: { value: parseFloat(rates.USD), symbol: "USD", name: "Dolar Americano" },
+      eur: { value: parseFloat(rates.EUR), symbol: "EUR", name: "Euro" },
+      jpy: { value: parseFloat(rates.JPY), symbol: "JPY", name: "Yen Japones" },
+      gbp: { value: parseFloat(rates.GBP), symbol: "GBP", name: "Pound Britanico" },
+      chf: { value: parseFloat(rates.CHF), symbol: "CHF", name: "Franco Suiço" },
+      cad: { value: parseFloat(rates.CAD), symbol: "CAD", name: "Dolar Canadense" },
     }
   }
 

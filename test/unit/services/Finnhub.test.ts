@@ -60,4 +60,5 @@ describe("Test Services Finhub", () => {
       }))
     })
   })
+
 })

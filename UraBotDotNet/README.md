@@ -19,6 +19,8 @@ request finhub: `curl 'https://finnhub.io/api/v1/quote?symbol=URA&token=c66u80ia
 
 TODO
 twiter sdk https://github.com/linvi/tweetinvi
+https://github.dev/linvi/tweetinvi/blob/master/Examples/Examplinvi.ASP.NET.Core/Startup.cs
+https://www.youtube.com/watch?v=1maeTudF8cQ
 docker image https://github.com/dotnet/dotnet-docker
 
 -->
