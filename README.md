@@ -19,14 +19,14 @@
     <img
       height="22px"
       src="https://cron-job.org/_next/image/?url=%2Fimages%2Flogo-darkbg.png&w=384&q=75"
-      style="background-color:#c33d1b;padding:5px 10px;border-radius:3px"
+      style="background-color:#c33d1b;padding:5px;border-radius:3px"
     />
   </a>
   <a href="https://uptime.kuma.pet/" target="_blank">
     <img
       height="22px"
       src="https://uptime.kuma.pet/img/icon.svg"
-      style="background-color:black;padding:5px 10px;border-radius:3px"
+      style="background-color:black;padding:5px;border-radius:3px"
     />
   </a>
 </p>
