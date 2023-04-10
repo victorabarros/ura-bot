@@ -10,6 +10,7 @@ const { version } = config
 const routes = Router()
 
 routes.post("/tweet", Tweet.postUraStock)
+routes.post("/ura/tweet", Tweet.postUraStock)
 routes.post("/brl/tweet", Tweet.postBrlPrice)
 routes.get("/health", async (req: Request, res: Response) => {
   let responseStatus = httpStatus.OK
@@ -20,7 +21,6 @@ routes.get("/health", async (req: Request, res: Response) => {
     twitter: {
       success: true,
     },
-    // TODO add db ping
   }
 
   await FinHubService.getQuoteRealTime("URA")

@@ -76,9 +76,7 @@ class FinnHubService implements IFinnHubService {
   }
 
   // TODO:
-  // find for uranium/nuclear stocks https://finnhub.io/docs/api/symbol-search
   // share relevant news https://finnhub.io/docs/api/company-news
-  // try URA and URNM https://finnhub.io/docs/api/indices-constituents
 }
 
 const service = new FinnHubService()

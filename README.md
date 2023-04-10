@@ -8,11 +8,26 @@
 <p>
   <!-- badgets -->
   <a href="https://railway.app/" target="_blank">
-    <img height="25px" src="https://railway.app/button.svg" />
+    <img height="32px" src="https://railway.app/button.svg" />
   </a>
   </a>
   <a href="https://codeclimate.com/github/victorabarros/ura-bot" target="_blank">
-    <img height="25px" src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" />
+    <img height="32px" src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" />
+  </a>
+  </a>
+  <a href="https://cron-job.org/en/" target="_blank">
+    <img
+      height="22px"
+      src="https://cron-job.org/_next/image/?url=%2Fimages%2Flogo-darkbg.png&w=384&q=75"
+      style="background-color:#c33d1b;padding:5px 10px;border-radius:3px"
+    />
+  </a>
+  <a href="https://uptime.kuma.pet/" target="_blank">
+    <img
+      height="22px"
+      src="https://uptime.kuma.pet/img/icon.svg"
+      style="background-color:black;padding:5px 10px;border-radius:3px"
+    />
   </a>
 </p>
 
@@ -105,11 +120,13 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
-- add https://cron-job.org/en/ badgets
-- add https://uptime.kuma.pet/ badgets
 - add reference to https://github.com/draftbit/twitter-lite
-- The server is no longer using DB. Remove from description and flow
-- improve body message (like https://twitter.com/DolarBipolar/status/1458801696017113093 https://twitter.com/precodobitcoin/status/1460951202531794951 https://twitter.com/precodobitcoin/status/1480313562291658760 https://twitter.com/hashdex/status/1481672773554610181 https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
+- improve body message (like
+  - https://twitter.com/DolarBipolar/status/1458801696017113093
+  - https://twitter.com/precodobitcoin/status/1460951202531794951
+  - https://twitter.com/precodobitcoin/status/1480313562291658760
+  - https://twitter.com/hashdex/status/1481672773554610181
+  - https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
 - https://github.com/victorabarros/ura-bot/issues/2 =>  / weekly report on friday night or Monday morning / monthly report on last day of month / quarter report
 - add github actions => run tests
 - write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
