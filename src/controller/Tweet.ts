@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import FinnHubService, { IGetQuoteResponse } from "../services/Finnhub"
+import FinnHubService, { GetQuoteResponse } from "../services/Finnhub"
 import CurrencyService from "../services/Currency"
 import { BrlTwitterService, UraTwitterService } from "../services/Twitter"
 
@@ -48,7 +48,7 @@ export default {
     const now = new Date()
 
     const tasks = STOCKS.map(
-      async (stock: string): Promise<IGetQuoteResponse | undefined> => {
+      async (stock: string): Promise<GetQuoteResponse | undefined> => {
         try {
           const q = await FinnHubService.getQuoteRealTime(stock)
 
@@ -64,7 +64,7 @@ export default {
     )
 
     const quotes = (await Promise.all(tasks))
-      .filter(quote => quote !== undefined) as IGetQuoteResponse[]
+      .filter(quote => quote !== undefined) as GetQuoteResponse[]
 
     if (quotes.length === 0) {
       return res
@@ -143,7 +143,7 @@ export const fridayMessage = (now: Date): string => (
     "Have a nice and sunny weekend" : ""
 )
 
-const handleQuotes = (quotes: Array<IGetQuoteResponse>): string[] =>
+const handleQuotes = (quotes: Array<GetQuoteResponse>): string[] =>
   quotes.map(({ symbol, price, openPrice }) => {
     const message = `$${symbol}${" ".repeat(6 - symbol.length)}${price}`
 

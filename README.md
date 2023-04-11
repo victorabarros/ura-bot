@@ -6,6 +6,9 @@
 # UraBot
 
 <p>
+  <a href="https://www.npmjs.com/package/twitter-lite" target="_blank">
+    Twiiter Lite
+  </a>
   <!-- badgets -->
   <a href="https://railway.app/" target="_blank">
     <img height="32px" src="https://railway.app/button.svg" />
@@ -28,9 +31,6 @@
       src="https://uptime.kuma.pet/img/icon.svg"
       style="background-color:black;padding:5px 10px;border-radius:3px"
     />
-  </a>
-  <a href="https://www.npmjs.com/package/twitter-lite" target="_blank">
-    Twiiter Lite
   </a>
 </p>
 

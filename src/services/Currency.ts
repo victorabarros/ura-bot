@@ -3,14 +3,14 @@ import config from "../config"
 
 const { address } = config.currency
 
-export interface Currency {
+export type Currency = {
   value: number
   symbol: string
   name: string
   flag: string
 }
 
-interface GetCurrenciesResponse {
+type GetCurrenciesResponse = {
   brl: Currency // Brazil Real
   usd: Currency // US Dollar
   eur: Currency // European Euro

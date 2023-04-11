@@ -3,12 +3,12 @@ import config from "../config"
 
 const { apiKey, apiKeySecret, accessToken, accessTokenSecret } = config.twitter.uraBot
 
-interface IWriteTweetResponse {
+type WriteTweetResponse = {
   id: string
 }
 
 interface ITwitterService {
-  writeTweet(message: string): Promise<IWriteTweetResponse>
+  writeTweet(message: string): Promise<WriteTweetResponse>
   check(): Promise<boolean>
 }
 
@@ -19,7 +19,7 @@ class TwitterService implements ITwitterService {
     this.client = config
   }
 
-  async writeTweet(message: string): Promise<IWriteTweetResponse> {
+  async writeTweet(message: string): Promise<WriteTweetResponse> {
     const { id_str } = await this.client.post("statuses/update", { status: message })
     return { id: id_str }
   }
