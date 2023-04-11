@@ -2,8 +2,8 @@ import { Request, Response, Router } from "express"
 import httpStatus from "http-status"
 import Tweet from "./controller/Tweet"
 import FinHubService from "./services/Finnhub"
-import TwitterService from "./services/Twitter"
 import config from "./config"
+import { UraTwitterService } from "./services/Twitter"
 
 const { version } = config
 
@@ -30,7 +30,7 @@ routes.get("/health", async (req: Request, res: Response) => {
       services.finhub.success = false
     })
 
-  await TwitterService.check()
+  await UraTwitterService.check()
     .catch((err: unknown) => {
       console.log(err)
       responseStatus = httpStatus.SERVICE_UNAVAILABLE

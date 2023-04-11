@@ -10,7 +10,7 @@ describe("Test config", () => {
 
   describe("twitter", () => {
     it("success", async () => {
-      const { apiKey, apiKeySecret, accessToken, accessTokenSecret } = config.twitter
+      const { apiKey, apiKeySecret, accessToken, accessTokenSecret } = config.twitter.uraBot
     })
   })
 

@@ -3,12 +3,20 @@ const throwMissingVariable = (name: string) => { throw new Error(`missing requir
 export default {
   port: process.env.PORT || "8080",
   apiKey: process.env.API_KEY || throwMissingVariable("API_KEY"),
-  version: process.env.VERSION || "1.3.8",
+  version: process.env.VERSION || "1.3.9",
   twitter: {
-    apiKey: process.env.TWITTER_API_KEY || throwMissingVariable("TWITTER_API_KEY"),
-    apiKeySecret: process.env.TWITTER_API_KEY_SECRET || throwMissingVariable("TWITTER_API_KEY_SECRET"),
-    accessToken: process.env.TWITTER_ACCESS_TOKEN || throwMissingVariable("TWITTER_ACCESS_TOKEN"),
-    accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET || throwMissingVariable("TWITTER_ACCESS_TOKEN_SECRET"),
+    uraBot: {
+      apiKey: process.env.URA_BOT_TWITTER_API_KEY || throwMissingVariable("URA_BOT_TWITTER_API_KEY"),
+      apiKeySecret: process.env.URA_BOT_TWITTER_API_KEY_SECRET || throwMissingVariable("URA_BOT_TWITTER_API_KEY_SECRET"),
+      accessToken: process.env.URA_BOT_TWITTER_ACCESS_TOKEN || throwMissingVariable("URA_BOT_TWITTER_ACCESS_TOKEN"),
+      accessTokenSecret: process.env.URA_BOT_TWITTER_ACCESS_TOKEN_SECRET || throwMissingVariable("URA_BOT_TWITTER_ACCESS_TOKEN_SECRET"),
+    },
+    brlBot: {
+      apiKey: process.env.BRL_BOT_TWITTER_API_KEY || throwMissingVariable("BRL_BOT_TWITTER_API_KEY"),
+      apiKeySecret: process.env.BRL_BOT_TWITTER_API_KEY_SECRET || throwMissingVariable("BRL_BOT_TWITTER_API_KEY_SECRET"),
+      accessToken: process.env.BRL_BOT_TWITTER_ACCESS_TOKEN || throwMissingVariable("BRL_BOT_TWITTER_ACCESS_TOKEN"),
+      accessTokenSecret: process.env.BRL_BOT_TWITTER_ACCESS_TOKEN_SECRET || throwMissingVariable("BRL_BOT_TWITTER_ACCESS_TOKEN_SECRET"),
+    },
   },
   finnhub: {
     address: process.env.FINNHUB_ADDRESS || throwMissingVariable("FINNHUB_ADDRESS"),

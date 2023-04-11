@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import FinnHubService, { IGetQuoteResponse } from "../services/Finnhub"
 import CurrencyService from "../services/Currency"
-import TwitterService from "../services/Twitter"
+import { BrlTwitterService, UraTwitterService } from "../services/Twitter"
 
 const DATE_FORMAT = {
   // weekday: "long",
@@ -81,8 +81,7 @@ export default {
 
 
     try {
-      const { id } = await TwitterService.writeTweet(message)
-      // Stock.bulkCreate(quotes)
+      const { id } = await UraTwitterService.writeTweet(message)
 
       return res
         .status(fail ? httpStatus.PARTIAL_CONTENT : httpStatus.OK)
@@ -99,19 +98,22 @@ export default {
     const now = new Date()
     const currencies = await CurrencyService.getBrlValues()
 
-    const message = [
-      `${(currencies.usd.value * currencies.brl.value).toFixed(2)} ${currencies.usd.name}`,
-      `${(currencies.eur.value * currencies.brl.value).toFixed(2)} ${currencies.eur.name}`,
-      `${(currencies.cad.value * currencies.brl.value).toFixed(2)} ${currencies.cad.name}`,
-      `${(currencies.gbp.value * currencies.brl.value).toFixed(2)} ${currencies.gbp.name}`,
-      `${(currencies.chf.value * currencies.brl.value).toFixed(2)} ${currencies.chf.name}`,
-      `${(currencies.jpy.value * currencies.brl.value).toFixed(2)} ${currencies.jpy.name}`,
-    ].join("\n")
+    const lines = ["Cambio do BRL Real:\n",]
+      .concat(
+        ["usd", "eur", "cad", "gbp", "chf", "jpy"].map((c: string) => {
+          const currency = (currencies as any)[c]
+          return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}`
+        })
+      )
+
+    const message = lines.join("\n")
+    console.log(message)
 
     try {
       // TODO tweet on brlbot account
-      // const { id } = await TwitterService.writeTweet(message)
-      const id = "MOCK"
+      // https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/main/Manage-Tweets/create_tweet.js
+      // https://www.postman.com/twitter/workspace/twitter-s-public-workspace/request/9956214-5bd6ebb1-9d79-4456-a9a6-22ead4a41625?ctx=code manage-tweets > create a tweet
+      const { id } = await BrlTwitterService.writeTweet(message)
 
       return res
         .status(httpStatus.OK)

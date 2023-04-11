@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Twitter from "twitter-lite"
-import TwitterService from "../../../src/services/Twitter"
+import { UraTwitterService } from "../../../src/services/Twitter"
 
 // Twitter Mock
 jest.mock("twitter-lite",
@@ -16,7 +16,7 @@ describe("Test Services Twitter", () => {
 
   describe("write twitter", () => {
     it("success", async () => {
-      const { id } = await TwitterService.writeTweet("message")
+      const { id } = await UraTwitterService.writeTweet("message")
       expect(Twitter).toHaveBeenCalled
       expect(id).toBe("xpto")
     })
@@ -24,7 +24,7 @@ describe("Test Services Twitter", () => {
 
   describe("check", () => {
     it("success", async () => {
-      const isHealth = await TwitterService.check()
+      const isHealth = await UraTwitterService.check()
       expect(isHealth).toBeTruthy()
     })
   })
