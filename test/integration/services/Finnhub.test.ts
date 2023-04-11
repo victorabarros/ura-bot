@@ -7,7 +7,7 @@ describe("Test Services Finhub", () => {
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
         const resp = await FinnHubService.searchQuote(stock)
-        console.log(JSON.stringify(resp))
+        // console.log(JSON.stringify(resp))
       })
     }))
   })
@@ -17,7 +17,7 @@ describe("Test Services Finhub", () => {
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
         const resp = await FinnHubService.searchNews(stock)
-        console.log(JSON.stringify(resp))
+        console.log(resp.length, JSON.stringify(resp[0]))
       })
     }))
   })

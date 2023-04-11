@@ -63,11 +63,18 @@ class FinnHubService implements IFinnHubService {
     }
 
     if (!from) {
-      from = new Date(to.setDate(to.getDate() - 7))
+      from = new Date()
+      from.setDate(from.getDate() - 7)
     }
 
-    const params = { symbol, from, to, token: apiKey }
-    const { data } = await axios.get(`${address}search`, { params })
+    const params = {
+      symbol,
+      from: from.toISOString().substring(0, 10), // TODO use localestring and format correctly
+      to: to.toISOString().substring(0, 10), // TODO use localestring and format correctly
+      token: apiKey
+    }
+
+    const { data } = await axios.get(`${address}company-news`, { params })
     return data
   }
 
