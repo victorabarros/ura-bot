@@ -45,6 +45,7 @@ type GetQuoteCandlesResponse = {
 
 interface IFinnHubService {
   searchQuote(symbol: string): Promise<SearchQuoteResponse>
+  searchNews(symbol: string, from?: Date, to?: Date): Promise<Array<SearchNewsResponse>>
   getQuoteRealTime(symbol: string): Promise<GetQuoteResponse>
   getQuoteCandles(symbol: string, from: number, to: number): Promise<Array<GetQuoteCandlesResponse>>
 }
@@ -52,6 +53,20 @@ interface IFinnHubService {
 class FinnHubService implements IFinnHubService {
   async searchQuote(symbol: string): Promise<SearchQuoteResponse> {
     const params = { q: symbol, token: apiKey }
+    const { data } = await axios.get(`${address}search`, { params })
+    return data
+  }
+
+  async searchNews(symbol: string, from?: Date, to?: Date): Promise<Array<SearchNewsResponse>> {
+    if (!to) {
+      to = new Date()
+    }
+
+    if (!from) {
+      from = new Date(to.setDate(to.getDate() - 7))
+    }
+
+    const params = { symbol, from, to, token: apiKey }
     const { data } = await axios.get(`${address}search`, { params })
     return data
   }
