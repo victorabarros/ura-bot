@@ -19,15 +19,18 @@
     <img
       height="22px"
       src="https://cron-job.org/_next/image/?url=%2Fimages%2Flogo-darkbg.png&w=384&q=75"
-      style="background-color:#c33d1b;padding:5px;border-radius:3px"
+      style="background-color:#c33d1b;padding:5px 10px;border-radius:3px"
     />
   </a>
   <a href="https://uptime.kuma.pet/" target="_blank">
     <img
       height="22px"
       src="https://uptime.kuma.pet/img/icon.svg"
-      style="background-color:black;padding:5px;border-radius:3px"
+      style="background-color:black;padding:5px 10px;border-radius:3px"
     />
+  </a>
+  <a href="https://www.npmjs.com/package/twitter-lite" target="_blank">
+    Twiiter Lite
   </a>
 </p>
 
@@ -120,21 +123,19 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
-- add reference to https://github.com/draftbit/twitter-lite
-- improve body message (like
-  - https://twitter.com/DolarBipolar/status/1458801696017113093
-  - https://twitter.com/precodobitcoin/status/1460951202531794951
-  - https://twitter.com/precodobitcoin/status/1480313562291658760
-  - https://twitter.com/hashdex/status/1481672773554610181
-  - https://twitter.com/MercadoBitcoin/status/1493942572166832134 and add font/vendor)
-- https://github.com/victorabarros/ura-bot/issues/2 =>  / weekly report on friday night or Monday morning / monthly report on last day of month / quarter report
-- add github actions => run tests
-- write article: part 1 - first auto tweet serveless with finhub and tweet; part2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/); part 3 - add query params and cron with goodmorning/evenning.
-- variation D-1 D-7 D-30 D-90 interaction => happy, money, sad, booom
-- add uranium/nuclear/energy icon 📉
+- BRLbot
+  - nomes:
+    - real de tpm
+    - real vale nada
+- weekly report on friday night or Monday morning / monthly report on last day of month / quarter report; example https://twitter.com/precodobitcoin/status/1480313562291658760
+- add github actions => run tests on pr opened
+- write article:
+  - https://medium.com/p/152d197194/edit
+  - part 1 - first auto tweet serveless with finhub and tweet
+  - part 2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/)
+  - part 3 - add query params and cron with goodmorning/evenning.
 - tweet relevant news (understand what's better hour and schedule it)
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
-- integration tests - get QA credentials
 - read https://www.infoq.com/news/2021/11/twitter-api-v2
 - data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
 -->

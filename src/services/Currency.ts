@@ -7,6 +7,7 @@ export interface Currency {
   value: number
   symbol: string
   name: string
+  flag: string
 }
 
 interface GetCurrenciesResponse {
@@ -29,13 +30,13 @@ class CurrencyService implements ICurrencyService {
     const { s: { r: rates } } = data
 
     return {
-      brl: { value: parseFloat(rates.BRL), symbol: "BRL", name: "Real Brasileiro" },
-      usd: { value: parseFloat(rates.USD), symbol: "USD", name: "Dolar Americano" },
-      eur: { value: parseFloat(rates.EUR), symbol: "EUR", name: "Euro" },
-      jpy: { value: parseFloat(rates.JPY), symbol: "JPY", name: "Yen Japones" },
-      gbp: { value: parseFloat(rates.GBP), symbol: "GBP", name: "Pound Britanico" },
-      chf: { value: parseFloat(rates.CHF), symbol: "CHF", name: "Franco Suiço" },
-      cad: { value: parseFloat(rates.CAD), symbol: "CAD", name: "Dolar Canadense" },
+      brl: { value: parseFloat(rates.BRL), symbol: "BRL", name: "Real Brasileiro", flag: "🇧🇷" },
+      usd: { value: parseFloat(rates.USD), symbol: "USD", name: "Dolar Americano", flag: "🇺🇸" },
+      eur: { value: parseFloat(rates.EUR), symbol: "EUR", name: "Euro", flag: "🇪🇺" },
+      jpy: { value: parseFloat(rates.JPY), symbol: "JPY", name: "Yen Japones", flag: "🇯🇵" },
+      gbp: { value: parseFloat(rates.GBP), symbol: "GBP", name: "Pound Britanico", flag: "🇬🇧" },
+      chf: { value: parseFloat(rates.CHF), symbol: "CHF", name: "Franco Suiço", flag: "🇨🇭" },
+      cad: { value: parseFloat(rates.CAD), symbol: "CAD", name: "Dolar Canadense", flag: "🇨🇦" },
     }
   }
 
