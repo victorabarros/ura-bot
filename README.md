@@ -53,11 +53,12 @@ write .env file similar to .env.example
 # locally run with hot reload
 make dev
 
-# test endpoints
+# api requests
 make healthcheck
-make tweet
+make tweet-ura-stocks:
+make tweet-ura-news:
 
-# automation tests
+# automated tests
 make tests
 
 # build and run production version
@@ -70,7 +71,8 @@ make run
 |verb|endpoint|description|
 |:-:|:-:|:-:|
 |GET|/health|healthcheck|
-|POST|/tweet|tweet Uranium market stocks price in real time|
+|POST|/stocks/urabot|tweet Uranium market stocks price in real time|
+|POST|/news/urabot|tweet Uranium market news|
 
 ## Flow
 
@@ -88,7 +90,8 @@ make run
       server--->
       client;
 
-      finhub-..-server;
+      finhub----
+      server;
 
       %% styles
       classDef box fill-opacity:.5, stroke:grey, stroke-width:.5px;
@@ -98,7 +101,7 @@ make run
 ## Monitoring
 
 To monitor the bot's server, it's using the [Uptime Kuma](https://uptime.kuma.pet/), a self-hosted monitoring tool.
-It has integration with Telegram, so if a heartbeat fails, it must send me a message on telegram.
+It has integration with Telegram, so if a heartbeat fails it sends a message on telegram.
 
 ## Support
 
