@@ -5,7 +5,6 @@ PORT=8080
 URL?=http://localhost:${PORT}/
 ENV_FILE?=.env.test
 COMMAND?=bash
-API_KEY=McChickenPromo
 
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
@@ -29,6 +28,11 @@ endif
 install:
 	@echo "${YELLOW}Building project${COLOR_OFF}"
 	@yarn
+
+build:
+	@clear
+	@echo "${YELLOW}Building project${COLOR_OFF}"
+	@make -s docker-command ENV_FILE=.env COMMAND="yarn build"
 
 run:
 	@clear
@@ -55,3 +59,9 @@ healthcheck:
 
 tweet-ura:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}tweet
+
+tweet-ura-news:
+	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}news/urabot
+
+tweet-brl:
+	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brl/tweet
