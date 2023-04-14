@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import FinnHubService, { GetQuoteResponse } from "../services/Finnhub"
+import FinnHubService, { GetQuoteResponse, SearchNewsResponse } from "../services/Finnhub"
 import CurrencyService from "../services/Currency"
 import { BrlTwitterService, UraTwitterService } from "../services/Twitter"
 
@@ -44,8 +44,8 @@ export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 
 export default {
   async postUraStock(req: Request, res: Response) {
-    let fail = false
     const now = new Date()
+    let fail = false
 
     const tasks = STOCKS.map(
       async (stock: string): Promise<GetQuoteResponse | undefined> => {
@@ -75,7 +75,7 @@ export default {
     const message = [
       morningMessage(now),
       handleQuotes(quotes).join("\n"),
-      `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Uranium ☢️`,
+      signature(now),
       evenningMessage(now),
     ].join("\n\n")
 
@@ -125,6 +125,41 @@ export default {
         .json({})
     }
 
+  },
+
+  async postUraNews(req: Request, res: Response) {
+    const now = new Date()
+    let news: Array<SearchNewsResponse> = []
+    let times = 0
+
+    while (news.length == 0 && times < STOCKS.length * 4) {
+      const randomStock = STOCKS[Math.floor(Math.random() * STOCKS.length)]
+      news = await FinnHubService.searchNews(randomStock)
+      //todo improvement: search a batch of news and add to queue to publish for day long
+      times = times + 1
+    }
+
+    if (news.length == 0) {
+      return res
+        .status(httpStatus.NO_CONTENT)
+        .json({})
+    }
+
+    const n = news[0]
+
+    const message = [
+      n.headline,
+      "",
+      signature(now),
+      n.url,
+      // TODO add disclaimer and image
+    ].join("\n")
+
+    const { id } = await UraTwitterService.writeTweet(message)
+
+    return res
+      .status(httpStatus.OK)
+      .json({ url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
   }
 }
 
@@ -141,6 +176,10 @@ export const evenningMessage = (now: Date): string => (
 export const fridayMessage = (now: Date): string => (
   (now.getDay() === 5) ?
     "Have a nice and sunny weekend" : ""
+)
+
+const signature = (now: Date): string => (
+  `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Uranium ☢️`
 )
 
 const handleQuotes = (quotes: Array<GetQuoteResponse>): string[] =>

@@ -10,8 +10,9 @@ const { version } = config
 const routes = Router()
 
 routes.post("/tweet", Tweet.postUraStock)
-routes.post("/ura/tweet", Tweet.postUraStock)
-routes.post("/brl/tweet", Tweet.postBrlPrice)
+routes.post("/news/urabot", Tweet.postUraNews)
+routes.post("/stocks/urabot", Tweet.postUraStock)
+routes.post("/stocks/brlbot", Tweet.postBrlPrice)
 routes.get("/health", async (req: Request, res: Response) => {
   let responseStatus = httpStatus.OK
   const services = {

@@ -123,6 +123,7 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
+- alternative to railway: https://render.com/
 - BRLbot
   - nomes:
     - real de tpm
@@ -138,4 +139,13 @@ TODO:
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
 - read https://www.infoq.com/news/2021/11/twitter-api-v2
 - data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
+- references:
+  -  https://developer.twitter.com/en/docs/tutorials/creating-a-twitter-bot-with-python--oauth-2-0--and-v2-of-the-twi
+  -  https://sarahdepalo.hashnode.dev/create-a-twitter-bot-with-python#clamlkue800lu3dnv2a85fse4?t=1670010581400
+- read:
+  - https://developer.twitter.com/en/docs/tutorials/customer-engagement-application-playbook
+  - https://developer.twitter.com/en/docs/tutorials/how-to-build-a-complete-twitter-autoresponder-autohook
+  - https://developer.twitter.com/en/docs/tutorials/step-by-step-guide-to-making-your-first-request-to-the-twitter-api-v2
+  - https://developer.twitter.com/en/docs/tutorials/kickstart-your-twitter-bot-with-our-glitch-example-written-in-py
+  - https://developer.twitter.com/en/docs/tutorials/building-a-live-leaderboard-on-twitter
 -->

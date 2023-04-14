@@ -64,7 +64,7 @@ class FinnHubService implements IFinnHubService {
 
     if (!from) {
       from = new Date()
-      from.setDate(from.getDate() - 7)
+      from.setDate(from.getDate() - 1)
     }
 
     const params = {
