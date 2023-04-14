@@ -24,10 +24,12 @@ jest.mock("../../../src/services/Finnhub", () => ({
 jest.mock("../../../src/services/Twitter", () => ({
   __esModule: true,
   default: {
-    writeTweet: jest.fn((msg: string) => {
-      console.log(msg)
-      return { id: "mock" }
-    })
+    UraTwitterService: {
+      writeTweet: jest.fn((msg: string) => {
+        console.log(msg)
+        return { id: "mock" }
+      })
+    }
   }
 }))
 

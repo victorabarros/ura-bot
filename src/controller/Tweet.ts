@@ -145,13 +145,13 @@ export default {
         .json({})
     }
 
-    const n = news[0]
+    const randomNews = news[Math.floor(Math.random() * news.length)]
 
     const message = [
-      n.headline,
+      randomNews.headline,
       "",
       signature(now),
-      n.url,
+      randomNews.url,
       // TODO add disclaimer and image
     ].join("\n")
 
