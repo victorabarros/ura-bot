@@ -1,18 +1,19 @@
 import { Request, Response, Router } from "express"
 import httpStatus from "http-status"
-import Tweet from "./controller/Tweet"
 import FinHubService from "./services/Finnhub"
 import config from "./config"
 import { UraTwitterService } from "./services/Twitter"
+import { postUraNews, postUraStock } from "./controller/Uranium"
+import { postBrlPrice } from "./controller/BrazilianReal"
 
 const { version } = config
 
 const routes = Router()
 
-routes.post("/tweet", Tweet.postUraStock)
-routes.post("/news/urabot", Tweet.postUraNews)
-routes.post("/stocks/urabot", Tweet.postUraStock)
-routes.post("/prices/brlbot", Tweet.postBrlPrice)
+routes.post("/tweet", postUraStock)
+routes.post("/news/urabot", postUraNews)
+routes.post("/stocks/urabot", postUraStock)
+routes.post("/prices/brlbot", postBrlPrice)
 routes.get("/health", async (req: Request, res: Response) => {
   let responseStatus = httpStatus.OK
   const services = {

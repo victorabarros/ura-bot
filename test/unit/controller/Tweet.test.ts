@@ -1,4 +1,4 @@
-import Tweet, { evenningMessage, fridayMessage, morningMessage } from "../../../src/controller/Tweet"
+import Tweet, { evenningMessage, fridayMessage, morningMessage } from "../../../src/controller/Uranium"
 
 const mockResponse = {
   status: (code: number) => ({ statusCode: code, ...mockResponse }),

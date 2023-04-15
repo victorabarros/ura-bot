@@ -1,4 +1,4 @@
-import { STOCKS } from "../../../src/controller/Tweet"
+import { STOCKS } from "../../../src/controller/Uranium"
 import FinnHubService from "../../../src/services/Finnhub"
 
 // axios Mock
