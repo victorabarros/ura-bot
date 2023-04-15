@@ -5,7 +5,6 @@ PORT=8080
 URL?=http://localhost:${PORT}/
 ENV_FILE?=.env.test
 COMMAND?=bash
-API_KEY=McChickenPromo
 
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
@@ -66,9 +65,3 @@ tweet-ura-news:
 
 tweet-brl-price:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}prices/brlbot
-
-tweet-prod:
-	@make tweet-ura-stocks URL=https://api.uraniumstockbot.com/
-
-news-prod:
-	@make tweet-ura-news URL=https://api.uraniumstockbot.com/
