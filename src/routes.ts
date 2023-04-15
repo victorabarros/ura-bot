@@ -34,21 +34,21 @@ routes.get("/health", async (req: Request, res: Response) => {
 
   await FinHubService.getQuoteRealTime("URA")
     .catch((err: unknown) => {
-      console.log(err)
+      console.error(JSON.stringify(err))
       responseStatus = httpStatus.SERVICE_UNAVAILABLE
       services.finhub.success = false
     })
 
   await UraTwitterService.check()
     .catch((err: unknown) => {
-      console.log(err)
+      console.error(JSON.stringify(err))
       responseStatus = httpStatus.SERVICE_UNAVAILABLE
       services.twitter.ura.success = false
     })
 
   await BrlTwitterService.check()
     .catch((err: unknown) => {
-      console.log(err)
+      console.error(JSON.stringify(err))
       responseStatus = httpStatus.SERVICE_UNAVAILABLE
       services.twitter.brl.success = false
     })
