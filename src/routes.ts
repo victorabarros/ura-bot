@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express"
 import httpStatus from "http-status"
 import FinHubService from "./services/Finnhub"
 import config from "./config"
-import { UraTwitterService } from "./services/Twitter"
+import { BrlTwitterService, UraTwitterService } from "./services/Twitter"
 import { postUraNews, postUraStock } from "./controller/Uranium"
 import { postBrlPrice } from "./controller/BrazilianReal"
 
@@ -14,6 +14,8 @@ routes.post("/tweet", postUraStock)
 routes.post("/news/urabot", postUraNews)
 routes.post("/stocks/urabot", postUraStock)
 routes.post("/prices/brlbot", postBrlPrice)
+routes.post("/callback/brlbot", () => console.log("callback"))
+
 routes.get("/health", async (req: Request, res: Response) => {
   let responseStatus = httpStatus.OK
   const services = {
@@ -21,7 +23,12 @@ routes.get("/health", async (req: Request, res: Response) => {
       success: true,
     },
     twitter: {
-      success: true,
+      ura: {
+        success: true,
+      },
+      brl: {
+        success: true,
+      },
     },
   }
 
@@ -36,7 +43,14 @@ routes.get("/health", async (req: Request, res: Response) => {
     .catch((err: unknown) => {
       console.log(err)
       responseStatus = httpStatus.SERVICE_UNAVAILABLE
-      services.twitter.success = false
+      services.twitter.ura.success = false
+    })
+
+  await BrlTwitterService.check()
+    .catch((err: unknown) => {
+      console.log(err)
+      responseStatus = httpStatus.SERVICE_UNAVAILABLE
+      services.twitter.brl.success = false
     })
 
   return res

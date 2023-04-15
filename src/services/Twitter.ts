@@ -35,6 +35,19 @@ class TwitterService implements ITwitterService {
   }
 }
 
+class TwitterServiceV2 implements ITwitterService {
+  constructor(config: unknown) {
+  }
+
+  async writeTweet(message: string): Promise<WriteTweetResponse> {
+    throw new Error("not implemented")
+  }
+
+  async check(): Promise<boolean> {
+    throw new Error("not implemented")
+  }
+}
+
 export const UraTwitterService = new TwitterService(new Twitter({
   consumer_key: apiKey,
   consumer_secret: apiKeySecret,
@@ -42,7 +55,7 @@ export const UraTwitterService = new TwitterService(new Twitter({
   access_token_secret: accessTokenSecret,
 }))
 
-export const BrlTwitterService = new TwitterService(new Twitter({
+export const BrlTwitterService = new TwitterServiceV2(new Twitter({
   consumer_key: config.twitter.brlBot.apiKey,
   consumer_secret: config.twitter.brlBot.apiKeySecret,
   access_token_key: config.twitter.brlBot.accessToken,
