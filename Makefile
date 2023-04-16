@@ -55,7 +55,7 @@ migration:
 	@make -s docker-command COMMAND="yarn sequelize db:migrate"
 
 healthcheck:
-	curl ${URL}health
+	curl -v ${URL}health
 
 tweet-ura-stocks:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}stocks/urabot

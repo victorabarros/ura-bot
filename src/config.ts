@@ -16,6 +16,9 @@ export default {
       apiKeySecret: process.env.BRL_BOT_TWITTER_API_KEY_SECRET || throwMissingVariable("BRL_BOT_TWITTER_API_KEY_SECRET"),
       accessToken: process.env.BRL_BOT_TWITTER_ACCESS_TOKEN || throwMissingVariable("BRL_BOT_TWITTER_ACCESS_TOKEN"),
       accessTokenSecret: process.env.BRL_BOT_TWITTER_ACCESS_TOKEN_SECRET || throwMissingVariable("BRL_BOT_TWITTER_ACCESS_TOKEN_SECRET"),
+      bearerToken: process.env.BRL_BOT_TWITTER_BEARER_TOKEN || throwMissingVariable("BRL_BOT_TWITTER_BEARER_TOKEN"),
+      clientId: process.env.BRL_BOT_TWITTER_CLIENT_ID || throwMissingVariable("BRL_BOT_TWITTER_CLIENT_ID"),
+      clientSecret: process.env.BRL_BOT_TWITTER_CLIENT_SECRET || throwMissingVariable("BRL_BOT_TWITTER_CLIENT_SECRET"),
     },
   },
   finnhub: {

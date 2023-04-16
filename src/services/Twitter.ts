@@ -1,3 +1,4 @@
+import { TwitterApi } from "twitter-api-v2"
 import Twitter from "twitter-lite"
 import config from "../config"
 
@@ -15,8 +16,8 @@ interface ITwitterService {
 class TwitterService implements ITwitterService {
   private client: Twitter
 
-  constructor(config: Twitter) {
-    this.client = config
+  constructor(twitterLite: Twitter) {
+    this.client = twitterLite
   }
 
   async writeTweet(message: string): Promise<WriteTweetResponse> {
@@ -36,7 +37,24 @@ class TwitterService implements ITwitterService {
 }
 
 class TwitterServiceV2 implements ITwitterService {
-  constructor(config: unknown) {
+
+  private readonly twitterClient: TwitterApi
+
+  constructor() {
+    // todo move to params
+    this.twitterClient = new TwitterApi({
+      appKey: config.twitter.brlBot.apiKey,
+      appSecret: config.twitter.brlBot.apiKeySecret,
+      accessToken: config.twitter.brlBot.accessToken,
+      accessSecret: config.twitter.brlBot.accessTokenSecret,
+    })
+
+    // this.twitterClient = new TwitterApi({
+    //   clientId: config.twitter.brlBot.clientId,
+    //   clientSecret: config.twitter.brlBot.clientSecret,
+    // })
+
+    // this.twitterClient = new TwitterApi(config.twitter.brlBot.bearerToken)
   }
 
   async writeTweet(message: string): Promise<WriteTweetResponse> {
@@ -44,6 +62,13 @@ class TwitterServiceV2 implements ITwitterService {
   }
 
   async check(): Promise<boolean> {
+    const readOnlyClient = this.twitterClient.readOnly
+    const user = await readOnlyClient.v2.userByUsername("brlbot")
+    console.log({ user })
+    // await this.twitterClient.v2.tweet("hi")
+    // await this.twitterClient.v1.tweet("Hello, this is a test.")
+    // await this.twitterClient.v1.uploadMedia("./big-buck-bunny.mp4")
+
     throw new Error("not implemented")
   }
 }
@@ -55,9 +80,10 @@ export const UraTwitterService = new TwitterService(new Twitter({
   access_token_secret: accessTokenSecret,
 }))
 
-export const BrlTwitterService = new TwitterServiceV2(new Twitter({
+export const BrlTwitterService = new TwitterService(new Twitter({
   consumer_key: config.twitter.brlBot.apiKey,
   consumer_secret: config.twitter.brlBot.apiKeySecret,
   access_token_key: config.twitter.brlBot.accessToken,
   access_token_secret: config.twitter.brlBot.accessTokenSecret,
 }))
+// export const BrlTwitterService = new TwitterServiceV2()

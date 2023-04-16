@@ -146,14 +146,19 @@ TODO:
   -  https://developer.twitter.com/en/docs/tutorials/creating-a-twitter-bot-with-python--oauth-2-0--and-v2-of-the-twi
   -  https://sarahdepalo.hashnode.dev/create-a-twitter-bot-with-python#clamlkue800lu3dnv2a85fse4?t=1670010581400
 - read:
-  - https://github.com/plhery/node-twitter-api-v2
+  - https://github.com/plhery/node-twitter-api-v2 https://www.npmjs.com/package/twitter-api-v2
   - https://developer.twitter.com/en/docs/tutorials/customer-engagement-application-playbook
   - https://developer.twitter.com/en/docs/tutorials/how-to-build-a-complete-twitter-autoresponder-autohook
   - https://developer.twitter.com/en/docs/tutorials/step-by-step-guide-to-making-your-first-request-to-the-twitter-api-v2
-    - curl --request GET 'https://api.twitter.com/2/tweets/search/recent?query=from:twitterdev' --header 'Authorization: Bearer AAAAAAAAAAAAAAAAAAAAAHuNmgEAAAAAqraFN8522F2qmgpFs4xuDa99Y%2FY%3DYcEk7uZfujLMwyTbm6rHy0lL4Amyo5VBt35DveCjKIwtjuixgk'
-    - curl -v --compressed -u 'victorbarros@id.uff.br:Vaa!Bj9X' "https://gnip-api.twitter.com/search/30day/accounts/@brlbot/prod/counts.json?query=from%3Atwitterdev"
-    - curl -v --compressed -u<email_address>:<password>
-    "https://gnip-api.twitter.com/search/30day/accounts/<account-name>/prod/counts.json?query=from%3Atwitterdev"
   - https://developer.twitter.com/en/docs/tutorials/kickstart-your-twitter-bot-with-our-glitch-example-written-in-py
   - https://developer.twitter.com/en/docs/tutorials/building-a-live-leaderboard-on-twitter
+
+curl "https://api.twitter.com/2/users/by/username/brlbot" -H "Authorization: Bearer AAAAAAAAAAAAAAAAAAAAALAHmwEAAAAABb0A5347FUCDtI%2BE7Jbha1BvndI%3DYBISJH6Rh0MtaUr5tcTbwhRjsnGVtCOrfIOqayC27GmdvkkQ4i"
+
+curl --request GET 'https://api.twitter.com/2/tweets/search/recent?query=from:twitterdev' --header 'Authorization: Bearer AAAAAAAAAAAAAAAAAAAAALAHmwEAAAAABb0A5347FUCDtI%2BE7Jbha1BvndI%3DYBISJH6Rh0MtaUr5tcTbwhRjsnGVtCOrfIOqayC27GmdvkkQ4i'
+
+curl --request POST \
+  --url 'https://api.twitter.com/1.1/statuses/update.json?status=Hello%20world' \
+  --header 'authorization: OAuth oauth_consumer_key="CONSUMER_API_KEY", oauth_nonce="OAUTH_NONCE", oauth_signature="OAUTH_SIGNATURE", oauth_signature_method="HMAC-SHA1", oauth_timestamp="OAUTH_TIMESTAMP", oauth_token="ACCESS_TOKEN", oauth_version="1.0"' \
+
 -->
