@@ -1,4 +1,4 @@
-import Tweet, { evenningMessage, fridayMessage, morningMessage } from "../../../src/controller/Uranium"
+import { evenningMessage, fridayMessage, morningMessage, postUraStock } from "../../../src/controller/Uranium"
 
 const mockResponse = {
   status: (code: number) => ({ statusCode: code, ...mockResponse }),
@@ -38,7 +38,7 @@ describe("Test Controller Tweet", () => {
 
     it("success", async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await Tweet.postUraStock({} as any, mockResponse as any)
+      await postUraStock({} as any, mockResponse as any)
     })
   })
 
