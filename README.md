@@ -126,6 +126,8 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
+- https://twitter.com/FL17112012/status/1652042085183225856
+- add welcome script https://github.com/victorabarros/CS50chain/blob/0e071b7af8851ef92791a1f068ed679f6da14ac4/Makefile#L11
 - alternative to railway: https://render.com/
 - BRLbot
   - nomes:

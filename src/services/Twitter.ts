@@ -10,7 +10,7 @@ type WriteTweetResponse = {
 
 interface ITwitterService {
   writeTweet(message: string): Promise<WriteTweetResponse>
-  check(): Promise<boolean>
+  check(): Promise<void>
 }
 
 class TwitterService implements ITwitterService {
@@ -25,14 +25,8 @@ class TwitterService implements ITwitterService {
     return { id: id_str }
   }
 
-  async check(): Promise<boolean> {
-    try {
-      await this.client.getBearerToken()
-      return true
-    } catch (err) {
-      console.log(err)
-      return false
-    }
+  async check(): Promise<void> {
+    await this.client.getBearerToken()
   }
 }
 
@@ -61,7 +55,7 @@ class TwitterServiceV2 implements ITwitterService {
     throw new Error("not implemented")
   }
 
-  async check(): Promise<boolean> {
+  async check(): Promise<void> {
     const readOnlyClient = this.twitterClient.readOnly
     const user = await readOnlyClient.v2.userByUsername("brlbot")
     console.log({ user })

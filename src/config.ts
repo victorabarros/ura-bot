@@ -3,7 +3,7 @@ const throwMissingVariable = (name: string) => { throw new Error(`missing requir
 export default {
   port: process.env.PORT || "8080",
   apiKey: process.env.API_KEY || throwMissingVariable("API_KEY"),
-  version: process.env.VERSION || "1.3.9",
+  version: process.env.VERSION || "1.3.10",
   twitter: {
     uraBot: {
       apiKey: process.env.URA_BOT_TWITTER_API_KEY || throwMissingVariable("URA_BOT_TWITTER_API_KEY"),
