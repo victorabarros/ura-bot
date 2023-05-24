@@ -8,7 +8,7 @@ export const middleware = (req: Request, res: Response, next: NextFunction) => {
   const { method, url } = req
   console.log(`${new Date().toISOString()} ${method} "${url}" started`)
 
-  if (url !== "/health") {
+  if (!["/health", "/heartbeat"].includes(url)) {
     const { authorization } = req.headers
     if (authorization !== apiKey) {
       return res.status(httpStatus.UNAUTHORIZED).json({ errorMessage: "Invalid token" })

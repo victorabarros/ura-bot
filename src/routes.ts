@@ -16,6 +16,12 @@ routes.post("/stocks/urabot", postUraStock)
 routes.post("/prices/brlbot", postBrlPrice)
 routes.post("/callback/brlbot", () => console.log("callback"))
 
+routes.get("/heartbeat", async (req: Request, res: Response) => {
+  return res
+    .status(httpStatus.OK)
+    .json({ success: true, version })
+})
+
 routes.get("/health", async (req: Request, res: Response) => {
   let responseStatus = httpStatus.OK
   const services = {

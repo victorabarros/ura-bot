@@ -58,6 +58,9 @@ migration:
 healthcheck:
 	curl -v ${URL}health
 
+heart:
+	curl -v ${URL}heartbeat
+
 tweet-ura-stocks:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}stocks/urabot
 
