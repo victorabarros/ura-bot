@@ -47,7 +47,8 @@ dev:
 tests:
 	@clear
 	@echo "${YELLOW}Testing${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn build && yarn test"
+	@make -s docker-command COMMAND="yarn build"
+	@make -s docker-command COMMAND="yarn test"
 
 migration:
 	@clear

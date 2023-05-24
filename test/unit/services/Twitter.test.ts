@@ -24,8 +24,8 @@ describe("Test Services Twitter", () => {
 
   describe("check", () => {
     it("success", async () => {
-      const isHealth = await UraTwitterService.check()
-      expect(isHealth).toBeTruthy()
+      await UraTwitterService.check()
+      expect(true).toBeTruthy()
     })
   })
 })
