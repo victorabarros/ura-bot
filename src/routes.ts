@@ -1,67 +1,18 @@
-import { Request, Response, Router } from "express"
-import httpStatus from "http-status"
-import FinHubService from "./services/Finnhub"
-import config from "./config"
-import { BrlTwitterService, UraTwitterService } from "./services/Twitter"
-import { postUraNews, postUraStock } from "./controller/Uranium"
-import { postBrlPrice } from "./controller/BrazilianReal"
-
-const { version } = config
+import { Router } from "express"
+import { postUraNews, postUraStock } from "./controller"
+import { postBrlPrice } from "./controller"
+import { callback, health, heartbeat } from "./controller"
 
 const routes = Router()
 
+routes.post("/callback", callback)
+routes.get("/callback", callback)
+routes.get("/heartbeat", heartbeat)
+routes.get("/health", health)
+
 routes.post("/tweet", postUraStock)
-routes.post("/news/urabot", postUraNews)
-routes.post("/stocks/urabot", postUraStock)
-routes.post("/prices/brlbot", postBrlPrice)
-routes.post("/callback/brlbot", () => console.log("callback"))
-
-routes.get("/heartbeat", async (req: Request, res: Response) => {
-  return res
-    .status(httpStatus.OK)
-    .json({ success: true, version })
-})
-
-routes.get("/health", async (req: Request, res: Response) => {
-  let responseStatus = httpStatus.OK
-  const services = {
-    finhub: {
-      success: true,
-    },
-    twitter: {
-      ura: {
-        success: true,
-      },
-      brl: {
-        success: true,
-      },
-    },
-  }
-
-  await FinHubService.getQuoteRealTime("URA")
-    .catch((err: unknown) => {
-      console.error("Fail to check FinHub", JSON.stringify(err))
-      responseStatus = httpStatus.SERVICE_UNAVAILABLE
-      services.finhub.success = false
-    })
-
-  await UraTwitterService.check()
-    .catch((err: unknown) => {
-      console.error("Fail to check UraTwitter", JSON.stringify(err))
-      responseStatus = httpStatus.SERVICE_UNAVAILABLE
-      services.twitter.ura.success = false
-    })
-
-  await BrlTwitterService.check()
-    .catch((err: unknown) => {
-      console.error("Fail to check BrlTwitter", JSON.stringify(err))
-      responseStatus = httpStatus.SERVICE_UNAVAILABLE
-      services.twitter.brl.success = false
-    })
-
-  return res
-    .status(responseStatus)
-    .json({ services, version })
-})
+routes.post("/urabot/news", postUraNews)
+routes.post("/urabot/stocks", postUraStock)
+routes.post("/brlbot/prices", postBrlPrice)
 
 export default routes
