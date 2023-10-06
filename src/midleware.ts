@@ -11,7 +11,9 @@ export const middleware = (req: Request, res: Response, next: NextFunction) => {
   if (!["/health", "/heartbeat", "/callback"].includes(url)) {
     const { authorization } = req.headers
     if (authorization !== apiKey) {
-      return res.status(httpStatus.UNAUTHORIZED).json({ errorMessage: "Invalid token" })
+      return res
+        .status(httpStatus.UNAUTHORIZED)
+        .json({ errorMessage: "Invalid token" })
     }
   }
 

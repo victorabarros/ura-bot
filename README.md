@@ -6,9 +6,9 @@
 # UraBot
 
 <p>
-  <a href="https://www.npmjs.com/package/twitter-lite" target="_blank">
+  <!-- <a href="https://www.npmjs.com/package/twitter-lite" target="_blank">
     Twiiter Lite
-  </a>
+  </a> -->
   <!-- badgets -->
   <a href="https://railway.app/" target="_blank">
     <img height="32px" src="https://railway.app/button.svg" />
@@ -39,7 +39,7 @@
 <p align="center">
   <!-- Update screenshot with one more recent -->
   <a href="https://twitter.com/UraniumStockBot/status/1470423280712654850">
-    <img src="./assets/Tweet.png" />
+    <img src="./assets/Tweet_v2.png" />
   </a>
 </p>
 
