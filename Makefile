@@ -25,10 +25,6 @@ ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l
 	@docker ps -a --filter "name=${APP_NAME}" -aq | xargs docker rm -f
 endif
 
-install:
-	@echo "${YELLOW}Building project${COLOR_OFF}"
-	@yarn
-
 build:
 	@clear
 	@echo "${YELLOW}Building project${COLOR_OFF}"

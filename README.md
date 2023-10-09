@@ -6,10 +6,6 @@
 # UraBot
 
 <p>
-  <!-- <a href="https://www.npmjs.com/package/twitter-lite" target="_blank">
-    Twiiter Lite
-  </a> -->
-  <!-- badgets -->
   <a href="https://railway.app/" target="_blank">
     <img height="32px" src="https://railway.app/button.svg" />
   </a>
@@ -126,13 +122,9 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
-- https://twitter.com/FL17112012/status/1652042085183225856
+- references https://www.postman.com/twitter/workspace/twitter-s-public-workspace/request/9956214-c936778b-e343-4a23-b1b4-433c501cf6eb?ctx=code
 - add welcome script https://github.com/victorabarros/CS50chain/blob/0e071b7af8851ef92791a1f068ed679f6da14ac4/Makefile#L11
 - alternative to railway: https://render.com/
-- BRLbot
-  - nomes:
-    - real de tpm
-    - real vale nada
 - weekly report on friday night or Monday morning / monthly report on last day of month / quarter report; example https://twitter.com/precodobitcoin/status/1480313562291658760
 - add github actions => run tests on pr opened
 - write article:
@@ -140,27 +132,6 @@ TODO:
   - part 1 - first auto tweet serveless with finhub and tweet
   - part 2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/)
   - part 3 - add query params and cron with goodmorning/evenning.
-- tweet relevant news (understand what's better hour and schedule it)
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
-- read https://www.infoq.com/news/2021/11/twitter-api-v2
 - data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
-- references:
-  -  https://developer.twitter.com/en/docs/tutorials/creating-a-twitter-bot-with-python--oauth-2-0--and-v2-of-the-twi
-  -  https://sarahdepalo.hashnode.dev/create-a-twitter-bot-with-python#clamlkue800lu3dnv2a85fse4?t=1670010581400
-- read:
-  - https://github.com/plhery/node-twitter-api-v2 https://www.npmjs.com/package/twitter-api-v2
-  - https://developer.twitter.com/en/docs/tutorials/customer-engagement-application-playbook
-  - https://developer.twitter.com/en/docs/tutorials/how-to-build-a-complete-twitter-autoresponder-autohook
-  - https://developer.twitter.com/en/docs/tutorials/step-by-step-guide-to-making-your-first-request-to-the-twitter-api-v2
-  - https://developer.twitter.com/en/docs/tutorials/kickstart-your-twitter-bot-with-our-glitch-example-written-in-py
-  - https://developer.twitter.com/en/docs/tutorials/building-a-live-leaderboard-on-twitter
-
-curl "https://api.twitter.com/2/users/by/username/brlbot" -H "Authorization: Bearer AAAAAAAAAAAAAAAAAAAAALAHmwEAAAAABb0A5347FUCDtI%2BE7Jbha1BvndI%3DYBISJH6Rh0MtaUr5tcTbwhRjsnGVtCOrfIOqayC27GmdvkkQ4i"
-
-curl --request GET 'https://api.twitter.com/2/tweets/search/recent?query=from:twitterdev' --header 'Authorization: Bearer AAAAAAAAAAAAAAAAAAAAALAHmwEAAAAABb0A5347FUCDtI%2BE7Jbha1BvndI%3DYBISJH6Rh0MtaUr5tcTbwhRjsnGVtCOrfIOqayC27GmdvkkQ4i'
-
-curl --request POST \
-  --url 'https://api.twitter.com/1.1/statuses/update.json?status=Hello%20world' \
-  --header 'authorization: OAuth oauth_consumer_key="CONSUMER_API_KEY", oauth_nonce="OAUTH_NONCE", oauth_signature="OAUTH_SIGNATURE", oauth_signature_method="HMAC-SHA1", oauth_timestamp="OAUTH_TIMESTAMP", oauth_token="ACCESS_TOKEN", oauth_version="1.0"' \
-
 -->
