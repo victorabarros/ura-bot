@@ -1,22 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { UraTwitterService } from "../../../src/services/Twitter"
 
-// Twitter Mock
-jest.mock("twitter-lite",
-  () => jest.fn().mockImplementation(() => (
-    {
-      post: (path: string, data: unknown) => ({ id_str: "xpto" }),
-      getBearerToken: () => "token",
-    }
-  ))
-)
-
 describe("Test Services Twitter", () => {
 
   describe("write twitter", () => {
     it("success", async () => {
       const { id } = await UraTwitterService.writeTweet("message")
-      expect(id).toBe("xpto")
+      expect(id).toBe("mock")
     })
   })
 
