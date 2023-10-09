@@ -39,7 +39,7 @@ run:
 	@echo "${YELLOW}Running project${COLOR_OFF}"
 	@make -s docker-command ENV_FILE=.env COMMAND="yarn start"
 
-dev:
+run-dev:
 	@clear
 	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
 	@make -s docker-command ENV_FILE=.env COMMAND="yarn dev"
@@ -62,10 +62,10 @@ heart:
 	curl -v ${URL}heartbeat
 
 tweet-ura-stocks:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}stocks/urabot
+	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/stocks
 
 tweet-ura-news:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}news/urabot
+	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/news
 
 tweet-brl-price:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}prices/brlbot
+	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brlbot/prices

@@ -1,8 +1,7 @@
-import { TwitterApi } from "twitter-api-v2"
-import Twitter from "twitter-lite"
+import request from "request"
 import config from "../config"
 
-const { apiKey, apiKeySecret, accessToken, accessTokenSecret } = config.twitter.uraBot
+const { uraBot, brlBot } = config.twitter
 
 type WriteTweetResponse = {
   id: string
@@ -14,70 +13,57 @@ interface ITwitterService {
 }
 
 class TwitterService implements ITwitterService {
-  private client: Twitter
+  private oauth: any
 
-  constructor(twitterLite: Twitter) {
-    this.client = twitterLite
+  constructor(props: any) {
+    this.oauth = {
+      consumer_key: props.apiKey,
+      consumer_secret: props.apiKeySecret,
+      token: props.accessToken,
+      token_secret: props.accessTokenSecret,
+    }
   }
 
   async writeTweet(message: string): Promise<WriteTweetResponse> {
-    const { id_str } = await this.client.post("statuses/update", { status: message })
-    return { id: id_str }
-  }
+    const options = {
+      method: "POST",
+      url: "https://api.twitter.com/2/tweets",//todo "https://api.twitter.com" move to config
+      headers: {
+        "Content-Type": "application/json",
+      },
+      oauth: this.oauth,
+      body: JSON.stringify({ "text": message })
+    }
 
-  async check(): Promise<void> {
-    await this.client.getBearerToken()
-  }
-}
-
-class TwitterServiceV2 implements ITwitterService {
-
-  private readonly twitterClient: TwitterApi
-
-  constructor() {
-    // todo move to params
-    this.twitterClient = new TwitterApi({
-      appKey: config.twitter.brlBot.apiKey,
-      appSecret: config.twitter.brlBot.apiKeySecret,
-      accessToken: config.twitter.brlBot.accessToken,
-      accessSecret: config.twitter.brlBot.accessTokenSecret,
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error)
+      console.log(body)
     })
 
-    // this.twitterClient = new TwitterApi({
-    //   clientId: config.twitter.brlBot.clientId,
-    //   clientSecret: config.twitter.brlBot.clientSecret,
-    // })
-
-    // this.twitterClient = new TwitterApi(config.twitter.brlBot.bearerToken)
+    return { id: "mock" }
   }
 
-  async writeTweet(message: string): Promise<WriteTweetResponse> {
-    throw new Error("not implemented")
-  }
+  check(): Promise<void> {
+    const options = {
+      method: "POST",
+      url: "https://api.twitter.com/oauth/request_token",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      oauth: this.oauth,
+      body: JSON.stringify({})
+    }
 
-  async check(): Promise<void> {
-    const readOnlyClient = this.twitterClient.readOnly
-    const user = await readOnlyClient.v2.userByUsername("brlbot")
-    console.log({ user })
-    // await this.twitterClient.v2.tweet("hi")
-    // await this.twitterClient.v1.tweet("Hello, this is a test.")
-    // await this.twitterClient.v1.uploadMedia("./big-buck-bunny.mp4")
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error)
+    })
 
-    throw new Error("not implemented")
+    return Promise.resolve()
   }
 }
 
-export const UraTwitterService = new TwitterService(new Twitter({
-  consumer_key: apiKey,
-  consumer_secret: apiKeySecret,
-  access_token_key: accessToken,
-  access_token_secret: accessTokenSecret,
-}))
 
-export const BrlTwitterService = new TwitterService(new Twitter({
-  consumer_key: config.twitter.brlBot.apiKey,
-  consumer_secret: config.twitter.brlBot.apiKeySecret,
-  access_token_key: config.twitter.brlBot.accessToken,
-  access_token_secret: config.twitter.brlBot.accessTokenSecret,
-}))
-// export const BrlTwitterService = new TwitterServiceV2()
+export const UraTwitterService = new TwitterService({ ...uraBot })
+
+
+export const BrlTwitterService = new TwitterService(brlBot)

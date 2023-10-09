@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Twitter from "twitter-lite"
 import { UraTwitterService } from "../../../src/services/Twitter"
 
 // Twitter Mock
@@ -17,7 +16,6 @@ describe("Test Services Twitter", () => {
   describe("write twitter", () => {
     it("success", async () => {
       const { id } = await UraTwitterService.writeTweet("message")
-      expect(Twitter).toHaveBeenCalled
       expect(id).toBe("xpto")
     })
   })
