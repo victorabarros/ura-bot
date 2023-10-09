@@ -19,9 +19,6 @@ export const postBrlPrice = async (req: Request, res: Response) => {
   console.log(message)
 
   try {
-    // TODO tweet on brlbot account
-    // https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/main/Manage-Tweets/create_tweet.js
-    // https://www.postman.com/twitter/workspace/twitter-s-public-workspace/request/9956214-5bd6ebb1-9d79-4456-a9a6-22ead4a41625?ctx=code manage-tweets > create a tweet
     const { id } = await BrlTwitterService.writeTweet(message)
 
     return res

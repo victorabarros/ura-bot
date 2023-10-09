@@ -1,10 +1,17 @@
-import request from "request"
+import request, { OAuthOptions } from "request"
 import config from "../config"
 
-const { uraBot, brlBot } = config.twitter
+const { uraBot, brlBot, baseUrl } = config.twitter
 
 type WriteTweetResponse = {
   id: string
+}
+
+type TwitterServiceProps = {
+  apiKey: string
+  apiKeySecret: string
+  accessToken: string
+  accessTokenSecret: string
 }
 
 interface ITwitterService {
@@ -13,9 +20,9 @@ interface ITwitterService {
 }
 
 class TwitterService implements ITwitterService {
-  private oauth: any
+  private oauth: OAuthOptions
 
-  constructor(props: any) {
+  constructor(props: TwitterServiceProps) {
     this.oauth = {
       consumer_key: props.apiKey,
       consumer_secret: props.apiKeySecret,
@@ -27,7 +34,7 @@ class TwitterService implements ITwitterService {
   async writeTweet(message: string): Promise<WriteTweetResponse> {
     const options = {
       method: "POST",
-      url: "https://api.twitter.com/2/tweets",//todo "https://api.twitter.com" move to config
+      url: baseUrl,
       headers: {
         "Content-Type": "application/json",
       },
@@ -44,21 +51,7 @@ class TwitterService implements ITwitterService {
   }
 
   check(): Promise<void> {
-    const options = {
-      method: "POST",
-      url: "https://api.twitter.com/oauth/request_token",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      oauth: this.oauth,
-      body: JSON.stringify({})
-    }
-
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error)
-    })
-
-    return Promise.resolve()
+    throw new Error("Method not implemented.")
   }
 }
 

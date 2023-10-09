@@ -3,9 +3,9 @@ import routes from "./routes"
 import config from "./config"
 import { middleware } from "./midleware"
 
-const { port } = config
+const { port, version } = config
 
 express()
   .use(middleware)
   .use(routes)
-  .listen(port, () => console.log(`runnnig on port ${port}`))
+  .listen(port, () => console.log(`runnnig UraBot ${version} on port ${port}`))
