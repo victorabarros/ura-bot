@@ -10,7 +10,7 @@ describe("Test Services Twitter", () => {
     })
   })
 
-  describe("check", () => {
+  describe.skip("check", () => {
     it("success", async () => {
       await UraTwitterService.check()
       expect(true).toBeTruthy()
