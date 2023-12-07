@@ -111,7 +111,7 @@ class FinnHubService implements IFinnHubService {
   }
 
   // TODO:
-  // share relevant news https://finnhub.io/docs/api/company-news
+  // use finhub's sdk https://github.com/Finnhub-Stock-API/finnhub-js
 }
 
 const service = new FinnHubService()
