@@ -20,7 +20,7 @@ export const postBrlPrice = async (req: Request, res: Response) => {
 
   try {
     const { id } = await BrlTwitterService.writeTweet(message)
-
+    //todo after tweet, use melembredisto, brlbot and urabot to like it
     return res
       .status(httpStatus.OK)
       .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })

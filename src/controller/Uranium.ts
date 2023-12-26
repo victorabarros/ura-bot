@@ -80,6 +80,7 @@ export const postUraStock = async (req: Request, res: Response) => {
 
   try {
     const { id } = await UraTwitterService.writeTweet(message)
+    //todo after tweet, use melembredisto, brlbot and urabot to like it
 
     return res
       .status(fail ? httpStatus.PARTIAL_CONTENT : httpStatus.OK)
@@ -121,6 +122,7 @@ export const postUraNews = async (req: Request, res: Response) => {
   ].join("\n")
 
   const { id } = await UraTwitterService.writeTweet(message)
+  //todo after tweet, use melembredisto, brlbot and urabot to like it
 
   return res
     .status(httpStatus.OK)
