@@ -5,6 +5,7 @@ PORT=8080
 URL?=http://localhost:${PORT}/
 ENV_FILE?=.env.test
 COMMAND?=bash
+API_KEY=McChickenPromo
 
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
