@@ -134,4 +134,5 @@ TODO:
   - part 3 - add query params and cron with goodmorning/evenning.
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
 - data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
+- is it possible to use a giphy api to add gif to news post? same to chart
 -->
