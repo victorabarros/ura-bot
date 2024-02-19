@@ -51,8 +51,8 @@ make dev
 
 # api requests
 make healthcheck
-make tweet-ura-stocks:
-make tweet-ura-news:
+make tweet-ura-stocks
+make tweet-ura-news
 
 # automated tests
 make tests

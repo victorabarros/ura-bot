@@ -1,7 +1,7 @@
 APP_NAME=ura-bot
 APP_DIR=/${APP_NAME}/src
 DOCKER_BASE_IMAGE=node:16.14.0
-PORT=8080
+PORT=8082
 URL?=http://localhost:${PORT}/
 ENV_FILE?=.env.test
 COMMAND?=bash
@@ -29,6 +29,7 @@ endif
 build:
 	@clear
 	@echo "${YELLOW}Building project${COLOR_OFF}"
+	@make -s docker-command COMMAND="yarn"
 	@make -s docker-command ENV_FILE=.env COMMAND="yarn build"
 
 run:
@@ -44,6 +45,7 @@ run-dev:
 tests:
 	@clear
 	@echo "${YELLOW}Testing${COLOR_OFF}"
+	@make -s docker-command COMMAND="yarn"
 	@make -s docker-command COMMAND="yarn build"
 	@make -s docker-command COMMAND="yarn test"
 

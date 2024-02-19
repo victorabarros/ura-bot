@@ -35,6 +35,7 @@ const OTHER_STOCKS = [
   // "HURA", // ETF
   // "URM", TODO https://twitter.com/TheTSXDude/status/1631066976666763266?s=20 https://t2.genius.com/unsafe/600x612/https://images.genius.com/99b18d354a84873bd2134f418b4d58d1.589x600x1.jpg
   // TODO find another api that supports the stocks above
+  "URNJ",
 
   "UROY",
 ]
