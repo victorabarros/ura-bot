@@ -46,6 +46,7 @@ tests:
 	@reset
 	@echo "${YELLOW}Testing${COLOR_OFF}"
 	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
+	@open coverage/index.html
 
 # migration:
 # 	@clear
@@ -66,3 +67,7 @@ tweet-ura-news:
 
 tweet-brl-price:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brlbot/prices
+
+prod-tweet-ura-stocks:
+	curl -v -X POST --header 'Authorization: ${API_KEY}' https://api.uraniumstockbot.com/urabot/stocks
+  # tweet-ura-stocks URL="https://api.uraniumstockbot.com/"

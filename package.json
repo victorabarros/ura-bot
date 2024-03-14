@@ -14,7 +14,7 @@
     "precommit": "yarn lint",
     "prepare-husky": "husky install server/.husky",
     "pretest": "yarn lint && yarn build",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.0",
