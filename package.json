@@ -5,14 +5,15 @@
   "description": "Twitter bot to share uranium's market news and stocks price.",
   "homepage": "https://github.com/victorabarros/ura-bot",
   "scripts": {
-    "preinstall": "rm -rf node_modules dist",
+    "preinstall": "rm -rf node_modules",
+    "prebuild": "rm -rf dist",
     "build": "tsc",
     "start": "node dist/src/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "lint": "yarn run eslint --fix .",
     "precommit": "yarn lint",
     "prepare-husky": "husky install server/.husky",
-    "pretest": "yarn lint",
+    "pretest": "yarn lint && yarn build",
     "test": "jest"
   },
   "devDependencies": {

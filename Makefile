@@ -29,12 +29,12 @@ endif
 build:
 	@clear
 	@echo "${YELLOW}Building project${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn"
 	@make -s docker-command ENV_FILE=.env COMMAND="yarn build"
 
 run:
 	@clear
 	@echo "${YELLOW}Running project${COLOR_OFF}"
+	@make build
 	@make -s docker-command ENV_FILE=.env COMMAND="yarn start"
 
 run-dev:
@@ -43,16 +43,14 @@ run-dev:
 	@make -s docker-command ENV_FILE=.env COMMAND="yarn dev"
 
 tests:
-	@clear
+	@reset
 	@echo "${YELLOW}Testing${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn"
-	@make -s docker-command COMMAND="yarn build"
-	@make -s docker-command COMMAND="yarn test"
+	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
 
-migration:
-	@clear
-	@echo "${YELLOW}Executing Migrations${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn sequelize db:migrate"
+# migration:
+# 	@clear
+# 	@echo "${YELLOW}Executing Migrations${COLOR_OFF}"
+# 	@make -s docker-command COMMAND="yarn sequelize db:migrate"
 
 healthcheck:
 	curl -v ${URL}health
