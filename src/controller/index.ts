@@ -26,7 +26,7 @@ export const health = async (req: Request, res: Response) => {
   try {
     await FinHubService.getQuoteRealTime("URA")
   } catch (err) {
-    console.error("Fail to check FinHub", JSON.stringify(err))
+    console.error("Fail to check FinHub", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
     services.finhub.success = false
   }
@@ -34,7 +34,7 @@ export const health = async (req: Request, res: Response) => {
   try {
     await UraTwitterService.check()
   } catch (err) {
-    console.error("Fail to check UraTwitter", JSON.stringify(err))
+    console.error("Fail to check UraTwitter", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
     services.twitter.ura.success = false
   }

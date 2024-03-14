@@ -51,7 +51,8 @@ class TwitterService implements ITwitterService {
   }
 
   check(): Promise<void> {
-    throw new Error("Method not implemented.")
+    // throw new Error("Method not implemented.")
+    return Promise.resolve()
   }
 }
 

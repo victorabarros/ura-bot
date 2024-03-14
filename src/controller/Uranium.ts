@@ -81,12 +81,12 @@ export const postUraStock = async (req: Request, res: Response) => {
 
   try {
     const { id } = await UraTwitterService.writeTweet(message)
-    //todo after tweet, use melembredisto, brlbot and urabot to like it
+    // todo after tweet, use melembredisto, brlbot and urabot to like it
     console.log("message posted with success")
 
     return res
       .status(fail ? httpStatus.PARTIAL_CONTENT : httpStatus.OK)
-      .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
+      .json({ id, url: "https://twitter.com/UraniumStockBot", created_at: now })
   } catch (error) {
     console.error(error)
     return res

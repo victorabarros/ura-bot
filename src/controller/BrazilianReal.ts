@@ -23,7 +23,7 @@ export const postBrlPrice = async (req: Request, res: Response) => {
     //todo after tweet, use melembredisto, brlbot and urabot to like it
     return res
       .status(httpStatus.OK)
-      .json({ id, url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
+      .json({ id, url: "https://twitter.com/BrlBot", created_at: now })
   } catch (error) {
     console.error(error)
     return res
