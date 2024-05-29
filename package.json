@@ -1,6 +1,5 @@
 {
   "name": "ura-bot",
-  "version": "1.0.0",
   "license": "MIT",
   "description": "Twitter bot to share uranium's market news and stocks price.",
   "homepage": "https://github.com/victorabarros/ura-bot",
