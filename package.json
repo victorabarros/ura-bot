@@ -1,8 +1,11 @@
 {
   "name": "ura-bot",
   "license": "MIT",
-  "description": "Twitter bot to share uranium's market news and stocks price.",
+  "description": "Bot to share uranium's market news and stocks price on X.com (Twitter) and Nostr.",
   "homepage": "https://github.com/victorabarros/ura-bot",
+  "engines": {
+    "node": "22.2.0"
+  },
   "scripts": {
     "preinstall": "rm -rf node_modules",
     "prebuild": "rm -rf dist",
