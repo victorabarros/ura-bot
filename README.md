@@ -28,9 +28,16 @@
       style="background-color:black;padding:5px 10px;border-radius:3px"
     />
   </a>
+  <a href="https://nostr.com/" target="_blank">
+    <img
+      height="22px"
+      src="https://avatars.githubusercontent.com/u/103332273?s=200&v=4"
+      style="background-color:black;padding:5px 10px;border-radius:3px"
+    />
+  </a>
 </p>
 
-[Twitter](https://twitter.com/UraniumStockBot) page dedicated to sharing uranium market stock prices, analyses and relevant news.
+**[Twitter](https://twitter.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news.
 
 <p align="center">
   <!-- Update screenshot with one more recent -->
@@ -67,8 +74,8 @@ make run
 |verb|endpoint|description|
 |:-:|:-:|:-:|
 |GET|/health|healthcheck|
-|POST|/stocks/urabot|tweet Uranium market stocks price in real time|
-|POST|/news/urabot|tweet Uranium market news|
+|POST|/stocks/urabot|post Uranium market stocks price in real time|
+|POST|/news/urabot|post Uranium market news|
 
 ## Flow
 
@@ -80,18 +87,21 @@ make run
       server[UraBot<br>Server];
       finhub[finhub];
       client[twitter];
+      client2[nostr];
 
       %% flow
       cron--->
       server--->
       client;
+      server--->
+      client2;
 
       finhub----
       server;
 
       %% styles
       classDef box fill-opacity:.5, stroke:grey, stroke-width:.5px;
-      class cron,server,finhub,db,client box
+      class cron,server,finhub,db,client,client2 box
 ```
 
 ## Monitoring
