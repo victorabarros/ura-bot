@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import FinnHubService, { GetQuoteResponse, SearchNewsResponse } from "../services/Finnhub"
 import { UraTwitterService } from "../services/Twitter"
+import { UraNostrService } from "../services/Nostr"
 
 const DATE_FORMAT = {
   // weekday: "long",
@@ -82,6 +83,7 @@ export const postUraStock = async (req: Request, res: Response) => {
   try {
     const { id } = await UraTwitterService.writeTweet(message)
     // todo after tweet, use melembredisto, brlbot and urabot to like it
+    await UraNostrService.writeNote(message)
     console.log("message posted with success")
 
     return res
