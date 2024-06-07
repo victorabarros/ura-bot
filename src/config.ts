@@ -3,7 +3,7 @@ const throwMissingVariable = (name: string) => { throw new Error(`missing requir
 export default {
   port: process.env.PORT || "8082",
   apiKey: process.env.API_KEY || throwMissingVariable("API_KEY"),
-  version: process.env.VERSION || "1.5.3",
+  version: process.env.VERSION || "1.6.0",
   twitter: {
     uraBot: {
       apiKey: process.env.URA_BOT_TWITTER_API_KEY || throwMissingVariable("URA_BOT_TWITTER_API_KEY"),
@@ -25,5 +25,9 @@ export default {
   },
   currency: {
     address: process.env.CURRENCY_ADDRESS || throwMissingVariable("CURRENCY_ADDRESS"),
-  }
+  },
+  nostr:{
+    privateKey: process.env.URA_BOT_NOSTR_SECRET_KEY || throwMissingVariable("URA_BOT_NOSTR_SECRET_KEY"),
+    relayUrls: (process.env.NOSTR_RELAY_URLS || "wss://nostr.bitcoiner.social,wss://nostr-pub.wellorder.net,wss://nostr.mom,wss://nos.lol,wss://relay.mostr.pub,wss://relay.damus.io").split(","),
+  },
 }
