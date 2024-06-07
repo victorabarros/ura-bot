@@ -1,9 +1,9 @@
 APP_NAME=ura-bot
 APP_DIR=/${APP_NAME}/src
-DOCKER_BASE_IMAGE=node:20.12.2
+DOCKER_BASE_IMAGE=node:20.14.0
 PORT=8082
 URL?=http://localhost:${PORT}/
-ENV_FILE?=.env.test
+ENV_FILE?=.env
 COMMAND?=bash
 API_KEY=McChickenPromo
 
@@ -29,18 +29,18 @@ endif
 build:
 	@clear
 	@echo "${YELLOW}Building project${COLOR_OFF}"
-	@make -s docker-command ENV_FILE=.env COMMAND="yarn build"
+	@make -s docker-command COMMAND="yarn build"
 
 run:
 	@clear
 	@echo "${YELLOW}Running project${COLOR_OFF}"
 	@make build
-	@make -s docker-command ENV_FILE=.env COMMAND="yarn start"
+	@make -s docker-command COMMAND="yarn start"
 
 run-dev:
 	@clear
 	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
-	@make -s docker-command ENV_FILE=.env COMMAND="yarn dev"
+	@make -s docker-command COMMAND="yarn dev"
 
 tests:
 	@reset
