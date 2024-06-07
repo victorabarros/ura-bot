@@ -5206,7 +5206,7 @@ typescript-lru-cache@^2.0.0:
   resolved "https://registry.yarnpkg.com/typescript-lru-cache/-/typescript-lru-cache-2.0.0.tgz#d4ad0f071ab51987b088a57c3c502d7dd62dee07"
   integrity sha512-Jp57Qyy8wXeMkdNuZiglE6v2Cypg13eDA1chHwDG6kq51X7gk4K7P7HaDdzZKCxkegXkVHNcPD0n5aW6OZH3aA==
 
-typescript@^5.4.5:
+typescript@5.4.5:
   version "5.4.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.5.tgz#42ccef2c571fdbd0f6718b1d1f5e6e5ef006f611"
   integrity sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==

@@ -10,7 +10,7 @@ type NostrServiceProps = {
 
 interface INostrService {
   writeNote(message: string): Promise<void>
-  check(): Promise<Boolean>
+  check(): Promise<boolean>
 }
 
 class NostrService implements INostrService {
@@ -33,7 +33,7 @@ class NostrService implements INostrService {
     const relays = await event.publish()
   }
 
-  check(): Promise<Boolean> {
+  check(): Promise<boolean> {
     // TODO ping any relay
     return Promise.resolve(true)
   }
