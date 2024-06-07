@@ -126,6 +126,7 @@ export const postUraNews = async (req: Request, res: Response) => {
   ].join("\n")
 
   const { id } = await UraTwitterService.writeTweet(message)
+  await UraNostrService.writeNote(message)
   //todo after tweet, use melembredisto, brlbot and urabot to like it
 
   return res
