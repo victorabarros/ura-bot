@@ -132,6 +132,7 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
+- implement holiday checker (https://finnhub.io/docs/api/market-holiday) before get post stock price
 - https://x.com/derekrogden/status/1797668427936731459
 - references https://www.postman.com/twitter/workspace/twitter-s-public-workspace/request/9956214-c936778b-e343-4a23-b1b4-433c501cf6eb?ctx=code
 - add welcome script https://github.com/victorabarros/CS50chain/blob/0e071b7af8851ef92791a1f068ed679f6da14ac4/Makefile#L11
