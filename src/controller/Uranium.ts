@@ -48,7 +48,6 @@ const OTHER_STOCKS = [
 export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 
 export const postUraStock = async (req: Request, res: Response) => {
-  // TODO after holiday implemented, post it here https://twitter.com/UraniumStockBot/status/1803472849593909727
   const now = new Date()
   if (isHoliday(now)) {
     const message = [
@@ -97,10 +96,8 @@ export const postUraStock = async (req: Request, res: Response) => {
 const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
   try {
     const { id } = await UraTwitterService.writeTweet(message)
-    // todo after tweet, use melembredisto, brlbot and urabot to like it
+    // TODO after tweet, use melembredisto, brlbot and urabot to like it
     await UraNostrService.writeNote(message)
-    console.log("message posted with success")
-
     return res
       .status(httpStatus.OK)
       .json({ id, created_at: now })
@@ -120,7 +117,7 @@ export const postUraNews = async (req: Request, res: Response) => {
   while (news.length == 0 && times < STOCKS.length * 4) {
     const randomStock = STOCKS[Math.floor(Math.random() * STOCKS.length)]
     news = await FinnHubService.searchNews(randomStock)
-    //todo improvement: search a batch of news and add to queue to publish for day long
+    // TODO improvement: search a batch of news and add to queue to publish for day long
     times = times + 1
   }
 
@@ -142,7 +139,7 @@ export const postUraNews = async (req: Request, res: Response) => {
 
   await postMessage(message, now, res)
 
-  //todo after tweet, use melembredisto, brlbot and urabot to like it
+  // TODO after tweet, use melembredisto, brlbot and urabot to like it
 
   return res
     .status(httpStatus.OK)
