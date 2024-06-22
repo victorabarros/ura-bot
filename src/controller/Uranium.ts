@@ -1,9 +1,12 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import FinnHubService, { GetQuoteResponse, SearchNewsResponse } from "../services/Finnhub"
+import FinnHubService, {
+  GetQuoteResponse,
+  SearchNewsResponse,
+} from "../services/Finnhub"
 import { UraTwitterService } from "../services/Twitter"
 import { UraNostrService } from "../services/Nostr"
-import {isHoliday,holidayMessage} from "../services/Holidays"
+import { isHoliday, holidayMessage } from "../services/Holidays"
 
 const DATE_FORMAT = {
   // weekday: "long",
@@ -15,7 +18,7 @@ const DATE_FORMAT = {
   hour: "2-digit",
   minute: "2-digit",
   // second: "2-digit",
-  hour12: false
+  hour12: false,
 } as Intl.DateTimeFormatOptions
 
 const NYSE_STOCKS = [
@@ -47,15 +50,14 @@ export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 export const postUraStock = async (req: Request, res: Response) => {
   // TODO after holiday implemented, post it here https://twitter.com/UraniumStockBot/status/1803472849593909727
   const now = new Date()
-  if (isHoliday(now)){
-  const message = [
-    morningMessage(now),
-    holidayMessage(now),
-    signature(now),
-    evenningMessage(now),
-  ].join("\n\n")
-  return await postMessage(message, now, res)
-
+  if (isHoliday(now)) {
+    const message = [
+      morningMessage(now),
+      holidayMessage(now),
+      signature(now),
+      evenningMessage(now),
+    ].join("\n\n")
+    return await postMessage(message, now, res)
   }
 
   const tasks = STOCKS.map(
@@ -89,7 +91,7 @@ export const postUraStock = async (req: Request, res: Response) => {
     evenningMessage(now),
   ].join("\n\n")
 
- return await postMessage(message, now, res)
+  return await postMessage(message, now, res)
 }
 
 const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
@@ -100,7 +102,7 @@ const postMessage = async (message: string, now: Date, res: Response): Promise<a
     console.log("message posted with success")
 
     return res
-      .status( httpStatus.OK)
+      .status(httpStatus.OK)
       .json({ id, created_at: now })
   } catch (error) {
     console.error(error)
@@ -138,7 +140,7 @@ export const postUraNews = async (req: Request, res: Response) => {
     // TODO add disclaimer and image
   ].join("\n")
 
-  await  postMessage(message, now, res)
+  await postMessage(message, now, res)
 
   //todo after tweet, use melembredisto, brlbot and urabot to like it
 
@@ -170,7 +172,7 @@ const handleQuotes = (quotes: Array<GetQuoteResponse>): string[] =>
   quotes.map(({ symbol, price, openPrice }) => {
     const message = `$${symbol}${" ".repeat(6 - symbol.length)}${price}`
 
-    const delta = 100 * (price - openPrice) / openPrice
+    const delta = (100 * (price - openPrice)) / openPrice
     const deltaString = delta.toFixed(2)
     const deltaMessage = `${" ".repeat(5 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}% ${delta < 0 ? "📉" : "📈"}`
     return `${message} ${deltaMessage}`

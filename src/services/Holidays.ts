@@ -1,4 +1,4 @@
-import moment from 'moment-timezone';
+import moment from "moment-timezone"
 
 type HolidayDetail = {
   eventName: string
@@ -188,36 +188,36 @@ export const MARKET_HOLIDAYS: GetHolidaysResponse = {
 export const isHoliday = (now: Date): boolean => {
   const tz = MARKET_HOLIDAYS.timezone
 
-const nowTZ = moment(now).tz(tz);
+  const nowTZ = moment(now).tz(tz)
 
-const today = nowTZ.format('YYYY-MM-DD');
+  const today = nowTZ.format("YYYY-MM-DD")
 
-const holidayDetail = MARKET_HOLIDAYS.data.find((h) => h.atDate === today);
-if (!holidayDetail) {
-  return false;
-}
+  const holidayDetail = MARKET_HOLIDAYS.data.find((h) => h.atDate === today)
+  if (!holidayDetail) {
+    return false
+  }
 
-if (holidayDetail.tradingHour === "") {
-  return true;
-}
+  if (holidayDetail.tradingHour === "") {
+    return true
+  }
 
-const currentTime = nowTZ.format('HH:mm');
+  const currentTime = nowTZ.format("HH:mm")
 
-const [startTradingHour, endTradingHour] = holidayDetail.tradingHour.split("-");
+  const [startTradingHour, endTradingHour] =
+    holidayDetail.tradingHour.split("-")
 
-if (currentTime >= startTradingHour && currentTime <= endTradingHour) {
-  return true;
-} else {
-  return false;
-}
-
+  if (currentTime >= startTradingHour && currentTime <= endTradingHour) {
+    return true
+  } else {
+    return false
+  }
 }
 
 export const holidayMessage = (now: Date): string => {
   const tz = MARKET_HOLIDAYS.timezone
-const nowTZ = moment(now).tz(tz);
+  const nowTZ = moment(now).tz(tz)
 
-  const today = nowTZ.format('YYYY-MM-DD');
+  const today = nowTZ.format("YYYY-MM-DD")
 
   const holidayDetail = MARKET_HOLIDAYS.data.find((h) => h.atDate === today)
 
