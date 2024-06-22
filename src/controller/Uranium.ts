@@ -54,7 +54,7 @@ export const postUraStock = async (req: Request, res: Response) => {
     signature(now),
     evenningMessage(now),
   ].join("\n\n")
-  return postMessage(message, now, res)
+  return await postMessage(message, now, res)
 
   }
 
@@ -89,7 +89,7 @@ export const postUraStock = async (req: Request, res: Response) => {
     evenningMessage(now),
   ].join("\n\n")
 
- return postMessage(message, now, res)
+ return await postMessage(message, now, res)
 }
 
 const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
@@ -138,8 +138,8 @@ export const postUraNews = async (req: Request, res: Response) => {
     // TODO add disclaimer and image
   ].join("\n")
 
-  const { id } = await UraTwitterService.writeTweet(message)
-  await UraNostrService.writeNote(message)
+  await  postMessage(message, now, res)
+
   //todo after tweet, use melembredisto, brlbot and urabot to like it
 
   return res
