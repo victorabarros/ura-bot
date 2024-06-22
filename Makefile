@@ -42,7 +42,7 @@ run-dev:
 	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn dev"
 
-tests:
+test:
 	@reset
 	@echo "${YELLOW}Testing${COLOR_OFF}"
 	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
