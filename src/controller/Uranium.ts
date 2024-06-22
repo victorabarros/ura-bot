@@ -3,6 +3,7 @@ import httpStatus from "http-status"
 import FinnHubService, { GetQuoteResponse, SearchNewsResponse } from "../services/Finnhub"
 import { UraTwitterService } from "../services/Twitter"
 import { UraNostrService } from "../services/Nostr"
+import {isHoliday,holidayMessage} from "../services/Holidays"
 
 const DATE_FORMAT = {
   // weekday: "long",
@@ -44,8 +45,18 @@ const OTHER_STOCKS = [
 export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 
 export const postUraStock = async (req: Request, res: Response) => {
+  // TODO after holiday implemented, post it here https://twitter.com/UraniumStockBot/status/1803472849593909727
   const now = new Date()
-  let fail = false
+  if (isHoliday(now)){
+  const message = [
+    morningMessage(now),
+    holidayMessage(now),
+    signature(now),
+    evenningMessage(now),
+  ].join("\n\n")
+  return postMessage(message, now, res)
+
+  }
 
   const tasks = STOCKS.map(
     async (stock: string): Promise<GetQuoteResponse | undefined> => {
@@ -57,7 +68,6 @@ export const postUraStock = async (req: Request, res: Response) => {
 
         return q
       } catch (error) {
-        fail = true
         console.error(error)
       }
     }
@@ -79,7 +89,10 @@ export const postUraStock = async (req: Request, res: Response) => {
     evenningMessage(now),
   ].join("\n\n")
 
+ return postMessage(message, now, res)
+}
 
+const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
   try {
     const { id } = await UraTwitterService.writeTweet(message)
     // todo after tweet, use melembredisto, brlbot and urabot to like it
@@ -87,8 +100,8 @@ export const postUraStock = async (req: Request, res: Response) => {
     console.log("message posted with success")
 
     return res
-      .status(fail ? httpStatus.PARTIAL_CONTENT : httpStatus.OK)
-      .json({ id, url: "https://twitter.com/UraniumStockBot", created_at: now })
+      .status( httpStatus.OK)
+      .json({ id, created_at: now })
   } catch (error) {
     console.error(error)
     return res

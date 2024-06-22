@@ -1,11 +1,14 @@
-type HolidayDetails = {
+import moment from 'moment-timezone';
+
+type HolidayDetail = {
   eventName: string
   atDate: string
   tradingHour: string
+  message?: string
 }
 
 type GetHolidaysResponse = {
-  data: Array<HolidayDetails>
+  data: Array<HolidayDetail>
   exchange: string
   timezone: string
 }
@@ -180,4 +183,47 @@ export const MARKET_HOLIDAYS: GetHolidaysResponse = {
   ],
   exchange: "US",
   timezone: "America/New_York",
+}
+
+export const isHoliday = (now: Date): boolean => {
+  const tz = MARKET_HOLIDAYS.timezone
+
+const nowTZ = moment(now).tz(tz);
+
+const today = nowTZ.format('YYYY-MM-DD');
+
+const holidayDetail = MARKET_HOLIDAYS.data.find((h) => h.atDate === today);
+if (!holidayDetail) {
+  return false;
+}
+
+if (holidayDetail.tradingHour === "") {
+  return true;
+}
+
+const currentTime = nowTZ.format('HH:mm');
+
+const [startTradingHour, endTradingHour] = holidayDetail.tradingHour.split("-");
+
+if (currentTime >= startTradingHour && currentTime <= endTradingHour) {
+  return true;
+} else {
+  return false;
+}
+
+}
+
+export const holidayMessage = (now: Date): string => {
+  const tz = MARKET_HOLIDAYS.timezone
+const nowTZ = moment(now).tz(tz);
+
+  const today = nowTZ.format('YYYY-MM-DD');
+
+  const holidayDetail = MARKET_HOLIDAYS.data.find((h) => h.atDate === today)
+
+  if (!holidayDetail) {
+    throw new Error("Holiday not found")
+  }
+
+  return holidayDetail.message || `Today is ${holidayDetail.eventName}`
 }
