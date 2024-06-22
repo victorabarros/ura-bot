@@ -143,7 +143,7 @@ export const postUraNews = async (req: Request, res: Response) => {
 
   return res
     .status(httpStatus.OK)
-    .json({ url: `https://twitter.com/UraniumStockBot/status/${id}`, created_at: now })
+    .json({ url: `https://twitter.com/UraniumStockBot/`, created_at: now })
 }
 
 export const morningMessage = (now: Date): string => (
