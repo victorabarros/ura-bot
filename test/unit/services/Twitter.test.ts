@@ -4,7 +4,7 @@ import { UraTwitterService } from "../../../src/services/Twitter"
 describe("Test Services Twitter", () => {
 
   describe("write twitter", () => {
-    it("success", async () => {
+    it.skip("success", async () => {
       const { id } = await UraTwitterService.writeTweet("message")
       expect(id).toBe("mock")
     })

@@ -132,6 +132,7 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
+- refact: remove comment code / remove skipt test / remove mock id from tweeter response
 - more stocks https://twitter.com/FayeKnoozIV/status/1806373643435282575
 - https://x.com/derekrogden/status/1797668427936731459
 - references https://www.postman.com/twitter/workspace/twitter-s-public-workspace/request/9956214-c936778b-e343-4a23-b1b4-433c501cf6eb?ctx=code
