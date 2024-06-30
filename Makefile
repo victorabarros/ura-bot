@@ -26,29 +26,29 @@ ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l
 	@docker ps -a --filter "name=${APP_NAME}" -aq | xargs docker rm -f
 endif
 
-build:
+docker-build:
 	@clear
 	@echo "${YELLOW}Building project${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn build"
 
-run:
+docker-run:
 	@clear
 	@echo "${YELLOW}Running project${COLOR_OFF}"
 	@make build
 	@make -s docker-command COMMAND="yarn start"
 
-run-dev:
+docker-run-dev:
 	@clear
 	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn dev"
 
-test:
+docker-test:
 	@reset
 	@echo "${YELLOW}Testing${COLOR_OFF}"
 	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
 	@open coverage/index.html
 
-migration:
+docker-migration:
 	@clear
 	@echo "${YELLOW}Executing Migrations${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn sequelize db:migrate"
@@ -68,6 +68,3 @@ tweet-ura-news:
 tweet-brl-price:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brlbot/prices
 
-prod-tweet-ura-stocks:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' https://api.uraniumstockbot.com/urabot/stocks
-  # tweet-ura-stocks URL="https://api.uraniumstockbot.com/"

@@ -54,7 +54,7 @@ write .env file similar to .env.example
 
 ```sh
 # locally run with hot reload
-make dev
+make docker-run-dev
 
 # api requests
 make healthcheck
@@ -62,11 +62,11 @@ make tweet-ura-stocks
 make tweet-ura-news
 
 # automated tests
-make tests
+make docker-test
 
 # build and run production version
-make build
-make run
+make docker-build
+make docker-run
 ```
 
 ## Endpoint
