@@ -132,6 +132,8 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
+- setup cronjob to brl bot
+- use ai to create cover image to BRL bot https://x.com/LeonardoAi_
 - refact: remove comment code / remove skipt test / remove mock id from tweeter response
 - more stocks https://twitter.com/FayeKnoozIV/status/1806373643435282575
 - https://x.com/derekrogden/status/1797668427936731459

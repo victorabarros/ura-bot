@@ -39,7 +39,7 @@ class CurrencyService implements ICurrencyService {
       cad: { value: parseFloat(rates.CAD), symbol: "CAD", name: "Dolar Canadense", flag: "🇨🇦" },
     }
   }
-
+  
 }
 
 const service = new CurrencyService()

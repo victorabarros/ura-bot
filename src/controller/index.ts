@@ -21,6 +21,7 @@ export const health = async (req: Request, res: Response) => {
       ura: { success: true, },
       brl: { success: true, },
     },
+    // TODO add currency and nostr
   }
 
   try {

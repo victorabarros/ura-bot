@@ -8,7 +8,8 @@ export const middleware = (req: Request, res: Response, next: NextFunction) => {
   const { method, url } = req
   console.log(`${new Date().toISOString()} ${method} "${url}" started`)
 
-  if (!["/health", "/heartbeat", "/callback"].includes(url)) {
+  const urlWithoutAuth = ["/health", "/heartbeat", "/callback"]
+  if (!urlWithoutAuth.includes(url)) {
     const { authorization } = req.headers
     if (authorization !== apiKey) {
       return res
