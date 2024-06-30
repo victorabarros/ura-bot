@@ -4,8 +4,10 @@ export * from "./Uranium"
 import { Request, Response } from "express"
 import httpStatus from "http-status"
 import FinHubService from "../services/Finnhub"
+import CurrencyService from "../services/Currency"
 import config from "../config"
-import { BrlTwitterService, UraTwitterService } from "../services/Twitter"
+import { UraTwitterService } from "../services/Twitter"
+import { UraNostrService } from "../services/Nostr"
 
 export const heartbeat = async (req: Request, res: Response) => {
   return res
@@ -17,11 +19,9 @@ export const health = async (req: Request, res: Response) => {
   let responseStatus = httpStatus.OK
   const services = {
     finhub: { success: true, },
-    twitter: {
-      ura: { success: true, },
-      brl: { success: true, },
-    },
-    // TODO add currency and nostr
+    fxExchange: { success: true, },
+    twitter: { success: true, },
+    nostr: { success: true, },
   }
 
   try {
@@ -33,19 +33,27 @@ export const health = async (req: Request, res: Response) => {
   }
 
   try {
+    await CurrencyService.getBrlValues()
+  } catch (err) {
+    console.error("Fail to check FinHub", err)
+    responseStatus = httpStatus.SERVICE_UNAVAILABLE
+    services.finhub.success = false
+  }
+
+  try {
     await UraTwitterService.check()
   } catch (err) {
     console.error("Fail to check UraTwitter", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
-    services.twitter.ura.success = false
+    services.twitter.success = false
   }
 
   try {
-    await BrlTwitterService.check()
+    await UraNostrService.check()
   } catch (err) {
     console.error("Fail to check BrlTwitter", JSON.stringify(err))
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
-    services.twitter.brl.success = false
+    services.twitter.success = false
   }
 
   return res
