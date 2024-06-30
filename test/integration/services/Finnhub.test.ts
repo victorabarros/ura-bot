@@ -39,20 +39,4 @@ describe("Test Services Finhub", () => {
     }))
   })
 
-  describe.skip("get quote candles", () => {
-    Promise.all(STOCKS.map(async stock => {
-      it(`success ${stock}`, async () => {
-        const from = new Date(2021, 11, 10, 19, 30).getTime() / 1000
-        const to = new Date(2021, 11, 10, 20, 0).getTime() / 1000
-
-        const candles = await FinnHubService.getQuoteCandles(stock, from, to)
-
-        candles.map(({ timestamp }) => {
-          expect(timestamp).toBeGreaterThanOrEqual(from)
-          expect(timestamp).toBeLessThanOrEqual(to)
-        })
-      })
-    }))
-  })
-
 })

@@ -5,15 +5,15 @@ describe("Test Services Twitter", () => {
 
   describe("write twitter", () => {
     it.skip("success", async () => {
+      // Use to test the post message to Urabot account
       const { id } = await UraTwitterService.postMessage("message")
-      expect(id).toBe("mock")
+      expect(id).toBe("TODO")
     })
   })
 
-  describe.skip("check", () => {
+  describe("check", () => {
     it("success", async () => {
-      await UraTwitterService.check()
-      expect(true).toBeTruthy()
+      expect(await UraTwitterService.check()).toBeTruthy()
     })
   })
 })
