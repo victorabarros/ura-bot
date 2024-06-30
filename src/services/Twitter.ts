@@ -1,11 +1,8 @@
 import request, { OAuthOptions } from "request"
 import config from "../config"
+import { ISocialService, PostMessageResponse } from "./ISocialService"
 
 const { uraBot, brlBot, baseUrl } = config.twitter
-
-type WriteTweetResponse = {
-  id: string
-}
 
 type TwitterServiceProps = {
   apiKey: string
@@ -14,12 +11,7 @@ type TwitterServiceProps = {
   accessTokenSecret: string
 }
 
-interface ITwitterService {
-  writeTweet(message: string): Promise<WriteTweetResponse>
-  check(): Promise<void>
-}
-
-class TwitterService implements ITwitterService {
+class TwitterService implements ISocialService {
   private oauth: OAuthOptions
 
   constructor(props: TwitterServiceProps) {
@@ -31,7 +23,7 @@ class TwitterService implements ITwitterService {
     }
   }
 
-  async writeTweet(message: string): Promise<WriteTweetResponse> {
+  async postMessage(message: string): Promise<PostMessageResponse> {
     const options = {
       method: "POST",
       url: baseUrl,
@@ -47,12 +39,12 @@ class TwitterService implements ITwitterService {
       console.log(body)
     })
 
-    return { id: "mock" }
+    return { id: "TODO" }
   }
 
-  check(): Promise<void> {
+  check(): Promise<boolean> {
     // throw new Error("Method not implemented.")
-    return Promise.resolve()
+    return Promise.resolve(true)
   }
 }
 

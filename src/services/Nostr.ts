@@ -1,6 +1,7 @@
 import "websocket-polyfill"
 import NDK, { NDKEvent, NDKKind, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk"
 import config from "../config"
+import { ISocialService, PostMessageResponse } from "./ISocialService"
 
 
 type NostrServiceProps = {
@@ -8,12 +9,7 @@ type NostrServiceProps = {
     relayUrls: string[]
 }
 
-interface INostrService {
-  writeNote(message: string): Promise<void>
-  check(): Promise<boolean>
-}
-
-class NostrService implements INostrService {
+class NostrService implements ISocialService {
     private ndk: NDK
 
   constructor(props: NostrServiceProps) {
@@ -23,7 +19,7 @@ class NostrService implements INostrService {
     })
   }
 
-  async writeNote(message: string): Promise<void> {
+  async postMessage(message: string): Promise<PostMessageResponse> {
     await this.ndk.connect(2000)
 
     const event = new NDKEvent(this.ndk)
@@ -31,6 +27,8 @@ class NostrService implements INostrService {
     event.kind = NDKKind.Text
     
     const relays = await event.publish()
+
+    return { id: "TODO" }
   }
 
   check(): Promise<boolean> {

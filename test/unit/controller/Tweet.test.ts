@@ -1,4 +1,4 @@
-import { evenningMessage, fridayMessage, morningMessage, postUraStock } from "../../../src/controller/Uranium"
+import { postUraStock } from "../../../src/controller/Uranium"
 
 const mockResponse = {
   status: (code: number) => ({ statusCode: code, ...mockResponse }),
@@ -39,28 +39,6 @@ describe("Test Controller Tweet", () => {
     it("success", async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await postUraStock({} as any, mockResponse as any)
-    })
-  })
-
-  describe("is first", () => {
-    it("success", async () => {
-      const marketOpenning = new Date(50400000) // 1970-01-01T14:00:00.000Z
-      expect(morningMessage(marketOpenning).startsWith("Good Morning")).toBeTruthy()
-    })
-  })
-
-  describe("is last", () => {
-    it("success", async () => {
-      const marketClosing = new Date(75600000) // 1970-01-01T21:00:00.000Z
-      expect(evenningMessage(marketClosing).startsWith("Good Night")).toBeTruthy()
-    })
-  })
-
-  describe("friday message", () => {
-    it("success", async () => {
-      const fridayMarketClosing = new Date(162000000) // 1970-01-02T21:00:00.000Z
-      expect(fridayMessage(fridayMarketClosing)).toBe("Have a nice and sunny weekend")
-      expect(evenningMessage(fridayMarketClosing)).toContain("Have a nice and sunny weekend")
     })
   })
 

@@ -9,15 +9,9 @@ import { UraNostrService } from "../services/Nostr"
 import { isHoliday, holidayMessage } from "../services/Holidays"
 
 const DATE_FORMAT = {
-  // weekday: "long",
-  // year: "numeric",
-  // month: "long",
-  // day: "numeric",
-  // timeZoneName: "long",
   timeZone: "America/New_York",
   hour: "2-digit",
   minute: "2-digit",
-  // second: "2-digit",
   hour12: false,
 } as Intl.DateTimeFormatOptions
 
@@ -93,22 +87,6 @@ export const postUraStock = async (req: Request, res: Response) => {
   return await postMessage(message, now, res)
 }
 
-const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
-  try {
-    const { id } = await UraTwitterService.writeTweet(message)
-    // TODO after tweet, use melembredisto, brlbot and urabot to like it
-    await UraNostrService.writeNote(message)
-    return res
-      .status(httpStatus.OK)
-      .json({ id, created_at: now })
-  } catch (error) {
-    console.error(error)
-    return res
-      .status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({})
-  }
-}
-
 export const postUraNews = async (req: Request, res: Response) => {
   const now = new Date()
   let news: Array<SearchNewsResponse> = []
@@ -117,7 +95,6 @@ export const postUraNews = async (req: Request, res: Response) => {
   while (news.length == 0 && times < STOCKS.length * 4) {
     const randomStock = STOCKS[Math.floor(Math.random() * STOCKS.length)]
     news = await FinnHubService.searchNews(randomStock)
-    // TODO improvement: search a batch of news and add to queue to publish for day long
     times = times + 1
   }
 
@@ -134,29 +111,42 @@ export const postUraNews = async (req: Request, res: Response) => {
     "",
     signature(now),
     randomNews.url,
-    // TODO add disclaimer and image
   ].join("\n")
 
   await postMessage(message, now, res)
 
-  // TODO after tweet, use melembredisto, brlbot and urabot to like it
-
   return res
     .status(httpStatus.OK)
-    .json({ url: `https://twitter.com/UraniumStockBot/`, created_at: now })
+    .json({ url: "https://twitter.com/UraniumStockBot/", created_at: now })
 }
 
-export const morningMessage = (now: Date): string => (
+const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
+  try {
+    const { id } = await UraTwitterService.postMessage(message)
+    await UraNostrService.postMessage(message)
+
+    return res
+      .status(httpStatus.OK)
+      .json({ id, created_at: now })
+  } catch (error) {
+    console.error(error)
+    return res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({})
+  }
+}
+
+const morningMessage = (now: Date): string => (
   (now.getHours() === 14 && now.getMinutes() === 0) ?
     "Good Morning, everyone!" : ""
 )
 
-export const evenningMessage = (now: Date): string => (
+const evenningMessage = (now: Date): string => (
   (now.getHours() === 21 && now.getMinutes() === 0) ?
     `Good Night, guys! ${fridayMessage(now)}\nSee ya` : ""
 )
 
-export const fridayMessage = (now: Date): string => (
+const fridayMessage = (now: Date): string => (
   (now.getDay() === 5) ?
     "Have a nice and sunny weekend" : ""
 )

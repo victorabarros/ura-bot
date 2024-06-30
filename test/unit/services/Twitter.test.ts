@@ -5,7 +5,7 @@ describe("Test Services Twitter", () => {
 
   describe("write twitter", () => {
     it.skip("success", async () => {
-      const { id } = await UraTwitterService.writeTweet("message")
+      const { id } = await UraTwitterService.postMessage("message")
       expect(id).toBe("mock")
     })
   })

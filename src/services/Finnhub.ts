@@ -110,8 +110,6 @@ class FinnHubService implements IFinnHubService {
     return resp
   }
 
-  // TODO:
-  // use finhub's sdk https://github.com/Finnhub-Stock-API/finnhub-js
 }
 
 const service = new FinnHubService()

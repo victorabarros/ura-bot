@@ -2,9 +2,26 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import CurrencyService from "../services/Currency"
 import { BrlTwitterService } from "../services/Twitter"
+import { isHoliday, holidayMessage } from "../services/Holidays"
+
+const DATE_FORMAT = {
+  timeZone: "America/New_York",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+} as Intl.DateTimeFormatOptions
 
 export const postBrlPrice = async (req: Request, res: Response) => {
   const now = new Date()
+  if (isHoliday(now)) {
+    const message = [
+      holidayMessage(now),
+      signature(now),
+    ].join("\n\n")
+
+    return await postMessage(message, now, res)
+  }
+
   const currencies = await CurrencyService.getBrlValues()
 
   const lines = ["Cambio do BRL Real:\n",]
@@ -13,22 +30,28 @@ export const postBrlPrice = async (req: Request, res: Response) => {
         const currency = (currencies as any)[c]
         return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}`
       })
-    )
+    ).concat(["\n", signature(now),])
 
   const message = lines.join("\n")
-  console.log(message)
+
+  return await postMessage(message, now, res)
+}
+
+const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
 
   try {
-    const { id } = await BrlTwitterService.writeTweet(message)
-    //todo after tweet, use melembredisto, brlbot and urabot to like it
+    await BrlTwitterService.postMessage(message)
     return res
       .status(httpStatus.OK)
-      .json({ id, url: "https://twitter.com/BrlBot", created_at: now })
+      .json({ url: "https://twitter.com/BrlBot", created_at: now })
   } catch (error) {
     console.error(error)
     return res
       .status(httpStatus.INTERNAL_SERVER_ERROR)
       .json({})
   }
-
 }
+
+const signature = (now: Date): string => (
+  `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#BRLbot`
+)
