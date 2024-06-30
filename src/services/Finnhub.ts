@@ -69,8 +69,8 @@ class FinnHubService implements IFinnHubService {
 
     const params = {
       symbol,
-      from: from.toISOString().substring(0, 10), // TODO use localestring and format correctly
-      to: to.toISOString().substring(0, 10), // TODO use localestring and format correctly
+      from: from.toLocaleDateString("en-CA"),
+      to: to.toLocaleDateString("en-CA"),
       token: apiKey
     }
 
