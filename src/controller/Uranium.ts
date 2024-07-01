@@ -111,11 +111,7 @@ export const postUraNews = async (req: Request, res: Response) => {
     randomNews.url,
   ].join("\n")
 
-  await postMessage([message], now, res)
-
-  return res
-    .status(httpStatus.OK)
-    .json({ url: "https://twitter.com/UraniumStockBot/", created_at: now })
+  return await postMessage([message], now, res)
 }
 
 const postMessage = async (messages: string[], now: Date, res: Response): Promise<any> => {
