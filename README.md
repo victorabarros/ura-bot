@@ -132,22 +132,25 @@ I'm more than happy to be honored with your support.
 
 <!--
 TODO:
-- setup cronjob to brl bot
-- use ai to create cover image to BRL bot https://x.com/LeonardoAi_
-- refact: remove comment code / remove skipt test / remove mock id from tweeter response
-- more stocks https://twitter.com/FayeKnoozIV/status/1806373643435282575
-- https://x.com/derekrogden/status/1797668427936731459
-- references https://www.postman.com/twitter/workspace/twitter-s-public-workspace/request/9956214-c936778b-e343-4a23-b1b4-433c501cf6eb?ctx=code
-- add welcome script https://github.com/victorabarros/CS50chain/blob/0e071b7af8851ef92791a1f068ed679f6da14ac4/Makefile#L11
-- alternative to railway: https://render.com/
+
+
+- other stocks:
+  - find another api that supports the stocks above. alternatives: data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
+  - $URM https://twitter.com/TheTSXDude/status/1631066976666763266?s=20 
+  - $NANO https://twitter.com/FayeKnoozIV/status/1806373643435282575
+  - $SPUT https://x.com/derekrogden/status/1797668427936731459
 - weekly report on friday night or Monday morning / monthly report on last day of month / quarter report; example https://twitter.com/precodobitcoin/status/1480313562291658760
-- add github actions => run tests on pr opened
+
 - write article:
   - https://medium.com/p/152d197194/edit
   - part 1 - first auto tweet serveless with finhub and tweet
   - part 2 - cron and elephant sql (alternative to elephant is https://www.cockroachlabs.com/pricing/ or https://neon.tech/early-access/)
   - part 3 - add query params and cron with goodmorning/evenning.
+
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
-- data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
 - is it possible to use a giphy api to add gif to news post? same to chart
+
+- create cover image to BRL bot (use ai to https://x.com/LeonardoAi_)
+- alternative to railway: https://render.com/
+- add github actions => run tests on pr opened
 -->

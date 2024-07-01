@@ -24,16 +24,15 @@ const NYSE_STOCKS = [
   "URNM", // ETF
   "UUUU", // Energy Fuels
   "SRUUF",
+  "SMR", // NuScale Power Corporation (SMR)
 ]
 
 const OTHER_STOCKS = [
   // "U.U",
-  // "SPUT",
   // "U.UN", // Sprott: physical uranium trust
   // "UXC", // Future Contract
   // "HURA", // ETF
-  // "URM", TODO https://twitter.com/TheTSXDude/status/1631066976666763266?s=20 https://t2.genius.com/unsafe/600x612/https://images.genius.com/99b18d354a84873bd2134f418b4d58d1.589x600x1.jpg
-  // TODO find another api that supports the stocks above
+  // "NANO",
   "URNJ",
 
   "UROY",
