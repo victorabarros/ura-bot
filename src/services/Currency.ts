@@ -18,14 +18,15 @@ type GetCurrenciesResponse = {
   gbp: Currency // British Pound
   chf: Currency // Swiss Franc
   cad: Currency // Canadian Dollar
+  btc: Currency // Bitcoin
 }
 
 interface ICurrencyService {
-  getBrlValues(): Promise<GetCurrenciesResponse>
+  getCurrenciesValues(): Promise<GetCurrenciesResponse>
 }
 
 export class CurrencyService implements ICurrencyService {
-  async getBrlValues(): Promise<GetCurrenciesResponse> {
+  async getCurrenciesValues(): Promise<GetCurrenciesResponse> {
     const { data } = await axios.get(address)
     const { s: { r: rates } } = data
 
@@ -37,7 +38,8 @@ export class CurrencyService implements ICurrencyService {
       gbp: { value: parseFloat(rates.GBP), symbol: "GBP", name: "Pound Britanico", flag: "🇬🇧" },
       chf: { value: parseFloat(rates.CHF), symbol: "CHF", name: "Franco Suiço", flag: "🇨🇭" },
       cad: { value: parseFloat(rates.CAD), symbol: "CAD", name: "Dolar Canadense", flag: "🇨🇦" },
+      btc: { value: 1/parseFloat(rates.BTC), symbol: "BTC", name: "Bitcoin", flag: "🍕" },
     }
   }
-  
+
 }

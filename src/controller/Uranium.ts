@@ -6,13 +6,7 @@ import {
 } from "../services/Finnhub"
 import { isHoliday, holidayMessage } from "../services/Holidays"
 import { finnHub, uraNostr, uraTwitter } from "../services"
-
-const DATE_FORMAT = {
-  timeZone: "America/New_York",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-} as Intl.DateTimeFormatOptions
+import { handleQuotes, signature } from "./helper"
 
 const NYSE_STOCKS = [
   "CCJ",  // Cameco: second largest producer
@@ -46,7 +40,7 @@ export const postUraStock = async (req: Request, res: Response) => {
     const message = [
       morningMessage(now),
       holidayMessage(now),
-      signature(now),
+      signature(now, "#Uranium ☢️"),
       evenningMessage(now),
     ].join("\n\n")
     return await postMessage([message], now, res)
@@ -82,7 +76,7 @@ export const postUraStock = async (req: Request, res: Response) => {
     const message = [
       morningMessage(now),
       handleQuotes(quotes.slice(i, i + stocksPerMessage)).join("\n"),
-      signature(now),
+      signature(now, "#Uranium ☢️"),
       evenningMessage(now),
     ].join("\n\n")
     messages.push(message)
@@ -113,15 +107,11 @@ export const postUraNews = async (req: Request, res: Response) => {
   const message = [
     randomNews.headline,
     "",
-    signature(now),
+    signature(now, "#Uranium ☢️"),
     randomNews.url,
   ].join("\n")
 
-  await postMessage([message], now, res)
-
-  return res
-    .status(httpStatus.OK)
-    .json({ url: "https://twitter.com/UraniumStockBot/", created_at: now })
+  return await postMessage([message], now, res)
 }
 
 const postMessage = async (messages: string[], now: Date, res: Response): Promise<any> => {
@@ -157,17 +147,3 @@ const fridayMessage = (now: Date): string => (
   (now.getDay() === 5) ?
     "Have a nice and sunny weekend" : ""
 )
-
-const signature = (now: Date): string => (
-  `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Uranium ☢️`
-)
-
-const handleQuotes = (quotes: Array<GetQuoteResponse>): string[] =>
-  quotes.map(({ symbol, price, openPrice }) => {
-    const message = `$${symbol}${" ".repeat(6 - symbol.length)}${price}`
-
-    const delta = (100 * (price - openPrice)) / openPrice
-    const deltaString = delta.toFixed(2)
-    const deltaMessage = `${" ".repeat(5 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}% ${delta < 0 ? "📉" : "📈"}`
-    return `${message} ${deltaMessage}`
-  })

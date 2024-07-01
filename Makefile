@@ -83,3 +83,6 @@ tweet-ura-news:
 
 tweet-brl-price:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brlbot/prices
+
+tweet-btc-metrx:
+	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}btcmetrx/indexes
