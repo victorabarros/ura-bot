@@ -22,11 +22,11 @@ type GetCurrenciesResponse = {
 }
 
 interface ICurrencyService {
-  getBrlValues(): Promise<GetCurrenciesResponse>
+  getCurrenciesValues(): Promise<GetCurrenciesResponse>
 }
 
 export class CurrencyService implements ICurrencyService {
-  async getBrlValues(): Promise<GetCurrenciesResponse> {
+  async getCurrenciesValues(): Promise<GetCurrenciesResponse> {
     const { data } = await axios.get(address)
     const { s: { r: rates } } = data
 

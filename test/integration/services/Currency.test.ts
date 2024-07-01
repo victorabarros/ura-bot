@@ -5,7 +5,7 @@ describe("Test Services Currency", () => {
 
   describe("get currency values", () => {
     it("success", async () => {
-      const resp = await exchangeService.getBrlValues()
+      const resp = await exchangeService.getCurrenciesValues()
 
       Object.keys(resp).forEach((key) => {
         const currency: Currency = (resp as any)[key]

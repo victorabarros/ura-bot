@@ -30,7 +30,7 @@ export const health = async (req: Request, res: Response) => {
   }
 
   try {
-    await exchangeService.getBrlValues()
+    await exchangeService.getCurrenciesValues()
   } catch (err) {
     console.error("Fail to check FinHub", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE

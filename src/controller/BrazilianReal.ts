@@ -15,7 +15,7 @@ export const postBrlPrice = async (req: Request, res: Response) => {
     return await postMessage(message, now, res)
   }
 
-  const currencies = await exchangeService.getBrlValues()
+  const currencies = await exchangeService.getCurrenciesValues()
 
   const lines = ["Cambio do BRL Real:\n",]
     .concat(

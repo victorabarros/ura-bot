@@ -6,7 +6,7 @@ import { signature } from "./helper"
 export const postBTCIndexes = async (req: Request, res: Response) => {
   const now = new Date()
 
-  const currencies = await exchangeService.getBrlValues()
+  const currencies = await exchangeService.getCurrenciesValues()
   const currency = currencies.btc
   const msg = `$${currency.symbol} ${(currency.value).toFixed(2)}`
 
