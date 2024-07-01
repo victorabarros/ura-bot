@@ -2,13 +2,7 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import { brlTwitter, exchangeService } from "../services"
 import { isHoliday, holidayMessage } from "../services/Holidays"
-
-const DATE_FORMAT = {
-  timeZone: "America/New_York",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-} as Intl.DateTimeFormatOptions
+import { signature } from "./helper"
 
 export const postBrlPrice = async (req: Request, res: Response) => {
   const now = new Date()
@@ -29,7 +23,7 @@ export const postBrlPrice = async (req: Request, res: Response) => {
         const currency = (currencies as any)[c]
         return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}`
       })
-    ).concat(["\n", signature(now),])
+    ).concat(["\n", signature(now, "#BRLbot"),])
 
   const message = lines.join("\n")
 
@@ -50,7 +44,3 @@ const postMessage = async (message: string, now: Date, res: Response): Promise<a
       .json({})
   }
 }
-
-const signature = (now: Date): string => (
-  `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#BRLbot`
-)

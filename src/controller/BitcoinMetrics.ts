@@ -1,18 +1,26 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-
-// TODO move to index or helper and reutilize in other controllers
-const DATE_FORMAT = {
-  timeZone: "America/New_York",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-} as Intl.DateTimeFormatOptions
+import { exchangeService } from "../services"
+import { signature } from "./helper"
 
 export const postBTCIndexes = async (req: Request, res: Response) => {
   const now = new Date()
 
-  const messages: string[] = [signature(now)]
+  const currencies = await exchangeService.getBrlValues()
+
+  const lines = 
+    ["Cambio do BRL Real:\n",]
+    .concat(
+      ["btc"].map((c: string) => {
+        const currency = (currencies as any)[c]
+        return `$${currency.symbol} ${(currency.value).toFixed(2)}`
+      })
+    )
+    .concat(signature(now, "#Bitcoin"))
+
+  const message = lines.join("\n")
+
+  const messages: string[] = [message]
 
   return await postMessage(messages, now, res)
 }
@@ -38,8 +46,3 @@ const postMessage = async (messages: string[], now: Date, res: Response): Promis
       .json({})
   }
 }
-
-// TODO move to a helper or index and reutilize in other controllers
-const signature = (now: Date): string => (
-  `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n#Bitcoin`
-)
