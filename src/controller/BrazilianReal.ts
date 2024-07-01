@@ -25,7 +25,7 @@ export const postBrlPrice = async (req: Request, res: Response) => {
 
   const lines = ["Cambio do BRL Real:\n",]
     .concat(
-      ["usd", "eur", "cad", "gbp", "chf", "jpy"].map((c: string) => {
+      ["usd", "eur", "cad", "gbp", "chf", "jpy", "btc"].map((c: string) => {
         const currency = (currencies as any)[c]
         return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}`
       })
