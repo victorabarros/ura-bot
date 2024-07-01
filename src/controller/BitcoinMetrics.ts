@@ -7,15 +7,12 @@ export const postBTCIndexes = async (req: Request, res: Response) => {
   const now = new Date()
 
   const currencies = await exchangeService.getBrlValues()
+  const currency = currencies.btc
+  const msg = `$${currency.symbol} ${(currency.value).toFixed(2)}`
 
-  const lines = 
-    ["Cambio do BRL Real:\n",]
-    .concat(
-      ["btc"].map((c: string) => {
-        const currency = (currencies as any)[c]
-        return `$${currency.symbol} ${(currency.value).toFixed(2)}`
-      })
-    )
+  const lines =
+    ["#Bitcoin Indexes\n"]
+    .concat(msg)
     .concat(signature(now, "#Bitcoin"))
 
   const message = lines.join("\n")
@@ -25,7 +22,6 @@ export const postBTCIndexes = async (req: Request, res: Response) => {
   return await postMessage(messages, now, res)
 }
 
-// TODO move to helper or index and reutilize in other controllers
 const postMessage = async (messages: string[], now: Date, res: Response): Promise<any> => {
 
   try {
