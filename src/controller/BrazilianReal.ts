@@ -9,7 +9,7 @@ export const postBrlPrice = async (req: Request, res: Response) => {
   if (isHoliday(now)) {
     const message = [
       holidayMessage(now),
-      signature(now),
+      signature(now, "#BRLbot"),
     ].join("\n\n")
 
     return await postMessage(message, now, res)
