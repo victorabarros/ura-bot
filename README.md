@@ -134,6 +134,7 @@ I'm more than happy to be honored with your support.
 TODO:
 
 - weekly report on friday night or Monday morning / monthly report on last day of month / quarter report; example https://twitter.com/precodobitcoin/status/1480313562291658760; is it possible to use a giphy api to add gif to news post? same to chart
+- look twiter ai to improve urabot (like suggestion text to send with news; evaluation of stocks) https://twitter.com/elonmusk/status/1760516729783148583
 - write article:
   - https://medium.com/p/152d197194/edit
   - part 1 - first auto tweet serveless with finhub and tweet

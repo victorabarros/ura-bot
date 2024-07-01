@@ -50,7 +50,7 @@ export const postUraStock = async (req: Request, res: Response) => {
       signature(now),
       evenningMessage(now),
     ].join("\n\n")
-    return await postMessage(message, now, res)
+    return await postMessage([message], now, res)
   }
 
   const tasks = STOCKS.map(
