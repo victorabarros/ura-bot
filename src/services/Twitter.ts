@@ -2,7 +2,7 @@ import request, { OAuthOptions } from "request"
 import config from "../config"
 import { ISocialService, PostMessageResponse } from "./ISocialService"
 
-const { uraBot, brlBot, baseUrl } = config.twitter
+const { baseUrl } = config.twitter
 
 type TwitterServiceProps = {
   apiKey: string
@@ -11,7 +11,7 @@ type TwitterServiceProps = {
   accessTokenSecret: string
 }
 
-class TwitterService implements ISocialService {
+export class TwitterService implements ISocialService {
   private oauth: OAuthOptions
 
   constructor(props: TwitterServiceProps) {
@@ -46,9 +46,3 @@ class TwitterService implements ISocialService {
     return Promise.resolve(true)
   }
 }
-
-
-export const UraTwitterService = new TwitterService({ ...uraBot })
-
-
-export const BrlTwitterService = new TwitterService(brlBot)

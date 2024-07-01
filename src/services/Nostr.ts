@@ -1,6 +1,5 @@
 import "websocket-polyfill"
 import NDK, { NDKEvent, NDKKind, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk"
-import config from "../config"
 import { ISocialService, PostMessageResponse } from "./ISocialService"
 
 
@@ -9,7 +8,7 @@ type NostrServiceProps = {
     relayUrls: string[]
 }
 
-class NostrService implements ISocialService {
+export class NostrService implements ISocialService {
     private ndk: NDK
 
   constructor(props: NostrServiceProps) {
@@ -36,6 +35,3 @@ class NostrService implements ISocialService {
     return Promise.resolve(true)
   }
 }
-
-
-export const UraNostrService = new NostrService(config.nostr)

@@ -1,13 +1,10 @@
 export * from "./BrazilianReal"
 export * from "./Uranium"
+import { finnHub, currency, uraNostr, uraTwitter } from "../services"
 
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import FinHubService from "../services/Finnhub"
-import CurrencyService from "../services/Currency"
 import config from "../config"
-import { UraTwitterService } from "../services/Twitter"
-import { UraNostrService } from "../services/Nostr"
 
 export const heartbeat = async (req: Request, res: Response) => {
   return res
@@ -25,7 +22,7 @@ export const health = async (req: Request, res: Response) => {
   }
 
   try {
-    await FinHubService.getQuoteRealTime("URA")
+    await finnHub.getQuoteRealTime("URA")
   } catch (err) {
     console.error("Fail to check FinHub", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
@@ -33,7 +30,7 @@ export const health = async (req: Request, res: Response) => {
   }
 
   try {
-    await CurrencyService.getBrlValues()
+    await currency.getBrlValues()
   } catch (err) {
     console.error("Fail to check FinHub", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
@@ -41,7 +38,7 @@ export const health = async (req: Request, res: Response) => {
   }
 
   try {
-    await UraTwitterService.check()
+    await uraTwitter.check()
   } catch (err) {
     console.error("Fail to check UraTwitter", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
@@ -49,7 +46,7 @@ export const health = async (req: Request, res: Response) => {
   }
 
   try {
-    await UraNostrService.check()
+    await uraNostr.check()
   } catch (err) {
     console.error("Fail to check BrlTwitter", JSON.stringify(err))
     responseStatus = httpStatus.SERVICE_UNAVAILABLE

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { UraTwitterService } from "../../../src/services/Twitter"
+import { uraTwitter } from "../../../src/services"
 
 describe("Test Services Twitter", () => {
 
   describe("check", () => {
     it("success", async () => {
-      expect(await UraTwitterService.check()).toBeTruthy()
+      expect(await uraTwitter.check()).toBeTruthy()
     })
   })
 

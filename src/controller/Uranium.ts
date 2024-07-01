@@ -1,12 +1,11 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import FinnHubService, {
+import {
   GetQuoteResponse,
   SearchNewsResponse,
 } from "../services/Finnhub"
-import { UraTwitterService } from "../services/Twitter"
-import { UraNostrService } from "../services/Nostr"
 import { isHoliday, holidayMessage } from "../services/Holidays"
+import { finnHub, uraNostr, uraTwitter } from "../services"
 
 const DATE_FORMAT = {
   timeZone: "America/New_York",
@@ -56,7 +55,7 @@ export const postUraStock = async (req: Request, res: Response) => {
   const tasks = STOCKS.map(
     async (stock: string): Promise<GetQuoteResponse | undefined> => {
       try {
-        const q = await FinnHubService.getQuoteRealTime(stock)
+        const q = await finnHub.getQuoteRealTime(stock)
 
         if (q.price === 0)
           throw new Error(`stock ${stock} is not available`)
@@ -99,7 +98,7 @@ export const postUraNews = async (req: Request, res: Response) => {
 
   while (news.length == 0 && times < STOCKS.length * 4) {
     const randomStock = STOCKS[Math.floor(Math.random() * STOCKS.length)]
-    news = await FinnHubService.searchNews(randomStock)
+    news = await finnHub.searchNews(randomStock)
     times = times + 1
   }
 
@@ -129,8 +128,8 @@ const postMessage = async (messages: string[], now: Date, res: Response): Promis
 
   try {
     messages.forEach(async message => {
-      await UraTwitterService.postMessage(message)
-      await UraNostrService.postMessage(message)
+      await uraTwitter.postMessage(message)
+      await uraNostr.postMessage(message)
     })
 
     return res

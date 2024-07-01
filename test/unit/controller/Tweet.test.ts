@@ -6,7 +6,7 @@ const mockResponse = {
 }
 
 // Finnhub Mock
-jest.mock("../../../src/services/Finnhub", () => ({
+jest.mock("../../../src/services", () => ({
   __esModule: true,
   default: {
     getQuoteRealTime: jest.fn((symbol: string) => {
@@ -21,7 +21,7 @@ jest.mock("../../../src/services/Finnhub", () => ({
 }))
 
 // Twitter Mock
-jest.mock("../../../src/services/Twitter", () => ({
+jest.mock("../../../src/services", () => ({
   __esModule: true,
   default: {
     UraTwitterService: {

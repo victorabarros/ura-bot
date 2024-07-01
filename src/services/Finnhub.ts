@@ -50,7 +50,7 @@ interface IFinnHubService {
   getQuoteCandles(symbol: string, from: number, to: number): Promise<Array<GetQuoteCandlesResponse>>
 }
 
-class FinnHubService implements IFinnHubService {
+export class FinnHubService implements IFinnHubService {
   async searchQuote(symbol: string): Promise<SearchQuoteResponse> {
     const params = { q: symbol, token: apiKey }
     const { data } = await axios.get(`${address}search`, { params })
@@ -111,7 +111,3 @@ class FinnHubService implements IFinnHubService {
   }
 
 }
-
-const service = new FinnHubService()
-
-export default service

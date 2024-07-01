@@ -1,12 +1,12 @@
 import { STOCKS } from "../../../src/controller/Uranium"
-import FinnHubService from "../../../src/services/Finnhub"
+import { finnHub } from "../../../src/services"
 
 describe("Test Services Finhub", () => {
 
   describe("get stock information", () => {
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
-        const resp = await FinnHubService.searchQuote(stock)
+        const resp = await finnHub.searchQuote(stock)
         // console.log(JSON.stringify(resp))
       })
     }))
@@ -16,8 +16,8 @@ describe("Test Services Finhub", () => {
   describe("get stock news", () => {
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
-        const resp = await FinnHubService.searchNews(stock)
-        console.log("FinnHubService.searchNews", resp.length)
+        const resp = await finnHub.searchNews(stock)
+        console.log("finnHub.searchNews", resp.length)
       })
     }))
   })
@@ -26,7 +26,7 @@ describe("Test Services Finhub", () => {
 
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
-        const resp = await FinnHubService.getQuoteRealTime(stock)
+        const resp = await finnHub.getQuoteRealTime(stock)
         const { symbol, price, highPrice, lowPrice, openPrice, previousClosePrice } = resp
 
         expect(symbol).toBe(stock)

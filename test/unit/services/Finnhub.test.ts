@@ -1,5 +1,5 @@
 import { STOCKS } from "../../../src/controller/Uranium"
-import FinnHubService from "../../../src/services/Finnhub"
+import { finnHub } from "../../../src/services"
 
 // axios Mock
 jest.mock("axios", () => ({
@@ -35,7 +35,7 @@ describe("Test Services Finhub", () => {
   describe("get quote real time", () => {
 
     it("success", async () => {
-      const { symbol, price, highPrice, lowPrice } = await FinnHubService.getQuoteRealTime("URA")
+      const { symbol, price, highPrice, lowPrice } = await finnHub.getQuoteRealTime("URA")
       expect(symbol).toBe("URA")
       expect(price).toBe(28.61)
       expect(highPrice).toBeGreaterThan(price)
@@ -50,7 +50,7 @@ describe("Test Services Finhub", () => {
         const from = new Date(2021, 11, 10, 19, 30).getTime() / 1000
         const to = new Date(2021, 11, 10, 20, 0).getTime() / 1000
 
-        const candles = await FinnHubService.getQuoteCandles(stock, from, to)
+        const candles = await finnHub.getQuoteCandles(stock, from, to)
 
         candles.map(({ timestamp }) => {
           expect(timestamp).toBeGreaterThanOrEqual(from)
