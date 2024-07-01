@@ -42,6 +42,7 @@ export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 
 export const postUraStock = async (req: Request, res: Response) => {
   const now = new Date()
+
   if (isHoliday(now)) {
     const message = [
       morningMessage(now),
@@ -76,14 +77,19 @@ export const postUraStock = async (req: Request, res: Response) => {
       .json({})
   }
 
-  const message = [
-    morningMessage(now),
-    handleQuotes(quotes).join("\n"),
-    signature(now),
-    evenningMessage(now),
-  ].join("\n\n")
+  const stocksPerMessage = 6
+  const messages = []
+  for (let i = 0; i < quotes.length; i += stocksPerMessage) {
+    const message = [
+      morningMessage(now),
+      handleQuotes(quotes.slice(i, i + stocksPerMessage)).join("\n"),
+      signature(now),
+      evenningMessage(now),
+    ].join("\n\n")
+    messages.push(message)
+  }
 
-  return await postMessage(message, now, res)
+  return await postMessage(messages, now, res)
 }
 
 export const postUraNews = async (req: Request, res: Response) => {
@@ -112,21 +118,24 @@ export const postUraNews = async (req: Request, res: Response) => {
     randomNews.url,
   ].join("\n")
 
-  await postMessage(message, now, res)
+  await postMessage([message], now, res)
 
   return res
     .status(httpStatus.OK)
     .json({ url: "https://twitter.com/UraniumStockBot/", created_at: now })
 }
 
-const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
+const postMessage = async (messages: string[], now: Date, res: Response): Promise<any> => {
+
   try {
-    const { id } = await UraTwitterService.postMessage(message)
-    await UraNostrService.postMessage(message)
+    messages.forEach(async message => {
+      await UraTwitterService.postMessage(message)
+      await UraNostrService.postMessage(message)
+    })
 
     return res
       .status(httpStatus.OK)
-      .json({ id, created_at: now })
+      .json({ created_at: now })
   } catch (error) {
     console.error(error)
     return res
