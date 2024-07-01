@@ -6,7 +6,7 @@ import {
 } from "../services/Finnhub"
 import { isHoliday, holidayMessage } from "../services/Holidays"
 import { finnHub, uraNostr, uraTwitter } from "../services"
-import { signature } from "./helper"
+import { handleQuotes, signature } from "./helper"
 
 const NYSE_STOCKS = [
   "CCJ",  // Cameco: second largest producer
@@ -151,13 +151,3 @@ const fridayMessage = (now: Date): string => (
   (now.getDay() === 5) ?
     "Have a nice and sunny weekend" : ""
 )
-
-const handleQuotes = (quotes: Array<GetQuoteResponse>): string[] =>
-  quotes.map(({ symbol, price, openPrice }) => {
-    const message = `$${symbol}${" ".repeat(6 - symbol.length)}${price}`
-
-    const delta = (100 * (price - openPrice)) / openPrice
-    const deltaString = delta.toFixed(2)
-    const deltaMessage = `${" ".repeat(5 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}% ${delta < 0 ? "📉" : "📈"}`
-    return `${message} ${deltaMessage}`
-  })

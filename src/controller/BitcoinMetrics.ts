@@ -1,18 +1,17 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import { exchangeService } from "../services"
-import { signature } from "./helper"
+import { finnHub } from "../services"
+import { handleQuotes, signature } from "./helper"
 
 export const postBTCIndexes = async (req: Request, res: Response) => {
   const now = new Date()
 
-  const currencies = await exchangeService.getCurrenciesValues()
+  const q = await finnHub.getQuoteRealTime("BINANCE:BTCUSDT")
+  q.symbol = "BTC"
 
-  const lines = [
-    "Bitcoin Indexes\n",
-    `$${currencies.btc.symbol} ${(currencies.btc.value).toFixed(2)}`,
-    signature(now, "#Bitcoin"),
-  ]
+  const lines = ["Bitcoin MetrX"]
+    .concat(handleQuotes([q]))
+    .concat(signature(now, "#Bitcoin"))
 
   const messages: string[] = [lines.join("\n")]
 
