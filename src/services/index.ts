@@ -9,5 +9,5 @@ const { uraBot, brlBot } = config.twitter
 export const uraTwitter = new TwitterService({ ...uraBot })
 export const brlTwitter = new TwitterService(brlBot)
 export const finnHub = new FinnHubService()
-export const currency = new CurrencyService()
+export const exchangeService = new CurrencyService()
 export const uraNostr = new NostrService(config.nostr)

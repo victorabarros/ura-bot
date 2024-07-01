@@ -1,6 +1,6 @@
 export * from "./BrazilianReal"
 export * from "./Uranium"
-import { finnHub, currency, uraNostr, uraTwitter } from "../services"
+import { finnHub, exchangeService, uraNostr, uraTwitter } from "../services"
 
 import { Request, Response } from "express"
 import httpStatus from "http-status"
@@ -30,7 +30,7 @@ export const health = async (req: Request, res: Response) => {
   }
 
   try {
-    await currency.getBrlValues()
+    await exchangeService.getBrlValues()
   } catch (err) {
     console.error("Fail to check FinHub", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE

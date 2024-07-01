@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import { brlTwitter, currency } from "../services"
+import { brlTwitter, exchangeService } from "../services"
 import { isHoliday, holidayMessage } from "../services/Holidays"
 
 const DATE_FORMAT = {
@@ -21,7 +21,7 @@ export const postBrlPrice = async (req: Request, res: Response) => {
     return await postMessage(message, now, res)
   }
 
-  const currencies = await currency.getBrlValues()
+  const currencies = await exchangeService.getBrlValues()
 
   const lines = ["Cambio do BRL Real:\n",]
     .concat(
