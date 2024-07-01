@@ -7,17 +7,14 @@ export const postBTCIndexes = async (req: Request, res: Response) => {
   const now = new Date()
 
   const currencies = await exchangeService.getCurrenciesValues()
-  const currency = currencies.btc
-  const msg = `$${currency.symbol} ${(currency.value).toFixed(2)}`
 
-  const lines =
-    ["#Bitcoin Indexes\n"]
-    .concat(msg)
-    .concat(signature(now, "#Bitcoin"))
+  const lines = [
+    "Bitcoin Indexes\n",
+    `$${currencies.btc.symbol} ${(currencies.btc.value).toFixed(2)}`,
+    signature(now, "#Bitcoin"),
+  ]
 
-  const message = lines.join("\n")
-
-  const messages: string[] = [message]
+  const messages: string[] = [lines.join("\n")]
 
   return await postMessage(messages, now, res)
 }
