@@ -42,8 +42,9 @@ export const MARKET_HOLIDAYS: GetHolidaysResponse = {
     },
     {
       eventName: "Independence Day",
-      atDate: "2026-07-03",
+      atDate: "2026-07-04",
       tradingHour: "",
+      message: "Today is Independence Day 🎇🎇🎇\nCelebrate with your family and friends\nAnd always remember FREEDOM IS NOT FREE!",
     },
     {
       eventName: "Juneteenth",
@@ -104,11 +105,7 @@ export const MARKET_HOLIDAYS: GetHolidaysResponse = {
       eventName: "Independence Day",
       atDate: "2025-07-04",
       tradingHour: "",
-    },
-    {
-      eventName: "Independence Day",
-      atDate: "2025-07-03",
-      tradingHour: "09:30-13:00",
+      message: "Today is Independence Day 🎇🎇🎇\nCelebrate with your family and friends\nAnd always remember FREEDOM IS NOT FREE!",
     },
     {
       eventName: "Juneteenth",
@@ -169,11 +166,7 @@ export const MARKET_HOLIDAYS: GetHolidaysResponse = {
       eventName: "Independence Day",
       atDate: "2024-07-04",
       tradingHour: "",
-    },
-    {
-      eventName: "Independence Day",
-      atDate: "2024-07-03",
-      tradingHour: "09:30-13:00",
+      message: "Today is Independence Day 🎇🎇🎇\nCelebrate with your family and friends\nAnd always remember FREEDOM IS NOT FREE!",
     },
     {
       eventName: "Juneteenth",
