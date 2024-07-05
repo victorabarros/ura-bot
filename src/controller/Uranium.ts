@@ -36,6 +36,7 @@ export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 export const postUraStock = async (req: Request, res: Response) => {
   const now = new Date()
 
+  // TODO us isFirstPostOfDay(now) to avoid multiple posts
   if (isHoliday(now)) {
     const message = [
       morningMessage(now),
@@ -134,6 +135,7 @@ const postMessage = async (messages: string[], now: Date, res: Response): Promis
 }
 
 const morningMessage = (now: Date): string => (
+  // TODO us isFirstPostOfDay(now) to avoid multiple posts
   (now.getHours() === 14 && now.getMinutes() === 0) ?
     "Good Morning, everyone!" : ""
 )
@@ -147,3 +149,7 @@ const fridayMessage = (now: Date): string => (
   (now.getDay() === 5) ?
     "Have a nice and sunny weekend" : ""
 )
+function isFirstPostOfDay(now: Date) {
+  // TODO use redis cache to this
+  return true
+}
