@@ -86,3 +86,7 @@ tweet-brl-price:
 
 tweet-btc-metrx:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}btcmetrx/indexes
+
+reset-main:
+	@git checkout main
+	@git pull
