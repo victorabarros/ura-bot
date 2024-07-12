@@ -79,30 +79,7 @@ make docker-run
 
 ## Flow
 
-```mermaid
-    flowchart LR;
-
-      %% components
-      cron[cron];
-      server[UraBot<br>Server];
-      finhub[finhub];
-      client[twitter];
-      client2[nostr];
-
-      %% flow
-      cron--->
-      server--->
-      client;
-      server--->
-      client2;
-
-      finhub----
-      server;
-
-      %% styles
-      classDef box fill-opacity:.5, stroke:grey, stroke-width:.5px;
-      class cron,server,finhub,db,client,client2 box
-```
+![demo](flow.excalidraw.png)
 
 ## Monitoring
 
@@ -143,7 +120,7 @@ TODO:
 
 - other stocks:
   - find another api that supports the stocks above. alternatives: data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
-  - $URM https://twitter.com/TheTSXDude/status/1631066976666763266?s=20 
+  - $URM https://twitter.com/TheTSXDude/status/1631066976666763266?s=20
   - $NANO https://twitter.com/FayeKnoozIV/status/1806373643435282575
   - $SPUT https://x.com/derekrogden/status/1797668427936731459
 
