@@ -1,9 +1,9 @@
+# UraBot
+
 <p align="center">
   <!-- cover image -->
   <img width="70%" src="https://raw.githubusercontent.com/victorabarros/ura-bot/main/assets/UraBot_profile01.png" />
 </p>
-
-# UraBot
 
 <p>
   <a href="https://railway.app/" target="_blank">
@@ -48,7 +48,7 @@
 
 ## How to run
 
-You can find all commands on [./Makefile](https://github.com/victorabarros/ura-bot/blob/main/Makefile)
+You can find all commands on [Makefile](./Makefile)
 
 write .env file similar to .env.example
 
@@ -71,11 +71,12 @@ make docker-run
 
 ## Endpoint
 
-|verb|endpoint|description|
-|:-:|:-:|:-:|
-|GET|/health|healthcheck|
-|POST|/stocks/urabot|post Uranium market stocks price in real time|
-|POST|/news/urabot|post Uranium market news|
+|endpoint|description|
+|:-:|:-:|
+GET /health|healthcheck|
+POST /urabot/stocks|post Uranium market stocks price in real time|
+POST /urabot/news|post Uranium market news|
+POST /brlbot/prices|post Brazilian Real price in other intl currencies|
 
 ## Flow
 
