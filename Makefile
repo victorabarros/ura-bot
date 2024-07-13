@@ -1,7 +1,9 @@
-APP_NAME=ura-bot
+APP_NAME=ura-bot-server
+WEB_APP_NAME=ura-bot-webapp
 APP_DIR=/${APP_NAME}/src
 DOCKER_BASE_IMAGE=node:20.14.0
 PORT=8082
+WEB_PORT=3000
 URL?=http://localhost:${PORT}/
 ENV_FILE?=.env
 COMMAND?=bash
@@ -38,53 +40,59 @@ ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l
 	@docker ps -a --filter "name=${APP_NAME}" -aq | xargs docker rm -f
 endif
 
-docker-build:
+build-server-image:
 	@clear
 	@echo "${YELLOW}Building project${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn build"
 
-docker-run:
+run-server:
 	@clear
 	@make welcome
 	@echo "${YELLOW}Running project${COLOR_OFF}"
 	@make build
 	@make -s docker-command COMMAND="yarn start"
 
-docker-run-dev:
+debug-server:
 	@clear
 	@make welcome
 	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn dev"
 
-docker-test:
+debug-webapp:
+	@clear
+	@make welcome
+	@echo "${YELLOW}Running ${WEB_APP_NAME} on port ${WEB_PORT}${COLOR_OFF}"
+	@make -s docker-command PORT=${WEB_PORT} COMMAND="cd website && yarn start"
+
+test-server:
 	@reset
 	@make welcome
 	@echo "${YELLOW}Testing${COLOR_OFF}"
 	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
 	@open coverage/index.html
 
-docker-migration:
+run-migration:
 	@clear
 	@make welcome
 	@echo "${YELLOW}Executing Migrations${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn sequelize db:migrate"
 
-healthcheck:
+curl-healthcheck:
 	curl -v ${URL}health
 
-heart:
+curl-heart:
 	curl -v ${URL}heartbeat
 
-tweet-ura-stocks:
+curl-tweet-ura-stocks:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/stocks
 
-tweet-ura-news:
+curl-tweet-ura-news:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/news
 
-tweet-brl-price:
+curl-tweet-brl-price:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brlbot/prices
 
-tweet-btc-metrx:
+curl-tweet-btc-metrx:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}btcmetrx/indexes
 
 reset-main:

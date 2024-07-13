@@ -54,29 +54,29 @@ write .env file similar to .env.example
 
 ```sh
 # locally run with hot reload
-make docker-run-dev
+make debug-server
 
-# api requests
-make healthcheck
-make tweet-ura-stocks
-make tweet-ura-news
+# hit api
+make curl-healthcheck
+make curl-tweet-ura-stocks
+make curl-tweet-ura-news
 
 # automated tests
-make docker-test
+make test-server
 
 # build and run production version
-make docker-build
-make docker-run
+make build-server-image
+make run-server
 ```
 
 ## Endpoint
 
-|endpoint|description|
-|:-:|:-:|
-GET /health|healthcheck|
-POST /urabot/stocks|post Uranium market stocks price in real time|
-POST /urabot/news|post Uranium market news|
-POST /brlbot/prices|post Brazilian Real price in other intl currencies|
+|     endpoint      |                   description                    |
+|-------------------|--------------------------------------------------|
+|GET  /health       |healthcheck                                       |
+|POST /urabot/stocks|post Uranium market stocks price in real time     |
+|POST /urabot/news  |post Uranium market news                          |
+|POST /brlbot/prices|post Brazilian Real price in other intl currencies|
 
 ## Flow
 
