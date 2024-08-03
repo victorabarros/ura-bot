@@ -49,7 +49,6 @@ run-server:
 	@clear
 	@make welcome
 	@echo "${YELLOW}Running project${COLOR_OFF}"
-	@make build
 	@make -s docker-command COMMAND="yarn start"
 
 debug-server:
@@ -82,6 +81,9 @@ curl-healthcheck:
 
 curl-heart:
 	curl -v ${URL}heartbeat
+
+prod-ura-stock:
+	@make curl-tweet-ura-stocks URL=https://api.uraniumstockbot.com/
 
 curl-tweet-ura-stocks:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/stocks
