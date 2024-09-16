@@ -36,7 +36,7 @@ export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 export const postUraStock = async (req: Request, res: Response) => {
   const now = new Date()
 
-  // TODO us isFirstPostOfDay(now) to avoid multiple posts
+  // TODO use isFirstPostOfDay(now) to avoid multiple posts
   if (isHoliday(now)) {
     const message = [
       morningMessage(now),
@@ -89,12 +89,13 @@ export const postUraStock = async (req: Request, res: Response) => {
 export const postUraNews = async (req: Request, res: Response) => {
   const now = new Date()
   let news: Array<SearchNewsResponse> = []
-  let times = 0
+  let iterLimit = 0
 
-  while (news.length == 0 && times < STOCKS.length * 4) {
+  // iter til find some news
+  while (news.length == 0 && iterLimit < STOCKS.length * 4) {
     const randomStock = STOCKS[Math.floor(Math.random() * STOCKS.length)]
     news = await finnHub.searchNews(randomStock)
-    times = times + 1
+    iterLimit = iterLimit + 1
   }
 
   if (news.length == 0) {
