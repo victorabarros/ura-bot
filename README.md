@@ -111,11 +111,13 @@ I'm more than happy to be honored with your support.
 <!--
 TODO:
 
+- look twiter AI to improve urabot (like suggestion text to send with news; evaluation of stocks) https://twitter.com/elonmusk/status/1760516729783148583
+  - Use replicate
 - weekly report on friday night or Monday morning
 - monthly report on last day of month
 - quarter report; example https://twitter.com/precodobitcoin/status/1480313562291658760;
 - is it possible to use a giphy api to add gif to news post? same to chart
-- look twiter AI to improve urabot (like suggestion text to send with news; evaluation of stocks) https://twitter.com/elonmusk/status/1760516729783148583
+- code website from this: https://github.com/victorabarros/ura-bot/commit/5c3ba215043e6adcb287bec03d4c0656edcff181
 
 - write article:
   - https://medium.com/p/152d197194/edit
@@ -132,5 +134,4 @@ TODO:
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
 - create cover image to BRL bot (use ai to https://x.com/LeonardoAi_)
 - alternative to railway: https://render.com/
-- add github actions => run tests on pr opened
 -->
