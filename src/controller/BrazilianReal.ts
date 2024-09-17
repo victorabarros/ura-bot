@@ -1,34 +1,25 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
 import { brlTwitter, exchangeService } from "../services"
-import { isHoliday, holidayMessage } from "../services/Holidays"
-import { signature } from "./helper"
+import { AVAILABLE_CURRENCIES } from "../services/Currency"
+
 
 export const postBrlPrice = async (req: Request, res: Response) => {
   const now = new Date()
 
-  if (isHoliday(now)) {
-    const lines = [
-      holidayMessage(now),
-      signature(now, "#BRLbot"),
-    ].join("\n\n")
-
-    return await postMessage(lines, now, res)
-  }
-
   const currencies = await exchangeService.getCurrenciesValues()
 
-  const headLine = "Cambio do BRL Real:\n"
-  const bodyLines = ["usd", "eur", "cad", "gbp", "chf", "jpy", "btc"]
-    .map((c: string) => {
-      const currency = (currencies as any)[c]
-      // TODO pretify number, like 313759.29 to 313,759.29
-      return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}`
+  const bodyLines = AVAILABLE_CURRENCIES
+  .filter(c => c !== "brl")
+  .map((c: string) => {
+    const currency = (currencies as any)[c]
+      const price = currency.value * currencies.brl.value
+      const formattedPrice = price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      return `${currency.flag} $${currency.symbol} ${formattedPrice}`
     })
 
-  const lines = [headLine]
-    .concat(bodyLines)
-    .concat(["\n", signature(now, "#BRLbot")])
+  const lines = bodyLines
+    .concat(["\n", "#BRLbot"])
 
   return await postMessage(lines.join("\n"), now, res)
 }
