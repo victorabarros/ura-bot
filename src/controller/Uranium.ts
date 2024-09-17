@@ -6,7 +6,7 @@ import {
 } from "../services/Finnhub"
 import { isHoliday, holidayMessage } from "../services/Holidays"
 import { finnHub, uraNostr, uraTwitter, replicateAI } from "../services"
-import { handleQuotes, signature } from "./helper"
+import { mapQuotesToBodyMessage, signature } from "./helper"
 
 const NYSE_STOCKS = [
   "CCJ",  // Cameco: second largest producer
@@ -76,7 +76,7 @@ export const postUraStock = async (req: Request, res: Response) => {
   for (let i = 0; i < quotes.length; i += stocksPerMessage) {
     const message = [
       morningMessage(now),
-      handleQuotes(quotes.slice(i, i + stocksPerMessage)).join("\n"),
+      mapQuotesToBodyMessage(quotes.slice(i, i + stocksPerMessage)).join("\n"),
       signature(now, "#Uranium ☢️"),
       evenningMessage(now),
     ].join("\n\n")

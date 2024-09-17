@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
 import { finnHub } from "../services"
-import { handleQuotes, signature } from "./helper"
+import { mapQuotesToBodyMessage, signature } from "./helper"
 
 export const postBTCIndexes = async (req: Request, res: Response) => {
   const now = new Date()
@@ -10,7 +10,7 @@ export const postBTCIndexes = async (req: Request, res: Response) => {
   q.symbol = "BTC"
 
   const lines = ["Bitcoin MetrX"]
-    .concat(handleQuotes([q]))
+    .concat(mapQuotesToBodyMessage([q]))
     .concat(signature(now, "#Bitcoin"))
 
   const messages: string[] = [lines.join("\n")]

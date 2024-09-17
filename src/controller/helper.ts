@@ -11,7 +11,7 @@ export const signature = (now: Date, msg: string): string => (
   `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n${msg}`
 )
 
-export const handleQuotes = (quotes: Array<GetQuoteResponse>): string[] =>
+export const mapQuotesToBodyMessage = (quotes: Array<GetQuoteResponse>): string[] =>
   quotes.map(({ symbol, price, openPrice }) => {
     const message = `$${symbol}${" ".repeat(6 - symbol.length)}${price}`
 

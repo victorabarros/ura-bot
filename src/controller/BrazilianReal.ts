@@ -21,7 +21,8 @@ export const postBrlPrice = async (req: Request, res: Response) => {
     .concat(
       ["usd", "eur", "cad", "gbp", "chf", "jpy", "btc"].map((c: string) => {
         const currency = (currencies as any)[c]
-        return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}` // TODO pretify number, like 313759.29 to 313,759.29
+        // TODO pretify number, like 313759.29 to 313,759.29
+        return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}`
       })
     ).concat(["\n", signature(now, "#BRLbot"),])
 
