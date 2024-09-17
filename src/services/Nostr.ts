@@ -24,7 +24,7 @@ export class NostrService implements ISocialService {
     const event = new NDKEvent(this.ndk)
     event.content = message
     event.kind = NDKKind.Text
-    
+
     const relays = await event.publish()
 
     return { id: "TODO" }

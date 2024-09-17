@@ -5,7 +5,7 @@ import {
   SearchNewsResponse,
 } from "../services/Finnhub"
 import { isHoliday, holidayMessage } from "../services/Holidays"
-import { finnHub, uraNostr, uraTwitter } from "../services"
+import { finnHub, uraNostr, uraTwitter, replicateAI } from "../services"
 import { handleQuotes, signature } from "./helper"
 
 const NYSE_STOCKS = [
@@ -88,29 +88,32 @@ export const postUraStock = async (req: Request, res: Response) => {
 
 export const postUraNews = async (req: Request, res: Response) => {
   const now = new Date()
-  let news: Array<SearchNewsResponse> = []
+  let newsArray: Array<SearchNewsResponse> = []
   let iterLimit = 0
 
-  // iter til find some news
-  while (news.length == 0 && iterLimit < STOCKS.length * 4) {
+  // iter til find some newsArray
+  while (newsArray.length == 0 && iterLimit < STOCKS.length * 4) {
     const randomStock = STOCKS[Math.floor(Math.random() * STOCKS.length)]
-    news = await finnHub.searchNews(randomStock)
+    newsArray = await finnHub.searchNews(randomStock)
     iterLimit = iterLimit + 1
   }
 
-  if (news.length == 0) {
+  if (newsArray.length == 0) {
     return res
       .status(httpStatus.NO_CONTENT)
       .json({})
   }
 
-  const randomNews = news[Math.floor(Math.random() * news.length)]
+  const news = newsArray[Math.floor(Math.random() * newsArray.length)]
+  const prompt = "Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): " + JSON.stringify(news)
+  const comment = await replicateAI.GetAnswer(prompt)
 
   const message = [
-    randomNews.headline,
+    comment,
     "",
-    signature(now, "#Uranium ☢️"),
-    randomNews.url,
+    "#Uranium☢️",
+    // TODO use a shorten url, like bit.ly
+    news.url,
   ].join("\n")
 
   return await postMessage([message], now, res)
@@ -150,6 +153,7 @@ const fridayMessage = (now: Date): string => (
   (now.getDay() === 5) ?
     "Have a nice and sunny weekend" : ""
 )
+
 function isFirstPostOfDay(now: Date) {
   // TODO use redis cache to this
   return true

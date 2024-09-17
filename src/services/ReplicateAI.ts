@@ -21,13 +21,15 @@ export class ReplicateAIService {
       max_tokens: 1024,
       min_tokens: 0,
       temperature: 0.6,
-      system_prompt: "You are a influencer about stock market writing a casual tweet about the page.",
+      // TODO move this config to variable per resource (ura/btc/brl)
+      system_prompt: "You are an investor and influencer about the uranium stock market, always posting with not casual terms and with a bit of acid humor. Never uses hashtags of external links.",
       presence_penalty: 0,
       frequency_penalty: 0,
     }
 
-    const output = await this.replicate.run(this.model.language, { input }) as any
-    return output.join(" ")
+    const output = await this.replicate.run(this.model.language, { input }) as Array<string>
+
+    return output.join("").slice(1, -1)
   }
 
   async BuildImage(prompt: string): Promise<string> {
