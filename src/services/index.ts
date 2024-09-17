@@ -9,7 +9,6 @@ const { uraBot, brlBot } = config.twitter
 
 // data suppliers
 export const finnHub = new FinnHubService()
-// TODO exchangeService and CurrencyService are terrible names. Fix in some future PR
 export const exchangeService = new CurrencyService()
 
 // AI services
