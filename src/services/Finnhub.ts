@@ -22,7 +22,6 @@ export type SearchNewsResponse = {
   source: string
   summary: string
   url: string
-  // datetime: 1569550360,
 }
 
 export type GetQuoteResponse = {
@@ -44,18 +43,11 @@ type GetQuoteCandlesResponse = {
 }
 
 interface IFinnHubService {
-  searchQuote(symbol: string): Promise<SearchQuoteResponse>
   searchNews(symbol: string, from?: Date, to?: Date): Promise<Array<SearchNewsResponse>>
   getQuoteRealTime(symbol: string): Promise<GetQuoteResponse>
-  getQuoteCandles(symbol: string, from: number, to: number): Promise<Array<GetQuoteCandlesResponse>>
 }
 
 export class FinnHubService implements IFinnHubService {
-  async searchQuote(symbol: string): Promise<SearchQuoteResponse> {
-    const params = { q: symbol, token: apiKey }
-    const { data } = await axios.get(`${address}search`, { params })
-    return data
-  }
 
   async searchNews(symbol: string, from?: Date, to?: Date): Promise<Array<SearchNewsResponse>> {
     if (!to) {
@@ -90,24 +82,6 @@ export class FinnHubService implements IFinnHubService {
       openPrice: parseFloat(o.toFixed(2)),
       previousClosePrice: parseFloat(pc.toFixed(2)),
     }
-  }
-
-  async getQuoteCandles(symbol: string, from: number, to: number): Promise<Array<GetQuoteCandlesResponse>> {
-    const params = { symbol: symbol, token: apiKey, resolution: 1, from, to }
-    const { data } = await axios.get(`${address}stock/candle`, { params })
-
-    if (data.s === "no_data") throw new Error(`get stock "${symbol}" candles from finnhub return empty`)
-
-    const resp = data.t.map((t: number, idx: number): GetQuoteCandlesResponse => ({
-      timestamp: t,
-      openPrice: data.o[idx],
-      closePrice: data.c[idx],
-      highPrice: data.h[idx],
-      lowPrice: data.l[idx],
-      volume: data.v[idx]
-    }))
-
-    return resp
   }
 
 }

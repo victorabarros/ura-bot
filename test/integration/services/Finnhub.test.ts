@@ -3,16 +3,6 @@ import { finnHub } from "../../../src/services"
 
 describe("Test Services Finhub", () => {
 
-  describe("get stock information", () => {
-    Promise.all(STOCKS.map(async stock => {
-      it(`success ${stock}`, async () => {
-        const resp = await finnHub.searchQuote(stock)
-        // console.log(JSON.stringify(resp))
-      })
-    }))
-  })
-
-
   describe("get stock news", () => {
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
