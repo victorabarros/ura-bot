@@ -4,5 +4,4 @@ export type PostMessageResponse = {
 
 export interface ISocialService {
   postMessage(message: string): Promise<PostMessageResponse>
-  check(): Promise<boolean>
 }

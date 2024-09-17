@@ -180,9 +180,7 @@ export const MARKET_HOLIDAYS: GetHolidaysResponse = {
 
 export const isHoliday = (now: Date): boolean => {
   const tz = MARKET_HOLIDAYS.timezone
-
   const nowTZ = moment(now).tz(tz)
-
   const today = nowTZ.format("YYYY-MM-DD")
 
   const holidayDetail = MARKET_HOLIDAYS.data.find((h) => h.atDate === today)
@@ -201,9 +199,9 @@ export const isHoliday = (now: Date): boolean => {
 
   if (currentTime >= startTradingHour && currentTime <= endTradingHour) {
     return true
-  } else {
-    return false
   }
+
+  return false
 }
 
 export const holidayMessage = (now: Date): string => {
@@ -218,5 +216,6 @@ export const holidayMessage = (now: Date): string => {
     throw new Error("Holiday not found")
   }
 
+  // TODOreplicate if !holidayDetail.message, use replicate to generate a holiday message. Maybe with a image.
   return holidayDetail.message || `Today is ${holidayDetail.eventName}`
 }

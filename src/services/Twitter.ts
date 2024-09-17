@@ -41,8 +41,4 @@ export class TwitterService implements ISocialService {
     return { id: "TODO" }
   }
 
-  check(): Promise<boolean> {
-    // throw new Error("Method not implemented.")
-    return Promise.resolve(true)
-  }
 }

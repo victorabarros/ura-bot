@@ -2,7 +2,6 @@ import "websocket-polyfill"
 import NDK, { NDKEvent, NDKKind, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk"
 import { ISocialService, PostMessageResponse } from "./ISocialService"
 
-
 type NostrServiceProps = {
     privateKey: string
     relayUrls: string[]
@@ -25,13 +24,9 @@ export class NostrService implements ISocialService {
     event.content = message.trim()
     event.kind = NDKKind.Text
 
-    const relays = await event.publish()
+    await event.publish()
 
     return { id: "TODO" }
   }
 
-  check(): Promise<boolean> {
-    // TODO ping any relay
-    return Promise.resolve(true)
-  }
 }

@@ -13,7 +13,15 @@ export class ReplicateAIService {
     this.replicate = new Replicate({ auth: apiKey })
   }
 
-  async GetAnswer(prompt: string): Promise<string> {
+  async GetAnswer(prompt: string, system: "ura"): Promise<string> {
+    let system_prompt = ""
+
+    if (system === "ura") {
+      system_prompt = "You are an investor and influencer about the uranium stock market, always posting with not casual terms and with a bit of acid humor. Never uses hashtags of external links."
+    } else {
+      throw new Error("System not implemented.")
+    }
+
     const input = {
       top_k: 50,
       top_p: 0.9,
@@ -21,8 +29,7 @@ export class ReplicateAIService {
       max_tokens: 1024,
       min_tokens: 0,
       temperature: 0.6,
-      // TODO move this config to variable per resource (ura/btc/brl)
-      system_prompt: "You are an investor and influencer about the uranium stock market, always posting with not casual terms and with a bit of acid humor. Never uses hashtags of external links.",
+      system_prompt: system_prompt,
       presence_penalty: 0,
       frequency_penalty: 0,
     }
@@ -32,13 +39,7 @@ export class ReplicateAIService {
     return output.join("").slice(1, -1)
   }
 
-  async BuildImage(prompt: string): Promise<string> {
-    // TODO copy from here https://github.com/victorabarros/Learning/blob/master/replicate/index.js
-    throw new Error("Method not implemented.")
-  }
+  // TODO async BuildImage(prompt: string): Promise<string>
+  // copy from here https://github.com/victorabarros/Learning/blob/master/replicate/index.js
 
-  async check(): Promise<boolean> {
-    // TODO check https://replicatestatus.com/
-    return true
-  }
 }
