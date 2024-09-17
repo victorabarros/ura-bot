@@ -21,6 +21,8 @@ type GetCurrenciesResponse = {
   btc: Currency // Bitcoin
 }
 
+export const AVAILABLE_CURRENCIES: string[] = ["usd", "eur", "cad", "gbp", "chf", "jpy", "btc", "brl"]
+
 interface ICurrencyService {
   getCurrenciesValues(): Promise<GetCurrenciesResponse>
 }
@@ -38,7 +40,7 @@ export class CurrencyService implements ICurrencyService {
       gbp: { value: parseFloat(rates.GBP), symbol: "GBP", name: "Pound Britanico", flag: "🇬🇧" },
       chf: { value: parseFloat(rates.CHF), symbol: "CHF", name: "Franco Suiço", flag: "🇨🇭" },
       cad: { value: parseFloat(rates.CAD), symbol: "CAD", name: "Dolar Canadense", flag: "🇨🇦" },
-      btc: { value: 1/parseFloat(rates.BTC), symbol: "BTC", name: "Bitcoin", flag: "#Bitcoin" },
+      btc: { value: 1/parseFloat(rates.BTC), symbol: "BTC", name: "Bitcoin", flag: "₿" },
     }
   }
 
