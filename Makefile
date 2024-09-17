@@ -57,12 +57,6 @@ debug-server:
 	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn dev"
 
-debug-webapp:
-	@clear
-	@make welcome
-	@echo "${YELLOW}Running ${WEB_APP_NAME} on port ${WEB_PORT}${COLOR_OFF}"
-	@make -s docker-command PORT=${WEB_PORT} COMMAND="cd website && yarn start"
-
 test-server:
 	@reset
 	@make welcome
