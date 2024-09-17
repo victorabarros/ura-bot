@@ -31,7 +31,7 @@ export class TwitterService implements ISocialService {
         "Content-Type": "application/json",
       },
       oauth: this.oauth,
-      body: JSON.stringify({ "text": message })
+      body: JSON.stringify({ "text": message.trim() }),
     }
 
     request(options, function (error, response, body) {

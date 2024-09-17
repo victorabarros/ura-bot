@@ -7,8 +7,8 @@ const DATE_FORMAT = {
   hour12: false,
 } as Intl.DateTimeFormatOptions
 
-export const signature = (now: Date, msg: string): string => (
-  `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n${msg}`
+export const signature = (now: Date, sign: string): string => (
+  `${now.toLocaleString("en-US", DATE_FORMAT)} ${DATE_FORMAT.timeZone}\n${sign}`
 )
 
 export const mapQuotesToBodyMessage = (quotes: Array<GetQuoteResponse>): string[] =>

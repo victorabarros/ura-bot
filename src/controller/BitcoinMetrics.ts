@@ -22,7 +22,9 @@ const postMessage = async (messages: string[], now: Date, res: Response): Promis
 
   try {
     messages.forEach(async message => {
-        console.log({message}) // TODO remove
+        // TODO remove
+        console.log({message})
+
         // TODO
         //   await btcMetrxTwitter.postMessage(message)
         //   await btcMetrxNostr.postMessage(message)

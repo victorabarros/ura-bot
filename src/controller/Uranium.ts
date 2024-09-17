@@ -7,6 +7,10 @@ import {
 import { isHoliday, holidayMessage } from "../services/Holidays"
 import { finnHub, uraNostr, uraTwitter, replicateAI } from "../services"
 import { mapQuotesToBodyMessage, signature } from "./helper"
+import { PostMessageResponse } from "../services/ISocialService"
+
+// In order to avoid achieve maximum number of characters in a tweet, we need to limit the number of stocks per message
+const MAX_STOCKS_PER_MESSAGE = 6
 
 const NYSE_STOCKS = [
   "CCJ",  // Cameco: second largest producer
@@ -36,18 +40,19 @@ export const STOCKS = NYSE_STOCKS.concat(OTHER_STOCKS)
 export const postUraStock = async (req: Request, res: Response) => {
   const now = new Date()
 
-  // TODO use isFirstPostOfDay(now) to avoid multiple posts
-  if (isHoliday(now)) {
-    const message = [
+  if (isHoliday(now) && isFirstPostOfDay(now)) {
+    const lines = [
       morningMessage(now),
       holidayMessage(now),
-      signature(now, "#Uranium ☢️"),
+      signature(now, "#Uranium☢️"),
       evenningMessage(now),
-    ].join("\n\n")
+    ]
+
+    const message = lines.join("\n\n")
     return await postMessage([message], now, res)
   }
 
-  const tasks = STOCKS.map(
+  const getStockTasks = STOCKS.map(
     async (stock: string): Promise<GetQuoteResponse | undefined> => {
       try {
         const q = await finnHub.getQuoteRealTime(stock)
@@ -62,7 +67,7 @@ export const postUraStock = async (req: Request, res: Response) => {
     }
   )
 
-  const quotes = (await Promise.all(tasks))
+  const quotes = (await Promise.all(getStockTasks))
     .filter(quote => quote !== undefined) as GetQuoteResponse[]
 
   if (quotes.length === 0) {
@@ -71,15 +76,19 @@ export const postUraStock = async (req: Request, res: Response) => {
       .json({})
   }
 
-  const stocksPerMessage = 6
   const messages = []
-  for (let i = 0; i < quotes.length; i += stocksPerMessage) {
-    const message = [
+
+  for (let i = 0; i < quotes.length; i += MAX_STOCKS_PER_MESSAGE) {
+    const partialQuotes = quotes.slice(i, i + MAX_STOCKS_PER_MESSAGE)
+
+    const lines = [
       morningMessage(now),
-      mapQuotesToBodyMessage(quotes.slice(i, i + stocksPerMessage)).join("\n"),
-      signature(now, "#Uranium ☢️"),
+      mapQuotesToBodyMessage(partialQuotes).join("\n"),
+      signature(now, "#Uranium☢️"),
       evenningMessage(now),
-    ].join("\n\n")
+    ]
+
+    const message = lines.join("\n\n")
     messages.push(message)
   }
 
@@ -93,8 +102,8 @@ export const postUraNews = async (req: Request, res: Response) => {
 
   // iter til find some newsArray
   while (newsArray.length == 0 && iterLimit < STOCKS.length * 4) {
-    const randomStock = STOCKS[Math.floor(Math.random() * STOCKS.length)]
-    newsArray = await finnHub.searchNews(randomStock)
+    const stockIndex = Math.floor(Math.random() * STOCKS.length)
+    newsArray = await finnHub.searchNews(STOCKS[stockIndex])
     iterLimit = iterLimit + 1
   }
 
@@ -104,28 +113,34 @@ export const postUraNews = async (req: Request, res: Response) => {
       .json({})
   }
 
-  const news = newsArray[Math.floor(Math.random() * newsArray.length)]
+  const newsIndex = Math.floor(Math.random() * newsArray.length)
+  const news: SearchNewsResponse = newsArray[newsIndex]
   const prompt = "Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): " + JSON.stringify(news)
   const comment = await replicateAI.GetAnswer(prompt)
 
-  const message = [
+  const lines = [
     comment,
     "",
     "#Uranium☢️",
     // TODO use a shorten url, like bit.ly
     news.url,
-  ].join("\n")
+  ]
 
+  const message = lines.join("\n")
   return await postMessage([message], now, res)
 }
 
 const postMessage = async (messages: string[], now: Date, res: Response): Promise<any> => {
 
   try {
+    const tasks = Array<Promise<PostMessageResponse>>()
+
     messages.forEach(async message => {
-      await uraTwitter.postMessage(message)
-      await uraNostr.postMessage(message)
+      tasks.push(uraTwitter.postMessage(message))
+      tasks.push(uraNostr.postMessage(message))
     })
+
+    await Promise.all(tasks)
 
     return res
       .status(httpStatus.OK)
@@ -139,14 +154,12 @@ const postMessage = async (messages: string[], now: Date, res: Response): Promis
 }
 
 const morningMessage = (now: Date): string => (
-  // TODO us isFirstPostOfDay(now) to avoid multiple posts
-  (now.getHours() === 14 && now.getMinutes() === 0) ?
-    "Good Morning, everyone!" : ""
+  isFirstPostOfDay(now) ? "Good Morning, everyone!" : ""
 )
 
 const evenningMessage = (now: Date): string => (
   (now.getHours() === 21 && now.getMinutes() === 0) ?
-    `Good Night, guys! ${fridayMessage(now)}\nSee ya` : ""
+    `Good Night, folks! ${fridayMessage(now)}\nSee ya` : ""
 )
 
 const fridayMessage = (now: Date): string => (
@@ -156,5 +169,5 @@ const fridayMessage = (now: Date): string => (
 
 function isFirstPostOfDay(now: Date) {
   // TODO use redis cache to this
-  return true
+  return now.getHours() === 14 && now.getMinutes() === 0
 }

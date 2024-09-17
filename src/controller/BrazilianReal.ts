@@ -6,33 +6,34 @@ import { signature } from "./helper"
 
 export const postBrlPrice = async (req: Request, res: Response) => {
   const now = new Date()
+
   if (isHoliday(now)) {
-    const message = [
+    const lines = [
       holidayMessage(now),
       signature(now, "#BRLbot"),
     ].join("\n\n")
 
-    return await postMessage(message, now, res)
+    return await postMessage(lines, now, res)
   }
 
   const currencies = await exchangeService.getCurrenciesValues()
 
-  const lines = ["Cambio do BRL Real:\n",]
-    .concat(
-      ["usd", "eur", "cad", "gbp", "chf", "jpy", "btc"].map((c: string) => {
-        const currency = (currencies as any)[c]
-        // TODO pretify number, like 313759.29 to 313,759.29
-        return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}`
-      })
-    ).concat(["\n", signature(now, "#BRLbot"),])
+  const headLine = "Cambio do BRL Real:\n"
+  const bodyLines = ["usd", "eur", "cad", "gbp", "chf", "jpy", "btc"]
+    .map((c: string) => {
+      const currency = (currencies as any)[c]
+      // TODO pretify number, like 313759.29 to 313,759.29
+      return `${currency.flag} $${currency.symbol} ${(currency.value * currencies.brl.value).toFixed(2)}`
+    })
 
-  const message = lines.join("\n")
+  const lines = [headLine]
+    .concat(bodyLines)
+    .concat(["\n", signature(now, "#BRLbot")])
 
-  return await postMessage(message, now, res)
+  return await postMessage(lines.join("\n"), now, res)
 }
 
 const postMessage = async (message: string, now: Date, res: Response): Promise<any> => {
-
   try {
     await brlTwitter.postMessage(message)
     return res

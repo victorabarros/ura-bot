@@ -22,7 +22,7 @@ export class NostrService implements ISocialService {
     await this.ndk.connect(2000)
 
     const event = new NDKEvent(this.ndk)
-    event.content = message
+    event.content = message.trim()
     event.kind = NDKKind.Text
 
     const relays = await event.publish()
