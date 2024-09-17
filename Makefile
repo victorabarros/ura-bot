@@ -1,9 +1,7 @@
 APP_NAME=ura-bot-server
-WEB_APP_NAME=ura-bot-webapp
 APP_DIR=/${APP_NAME}/src
 DOCKER_BASE_IMAGE=node:20.14.0
 PORT=8082
-WEB_PORT=3000
 URL?=http://localhost:${PORT}/
 ENV_FILE?=.env
 COMMAND?=bash
