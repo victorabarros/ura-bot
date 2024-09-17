@@ -1,6 +1,6 @@
 export * from "./BrazilianReal"
 export * from "./Uranium"
-import { finnHub, exchangeService, uraNostr, uraTwitter } from "../services"
+import { finnHub, exchangeService, uraNostr, uraTwitter, replicateAI, brlTwitter } from "../services"
 
 import { Request, Response } from "express"
 import httpStatus from "http-status"
@@ -17,8 +17,9 @@ export const health = async (req: Request, res: Response) => {
   const services = {
     finhub: { success: true, },
     fxExchange: { success: true, },
-    twitter: { success: true, },
     nostr: { success: true, },
+    replicate: { success: true, },
+    twitter: { success: true, },
   }
 
   try {
@@ -32,13 +33,13 @@ export const health = async (req: Request, res: Response) => {
   try {
     await exchangeService.getCurrenciesValues()
   } catch (err) {
-    console.error("Fail to check FinHub", err)
+    console.error("Fail to check fxExchange", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
-    services.finhub.success = false
+    services.fxExchange.success = false
   }
 
   try {
-    await uraTwitter.check()
+    services.twitter.success = await uraTwitter.check()
   } catch (err) {
     console.error("Fail to check UraTwitter", err)
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
@@ -46,9 +47,17 @@ export const health = async (req: Request, res: Response) => {
   }
 
   try {
-    await uraNostr.check()
+    services.nostr.success = await uraNostr.check()
   } catch (err) {
-    console.error("Fail to check BrlTwitter", JSON.stringify(err))
+    console.error("Fail to check uraNostr", JSON.stringify(err))
+    responseStatus = httpStatus.SERVICE_UNAVAILABLE
+    services.nostr.success = false
+  }
+
+  try {
+    services.twitter.success = await replicateAI.check()
+  } catch (err) {
+    console.error("Fail to check Replicate AI", JSON.stringify(err))
     responseStatus = httpStatus.SERVICE_UNAVAILABLE
     services.twitter.success = false
   }
