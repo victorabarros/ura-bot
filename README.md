@@ -35,9 +35,11 @@
       style="background-color:black;padding:5px 10px;border-radius:3px"
     />
   </a>
+  <!-- TODO add replicate ai badges -->
 </p>
 
 **[Twitter](https://twitter.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news.
+Powered with AI.
 
 <p align="center">
   <!-- TODO Update screenshot with one more recent -->
@@ -53,33 +55,33 @@ You can find all commands on [Makefile](./Makefile)
 write .env file similar to .env.example
 
 ```sh
-# locally run with hot reload
-make debug-server
-
-# hit api
-make curl-tweet-ura-stocks
-make curl-tweet-ura-news
-
 # automated tests
 make test-server
+
+# locally run with hot reload
+make debug-server
 
 # build and run production version
 make build-server-image
 make run-server
+
+# hit api
+make curl-heart
+make curl-ura-stocks
+make curl-ura-news
 ```
 
 ## Endpoint
 
-|     endpoint      |                   description                    |
-|-------------------|--------------------------------------------------|
-|POST /urabot/stocks|post Uranium market stocks price in real time     |
-|POST /urabot/news  |post Uranium market news                          |
-|POST /brlbot/prices|post Brazilian Real price in other intl currencies|
-|GET  /heartbeat    |heartbeat                                         |
+|     endpoint      |                   description                     |
+|-------------------|---------------------------------------------------|
+|**POST** /urabot/stocks|post Uranium market **stocks price** in real time      |
+|**POST** /urabot/news  |post Uranium market **news** commented with AI analysis|
+|**POST** /brlbot/prices|post Brazilian **Real price** in other intl currencies |
+|**GET**  /heartbeat    |heartbeat                                          |
 
 ## Flow
 
-<!-- TODO update flow w/ replicate ai -->
 ![demo](flow.excalidraw.png)
 
 ## Monitoring
@@ -96,7 +98,7 @@ I'm more than happy to be honored with your support.
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px">
   </a>
 
-  <a href="https://website.victorbarros.dev/wallet" target="_blank">
+  <a href="https://victor.barros.engineer/wallet" target="_blank">
     <img src="https://bitcoin.org/img/icons/logotop.svg?1671880122" height="40px">
   </a>
 </p>

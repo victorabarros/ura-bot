@@ -3,6 +3,7 @@ APP_DIR=/${APP_NAME}/src
 DOCKER_BASE_IMAGE=node:20.14.0
 PORT=8082
 URL?=http://localhost:${PORT}/
+PROD_URL=https://api.uraniumstockbot.com/
 ENV_FILE?=.env
 COMMAND?=bash
 API_KEY=McChickenPromo
@@ -30,13 +31,33 @@ docker-command: remove-containers
 		-p ${PORT}:${PORT} --name ${APP_NAME} \
 		${DOCKER_BASE_IMAGE} bash -c "${COMMAND}"
 
-debug: docker-command
-
 remove-containers:
 ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
 	@echo "${YELLOW}Removing containers${COLOR_OFF}"
 	@docker ps -a --filter "name=${APP_NAME}" -aq | xargs docker rm -f
 endif
+
+# commands to debug and run w/ hot reload
+
+debug: docker-command
+
+debug-server:
+	@clear
+	@make welcome
+	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
+	@make -s docker-command COMMAND="yarn dev"
+
+# commands to run test
+
+test-server:
+	@reset
+	@make welcome
+	@echo "${YELLOW}Testing${COLOR_OFF}"
+	@rm -rf coverage/
+	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
+	@open coverage/index.html
+
+# commands to build and run like prod
 
 build-server-image:
 	@clear
@@ -50,38 +71,36 @@ run-server:
 	@echo "${YELLOW}Running project${COLOR_OFF}"
 	@make -s docker-command COMMAND="yarn start"
 
-debug-server:
-	@clear
-	@make welcome
-	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn dev"
-
-test-server:
-	@reset
-	@make welcome
-	@echo "${YELLOW}Testing${COLOR_OFF}"
-	@rm -rf coverage/
-	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
-	@open coverage/index.html
+# commands to hit local
 
 curl-heart:
 	curl -v ${URL}heartbeat
 
-prod-ura-stock:
-	@make curl-tweet-ura-stocks URL=https://api.uraniumstockbot.com/
-
-curl-tweet-ura-stocks:
+curl-ura-stocks:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/stocks
 
-curl-tweet-ura-news:
+curl-ura-news:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/news
 
-curl-tweet-brl-price:
+curl-brl-price:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brlbot/prices
 
-curl-tweet-btc-metrx:
+curl-btc-metrx:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}btcmetrx/indexes
 
-reset-main:
-	@git checkout main
-	@git pull
+# commands to hit production
+
+curl-heart-prod:
+	@make curl-heart URL=${PROD_URL}
+
+curl-ura-stocks-prod:
+	@make curl-ura-stocks URL=${PROD_URL}
+
+curl-ura-news-prod:
+	@make curl-ura-news URL=${PROD_URL}
+
+curl-brl-price-prod:
+	@make curl-brl-price URL=${PROD_URL}
+
+curl-btc-metrx-prod:
+	@make curl-btc-metrx URL=${PROD_URL}
