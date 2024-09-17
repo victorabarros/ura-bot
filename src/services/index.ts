@@ -3,6 +3,7 @@ import { CurrencyService } from "./Currency"
 import { FinnHubService } from "./Finnhub"
 import { NostrService } from "./Nostr"
 import { TwitterService } from "./Twitter"
+import { ReplicateAIService } from "./ReplicateAI"
 
 const { uraBot, brlBot } = config.twitter
 
@@ -10,6 +11,9 @@ const { uraBot, brlBot } = config.twitter
 export const finnHub = new FinnHubService()
 // TODO exchangeService and CurrencyService are terrible names. Fix in some future PR
 export const exchangeService = new CurrencyService()
+
+// AI services
+export const replicateAI = new ReplicateAIService()
 
 // uranium stocks socials
 export const uraTwitter = new TwitterService({ ...uraBot })
