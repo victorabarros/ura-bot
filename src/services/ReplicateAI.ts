@@ -37,4 +37,8 @@ export class ReplicateAIService {
     throw new Error("Method not implemented.")
   }
 
+  async check(): Promise<boolean> {
+    // TODO check https://replicatestatus.com/
+    return true
+  }
 }
