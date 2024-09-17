@@ -1,19 +1,16 @@
 import { Router } from "express"
-import { postUraNews, postUraStock, postBrlPrice, health, heartbeat } from "./controller"
+import { postUraNews, postUraStock, postBrlPrice, heartbeat } from "./controller"
 import { postBTCIndexes } from "./controller/BitcoinMetrics"
 
 const routes = Router()
 
-// deprecated
-routes.post("/tweet", postUraStock)
-
 // health
 routes.get("/heartbeat", heartbeat)
-routes.get("/health", health)
 
 // uranium stocks bot
 routes.post("/urabot/news", postUraNews)
 routes.post("/urabot/stocks", postUraStock)
+routes.post("/tweet", postUraStock) // deprecated
 
 // brazilian real bot
 routes.post("/brlbot/prices", postBrlPrice)
