@@ -39,6 +39,7 @@
 </p>
 
 **[Twitter](https://twitter.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news.
+
 Powered with AI.
 
 <p align="center">
@@ -73,12 +74,12 @@ make curl-ura-news
 
 ## Endpoint
 
-|     endpoint      |                   description                     |
-|-------------------|---------------------------------------------------|
+|     endpoint      |                   description                             |
+|-------------------|-----------------------------------------------------------|
 |**POST** /urabot/stocks|post Uranium market **stocks price** in real time      |
 |**POST** /urabot/news  |post Uranium market **news** commented with AI analysis|
 |**POST** /brlbot/prices|post Brazilian **Real price** in other intl currencies |
-|**GET**  /heartbeat    |heartbeat                                          |
+|**GET**  /heartbeat    |heartbeat                                              |
 
 ## Flow
 
