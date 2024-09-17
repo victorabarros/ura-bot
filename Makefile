@@ -64,12 +64,6 @@ test-server:
 	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
 	@open coverage/index.html
 
-run-migration:
-	@clear
-	@make welcome
-	@echo "${YELLOW}Executing Migrations${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn sequelize db:migrate"
-
 curl-healthcheck:
 	curl -v ${URL}health
 
