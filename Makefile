@@ -41,6 +41,7 @@ endif
 build-server-image:
 	@clear
 	@echo "${YELLOW}Building project${COLOR_OFF}"
+	@make -s docker-command COMMAND="yarn install"
 	@make -s docker-command COMMAND="yarn build"
 
 run-server:
@@ -59,11 +60,9 @@ test-server:
 	@reset
 	@make welcome
 	@echo "${YELLOW}Testing${COLOR_OFF}"
+	@rm -rf coverage/
 	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
 	@open coverage/index.html
-
-curl-healthcheck:
-	curl -v ${URL}health
 
 curl-heart:
 	curl -v ${URL}heartbeat

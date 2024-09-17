@@ -40,7 +40,7 @@
 **[Twitter](https://twitter.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news.
 
 <p align="center">
-  <!-- Update screenshot with one more recent -->
+  <!-- TODO Update screenshot with one more recent -->
   <a href="https://twitter.com/UraniumStockBot/status/1470423280712654850">
     <img src="./assets/Tweet_v2.png" />
   </a>
@@ -57,7 +57,6 @@ write .env file similar to .env.example
 make debug-server
 
 # hit api
-make curl-healthcheck
 make curl-tweet-ura-stocks
 make curl-tweet-ura-news
 
@@ -73,13 +72,14 @@ make run-server
 
 |     endpoint      |                   description                    |
 |-------------------|--------------------------------------------------|
-|GET  /health       |healthcheck                                       |
 |POST /urabot/stocks|post Uranium market stocks price in real time     |
 |POST /urabot/news  |post Uranium market news                          |
 |POST /brlbot/prices|post Brazilian Real price in other intl currencies|
+|GET  /heartbeat    |heartbeat                                         |
 
 ## Flow
 
+<!-- TODO update flow w/ replicate ai -->
 ![demo](flow.excalidraw.png)
 
 ## Monitoring
@@ -111,6 +111,7 @@ I'm more than happy to be honored with your support.
 <!--
 TODO:
 
+- fix tests and use script "test": "jest --coverage"
 - reports
   - quarter report; example https://twitter.com/precodobitcoin/status/1480313562291658760;
   - weekly report on friday night or Monday morning
