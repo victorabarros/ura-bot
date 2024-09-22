@@ -114,6 +114,7 @@ I'm more than happy to be honored with your support.
 <!--
 TODO:
 
+- add star history like this https://github.com/afadil/wealthfolio/blob/f771dff685a2462aa7deb03cb69adf24e97bd780/README.md?plain=1#L160C35-L160C55
 - fix tests and use script "test": "jest --coverage"
 - reports
   - quarter report; example https://twitter.com/precodobitcoin/status/1480313562291658760;
@@ -131,7 +132,8 @@ TODO:
   - part 3 - add query params and cron with goodmorning/evenning.
 
 - other stocks:
-  - find another api that supports the stocks above. alternatives: data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
+  - find another api that supports the stocks above. alternatives: data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring | https://marketstack.com/ | yahoo finance api
+  - alternatives to currency prices https://fixer.io/
   - $URM https://twitter.com/TheTSXDude/status/1631066976666763266?s=20
   - $NANO https://twitter.com/FayeKnoozIV/status/1806373643435282575
   - $SPUT https://x.com/derekrogden/status/1797668427936731459
