@@ -114,6 +114,9 @@ I'm more than happy to be honored with your support.
 <!--
 TODO:
 
+- reduce nbr of post per day
+  - 4 posts w/ news
+  - 4 posts w/ stocks
 - add star history like this https://github.com/afadil/wealthfolio/blob/f771dff685a2462aa7deb03cb69adf24e97bd780/README.md?plain=1#L160C35-L160C55
 - fix tests and use script "test": "jest --coverage"
 - reports
