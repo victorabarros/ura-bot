@@ -7,7 +7,7 @@ import { ReplicateAIService } from "./ReplicateAI"
 
 const { uraBot, brlBot } = config.twitter
 
-// data suppliers
+// data vendors
 export const finnHub = new FinnHubService()
 export const exchangeService = new CurrencyService()
 

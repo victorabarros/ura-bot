@@ -17,6 +17,6 @@ export const mapQuotesToBodyMessage = (quotes: Array<GetQuoteResponse>): string[
 
     const delta = (100 * (price - openPrice)) / openPrice
     const deltaString = delta.toFixed(2)
-    const deltaMessage = `${" ".repeat(5 - deltaString.length)}${delta < 0 ? " " : "+"}${deltaString}% ${delta < 0 ? "📉" : "📈"}`
+    const deltaMessage = `${delta < 0 ? " " : "+"}${deltaString}% ${delta < 0 ? "📉" : "📈"}`
     return `${message} ${deltaMessage}`
   })

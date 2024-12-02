@@ -33,15 +33,6 @@ export type GetQuoteResponse = {
   previousClosePrice: number
 }
 
-type GetQuoteCandlesResponse = {
-  timestamp: number
-  openPrice: number
-  closePrice: number
-  highPrice: number
-  lowPrice: number
-  volume: number
-}
-
 interface IFinnHubService {
   searchNews(symbol: string, from?: Date, to?: Date): Promise<Array<SearchNewsResponse>>
   getQuoteRealTime(symbol: string): Promise<GetQuoteResponse>
