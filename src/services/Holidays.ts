@@ -216,6 +216,5 @@ export const holidayMessage = (now: Date): string => {
     throw new Error("Holiday not found")
   }
 
-  // TODOreplicate if !holidayDetail.message, use replicate to generate a holiday message. Maybe with a image.
   return holidayDetail.message || `Today is ${holidayDetail.eventName}`
 }

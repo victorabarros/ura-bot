@@ -122,7 +122,6 @@ export const postUraNews = async (req: Request, res: Response) => {
     comment,
     "",
     "#Uranium☢️",
-    // TODO use a shorten url, like bit.ly
     news.url,
   ]
 
@@ -168,6 +167,5 @@ const fridayMessage = (now: Date): string => (
 )
 
 function isFirstPostOfDay(now: Date) {
-  // TODO use redis cache to this
   return now.getHours() === 14 && now.getMinutes() === 0
 }

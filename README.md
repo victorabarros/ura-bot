@@ -115,7 +115,11 @@ I'm more than happy to be honored with your support.
 <!--
 TODO:
 
-- reduce nbr of post per day
+- use a shorten url, like bit.ly to here https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L126
+- use redis cache to isFirstPostOfDay https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L170
+- replicate if !holidayDetail.message, use replicate to generate a holiday message. Maybe with a image. https://github.com/victorabarros/ura-bot/blob/71d7cf7950786f53748a59da57042cb7501db8b1/src/services/Holidays.ts#L220
+- implement async ReplicateAIService.BuildImage(prompt: string): Promise<string>; copy from here https://github.com/victorabarros/Learning/blob/master/replicate/index.js
+- reduce nof post per day
   - 4 posts w/ news
   - 4 posts w/ stocks
 - add star history like this https://github.com/afadil/wealthfolio/blob/f771dff685a2462aa7deb03cb69adf24e97bd780/README.md?plain=1#L160C35-L160C55

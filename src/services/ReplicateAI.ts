@@ -39,7 +39,4 @@ export class ReplicateAIService {
     return output.join("").slice(1, -1)
   }
 
-  // TODO async BuildImage(prompt: string): Promise<string>
-  // copy from here https://github.com/victorabarros/Learning/blob/master/replicate/index.js
-
 }
