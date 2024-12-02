@@ -5,6 +5,7 @@
   <img width="70%" src="https://raw.githubusercontent.com/victorabarros/ura-bot/main/assets/UraBot_profile01.png" />
 </p>
 
+<!-- badges -->
 <p>
   <a href="https://railway.app/" target="_blank">
     <img height="32px" src="https://railway.app/button.svg" />
@@ -38,13 +39,13 @@
   <!-- TODO add replicate ai badges -->
 </p>
 
-**[Twitter](https://twitter.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news.
+**[Twitter/X](https://x.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news.
 
 Powered with AI.
 
 <p align="center">
-  <!-- TODO Update screenshot with one more recent -->
-  <a href="https://twitter.com/UraniumStockBot/status/1470423280712654850">
+  <!-- TODO Update screenshot with one more recent like this https://x.com/UraniumStockBot/status/1861862634100080682-->
+  <a href="https://x.com/UraniumStockBot/status/1470423280712654850">
     <img src="./assets/Tweet_v2.png" />
   </a>
 </p>
