@@ -8,30 +8,25 @@ import { isHoliday, holidayMessage } from "../services/Holidays"
 import { finnHub, uraNostr, uraTwitter, replicateAI } from "../services"
 import { mapQuotesToBodyMessage, signature } from "./helper"
 import { PostMessageResponse } from "../services/ISocialService"
+import { ReplicateAIPersona } from "../services/ReplicateAI"
 
 // In order to avoid achieve maximum number of characters in a tweet, we need to limit the number of stocks per message
 const MAX_STOCKS_PER_MESSAGE = 6
 
 const NYSE_STOCKS = [
-  "CCJ",  // Cameco: second largest producer
+  "CCJ",  // Cameco: second largest producer in the world
   "DNN",
   "NXE",  // Next Gen Energy
+  "SMR", // NuScale Power Corporation
+  "SRUUF",
   "UEC",  // Uranium Energy Corp
   "URA",  // ETF: 23%-Cameco 20%-Kazatomprom 50%-(out of uranium market)
-  "URNM", // ETF
+  "URNM",
   "UUUU", // Energy Fuels
-  "SRUUF",
-  "SMR", // NuScale Power Corporation (SMR)
 ]
 
 const OTHER_STOCKS = [
-  // "U.U",
-  // "U.UN", // Sprott: physical uranium trust
-  // "UXC", // Future Contract
-  // "HURA", // ETF
-  // "NANO",
   "URNJ",
-
   "UROY",
 ]
 
@@ -45,7 +40,6 @@ export const postUraStock = async (req: Request, res: Response) => {
       morningMessage(now),
       holidayMessage(now),
       signature(now, "#Uranium☢️"),
-      evenningMessage(now),
     ]
 
     const message = lines.join("\n\n")
@@ -100,7 +94,7 @@ export const postUraNews = async (req: Request, res: Response) => {
   let newsArray: Array<SearchNewsResponse> = []
   let iterLimit = 0
 
-  // iter til find some newsArray
+  // iter til find some newsArray randomly
   while (newsArray.length == 0 && iterLimit < STOCKS.length * 4) {
     const stockIndex = Math.floor(Math.random() * STOCKS.length)
     newsArray = await finnHub.searchNews(STOCKS[stockIndex])
@@ -116,7 +110,7 @@ export const postUraNews = async (req: Request, res: Response) => {
   const newsIndex = Math.floor(Math.random() * newsArray.length)
   const news: SearchNewsResponse = newsArray[newsIndex]
   const prompt = "Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): " + JSON.stringify(news)
-  const comment = await replicateAI.GetAnswer(prompt, "ura")
+  const comment = await replicateAI.GetAnswer(prompt, ReplicateAIPersona.URABOT)
 
   const lines = [
     comment,

@@ -3,6 +3,10 @@ import config from "../config"
 
 const { apiKey } = config.replicate
 
+export enum ReplicateAIPersona {
+  URABOT,
+}
+
 export class ReplicateAIService {
   replicate: Replicate
   model = {
@@ -13,10 +17,10 @@ export class ReplicateAIService {
     this.replicate = new Replicate({ auth: apiKey })
   }
 
-  async GetAnswer(prompt: string, system: "ura"): Promise<string> {
+  async GetAnswer(prompt: string, persona: ReplicateAIPersona): Promise<string> {
     let system_prompt = ""
 
-    if (system === "ura") {
+    if (persona === ReplicateAIPersona.URABOT) {
       system_prompt = "You are an investor and influencer about the uranium stock market, always posting with not casual terms and with a bit of acid humor. Never uses hashtags of external links."
     } else {
       throw new Error("System not implemented.")
