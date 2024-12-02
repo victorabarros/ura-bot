@@ -1,5 +1,6 @@
-import { STOCKS } from "../../../src/controller/Uranium"
 import { finnHub } from "../../../src/services"
+
+const STOCKS = ["BINANCE:BTCUSDT"]
 
 describe("Test Services Finhub", () => {
 

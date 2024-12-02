@@ -1,5 +1,5 @@
 export * from "./BrazilianReal"
-export * from "./Uranium"
+export * from "./BitcoinMetrics"
 
 import { Request, Response } from "express"
 import httpStatus from "http-status"

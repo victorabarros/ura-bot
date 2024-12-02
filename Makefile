@@ -1,9 +1,8 @@
-APP_NAME=ura-bot-server
+APP_NAME=bots-server
 APP_DIR=/${APP_NAME}/src
 DOCKER_BASE_IMAGE=node:20.14.0
 PORT=8082
 URL?=http://localhost:${PORT}/
-PROD_URL=https://api.uraniumstockbot.com/
 ENV_FILE?=.env
 COMMAND?=bash
 API_KEY=McChickenPromo
@@ -14,12 +13,6 @@ COLOR_OFF=$(shell printf '\033[0;1;0m')
 welcome:
 	@clear
 	@echo "${BOLD_YELLOW}"
-	@echo " ____ ___                   __________             __   " && sleep .02
-	@echo "|    |   \ _______  _____   \______   \   ____   _/  |_ " && sleep .02
-	@echo "|    |   / \_  __ \ \__  \   |    |  _/  /  _ \  \   __\ " && sleep .02
-	@echo "|    |  /   |  | \/  / __ \_ |    |   \ (  <_> )  |  |  " && sleep .02
-	@echo "|______/    |__|    (____  / |______  /  \____/   |__|  " && sleep .02
-	@echo "                        \/         \/                  " && sleep .02
 	@echo "${NOCOLOR}"
 	@# http://patorjk.com/software/taag font Graffiti full
 
@@ -76,31 +69,8 @@ run-server:
 curl-heart:
 	curl -v ${URL}heartbeat
 
-curl-ura-stocks:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/stocks
-
-curl-ura-news:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/news
-
 curl-brl-price:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brlbot/prices
 
 curl-btc-metrx:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}btcmetrx/indexes
-
-# commands to hit production
-
-curl-heart-prod:
-	@make curl-heart URL=${PROD_URL}
-
-curl-ura-stocks-prod:
-	@make curl-ura-stocks URL=${PROD_URL}
-
-curl-ura-news-prod:
-	@make curl-ura-news URL=${PROD_URL}
-
-curl-brl-price-prod:
-	@make curl-brl-price URL=${PROD_URL}
-
-curl-btc-metrx-prod:
-	@make curl-btc-metrx URL=${PROD_URL}

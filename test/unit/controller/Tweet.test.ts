@@ -1,5 +1,3 @@
-import { postUraStock } from "../../../src/controller/Uranium"
-
 const mockResponse = {
   status: (code: number) => ({ statusCode: code, ...mockResponse }),
   json: (body: unknown) => ({ data: body, ...mockResponse })
@@ -32,14 +30,3 @@ jest.mock("../../../src/services", () => ({
     }
   }
 }))
-
-describe("Test Controller Tweet", () => {
-  describe("post stock", () => {
-
-    it("success", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await postUraStock({} as any, mockResponse as any)
-    })
-  })
-
-})
