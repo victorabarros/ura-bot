@@ -100,7 +100,7 @@ I'm more than happy to be honored with your support.
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px">
   </a>
 
-  <a href="https://victor.barros.engineer/wallet" target="_blank">
+  <a href="https://victorabarros.github.io/wallet" target="_blank">
     <img src="https://bitcoin.org/img/icons/logotop.svg?1671880122" height="40px">
   </a>
 </p>
