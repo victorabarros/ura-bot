@@ -6,7 +6,7 @@ import {
 } from "../services/Finnhub"
 import { isHoliday, holidayMessage } from "../services/Holidays"
 import { finnHub, uraNostr, uraTwitter, replicateAI } from "../services"
-import { mapQuotesToBodyMessage, signature } from "./helper"
+import { evenningMessage, isFirstPostOfDay, mapQuotesToBodyMessage, morningMessage, signature } from "./helper"
 import { PostMessageResponse } from "../services/ISocialService"
 import { ReplicateAIPersona } from "../services/ReplicateAI"
 
@@ -144,22 +144,4 @@ const postMessage = async (messages: string[], now: Date, res: Response): Promis
       .status(httpStatus.INTERNAL_SERVER_ERROR)
       .json({})
   }
-}
-
-const morningMessage = (now: Date): string => (
-  isFirstPostOfDay(now) ? "Good Morning, everyone!" : ""
-)
-
-const evenningMessage = (now: Date): string => (
-  (now.getHours() === 21 && now.getMinutes() === 0) ?
-    `Good Night, folks! ${fridayMessage(now)}\nSee ya` : ""
-)
-
-const fridayMessage = (now: Date): string => (
-  (now.getDay() === 5) ?
-    "Have a nice and sunny weekend" : ""
-)
-
-function isFirstPostOfDay(now: Date) {
-  return now.getHours() === 14 && now.getMinutes() === 0
 }

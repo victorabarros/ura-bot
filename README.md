@@ -79,7 +79,6 @@ make curl-ura-news
 |-------------------|-----------------------------------------------------------|
 |**POST** /urabot/stocks|post Uranium market **stocks price** in real time      |
 |**POST** /urabot/news  |post Uranium market **news** commented with AI analysis|
-|**POST** /brlbot/prices|post Brazilian **Real price** in other intl currencies |
 |**GET**  /heartbeat    |heartbeat                                              |
 
 ## Flow
@@ -115,7 +114,7 @@ I'm more than happy to be honored with your support.
 <!--
 TODO:
 
-- getCurrenciesValues is not working. API changed the response contract
+- TODO follow on with BRLBOT and BTCMETRIX on branch https://github.com/victorabarros/ura-bot/tree/brlbot-and-btcmetrix-code
 - move to helper https://github.com/victorabarros/ura-bot/blob/8df0a3014c87b5c7927054381c22d26a12ec8b14/src/controller/Uranium.ts#L155-L171 ?
 - use signature(now, "#Uranium☢️") https://github.com/victorabarros/ura-bot/blob/8df0a3014c87b5c7927054381c22d26a12ec8b14/src/controller/Uranium.ts#L124
 - use a shorten url, like bit.ly to here https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L126
@@ -154,6 +153,5 @@ TODO:
   - UXC // Future Contract
 
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
-- create cover image to BRL bot (use ai to https://x.com/LeonardoAi_)
 - alternative to railway: https://render.com/
 -->

@@ -11,20 +11,11 @@ export default {
       accessToken: process.env.URA_BOT_TWITTER_ACCESS_TOKEN || throwMissingVariable("URA_BOT_TWITTER_ACCESS_TOKEN"),
       accessTokenSecret: process.env.URA_BOT_TWITTER_ACCESS_TOKEN_SECRET || throwMissingVariable("URA_BOT_TWITTER_ACCESS_TOKEN_SECRET"),
     },
-    brlBot: {
-      apiKey: process.env.BRL_BOT_TWITTER_API_KEY || throwMissingVariable("BRL_BOT_TWITTER_API_KEY"),
-      apiKeySecret: process.env.BRL_BOT_TWITTER_API_KEY_SECRET || throwMissingVariable("BRL_BOT_TWITTER_API_KEY_SECRET"),
-      accessToken: process.env.BRL_BOT_TWITTER_ACCESS_TOKEN || throwMissingVariable("BRL_BOT_TWITTER_ACCESS_TOKEN"),
-      accessTokenSecret: process.env.BRL_BOT_TWITTER_ACCESS_TOKEN_SECRET || throwMissingVariable("BRL_BOT_TWITTER_ACCESS_TOKEN_SECRET"),
-    },
     baseUrl: "https://api.twitter.com/2/tweets",
   },
   finnhub: {
     address: process.env.FINNHUB_ADDRESS || throwMissingVariable("FINNHUB_ADDRESS"),
     apiKey: process.env.FINNHUB_API_KEY || throwMissingVariable("FINNHUB_API_KEY"),
-  },
-  currency: {
-    address: process.env.CURRENCY_ADDRESS || throwMissingVariable("CURRENCY_ADDRESS"),
   },
   replicate: {
     apiKey: process.env.REPLICATE_API_TOKEN || throwMissingVariable("REPLICATE_API_TOKEN"),

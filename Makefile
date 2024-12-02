@@ -82,12 +82,6 @@ curl-ura-stocks:
 curl-ura-news:
 	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/news
 
-curl-brl-price:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}brlbot/prices
-
-curl-btc-metrx:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}btcmetrx/indexes
-
 # commands to hit production
 
 curl-heart-prod:
@@ -98,9 +92,3 @@ curl-ura-stocks-prod:
 
 curl-ura-news-prod:
 	@make curl-ura-news URL=${PROD_URL}
-
-curl-brl-price-prod:
-	@make curl-brl-price URL=${PROD_URL}
-
-curl-btc-metrx-prod:
-	@make curl-btc-metrx URL=${PROD_URL}

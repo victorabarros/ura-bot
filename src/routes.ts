@@ -1,6 +1,5 @@
 import { Router } from "express"
-import { postUraNews, postUraStock, postBrlPrice, heartbeat } from "./controller"
-import { postBTCIndexes } from "./controller/BitcoinMetrics"
+import { postUraNews, postUraStock, heartbeat } from "./controller"
 
 const routes = Router()
 
@@ -11,11 +10,5 @@ routes.get("/heartbeat", heartbeat)
 routes.post("/urabot/news", postUraNews)
 routes.post("/urabot/stocks", postUraStock)
 routes.post("/tweet", postUraStock) // deprecated
-
-// brazilian real bot
-routes.post("/brlbot/prices", postBrlPrice)
-
-// bitcoin metrics
-routes.post("/btcmetrx/indexes", postBTCIndexes)
 
 export default routes

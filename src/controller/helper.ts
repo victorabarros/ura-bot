@@ -20,3 +20,21 @@ export const mapQuotesToBodyMessage = (quotes: Array<GetQuoteResponse>): string[
     const deltaMessage = `${delta < 0 ? " " : "+"}${deltaString}% ${delta < 0 ? "📉" : "📈"}`
     return `${message} ${deltaMessage}`
   })
+
+export const morningMessage = (now: Date): string => (
+  isFirstPostOfDay(now) ? "Good Morning, everyone!" : ""
+)
+
+export const evenningMessage = (now: Date): string => (
+  (now.getHours() === 21 && now.getMinutes() === 0) ?
+    `Good Night, folks! ${fridayMessage(now)}\nSee ya` : ""
+)
+
+const fridayMessage = (now: Date): string => (
+  (now.getDay() === 5) ?
+    "Have a nice and sunny weekend" : ""
+)
+
+export function isFirstPostOfDay(now: Date) {
+  return now.getHours() === 14 && now.getMinutes() === 0
+}

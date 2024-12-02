@@ -1,4 +1,3 @@
-export * from "./BrazilianReal"
 export * from "./Uranium"
 
 import { Request, Response } from "express"
