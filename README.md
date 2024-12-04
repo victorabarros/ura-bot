@@ -127,6 +127,8 @@ I'm more than happy to be honored with your support.
 <!--
 TODO:
 
+- create landing page w/ react-native-web w/ uraniumstockbot.com ; same content of read plus footer from victor.barros.engineer
+  - use this link in the bio ; readme and more ...
 - follow on with BRLBOT and BTCMETRIX on branch https://github.com/victorabarros/ura-bot/tree/brlbot-and-btcmetrix-code
 - use signature(now, "#Uranium☢️") https://github.com/victorabarros/ura-bot/blob/8df0a3014c87b5c7927054381c22d26a12ec8b14/src/controller/Uranium.ts#L124
 - use a shorten url, like bit.ly to here https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L126
