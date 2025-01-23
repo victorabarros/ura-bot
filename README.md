@@ -1,4 +1,4 @@
-# UraBot
+# ☢️ UraBot ☢️
 
 <p align="center">
   <!-- cover image -->
@@ -47,7 +47,7 @@
 **[Twitter/X](https://x.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news.
 
 Powered with AI.
-
+**
 <p align="center">
   <a href="https://x.com/UraniumStockBot/status/1470423280712654850">
     <img
@@ -62,7 +62,7 @@ Powered with AI.
      />
   </a>
 </p>
-
+**
 ## How to run
 
 You can find all commands on [Makefile](./Makefile)
@@ -127,6 +127,8 @@ I'm more than happy to be honored with your support.
 <!--
 TODO:
 
+- improve replicate prompt with this: https://github.com/f/awesome-chatgpt-prompts?tab=readme-ov-file#act-as-a-social-media-influencer
+- "Please add ETF NUKZ" - https://x.com/lhthome/status/1882431883503714677
 - create landing page w/ react-native-web w/ [uraniumstockbot.com](https://account.squarespace.com/domains/managed/uraniumstockbot.com) ; same content of read plus footer from victor.barros.engineer
   - use this link in the bio ; readme and more ...
   - try add widget w/ view from x/twitter and nostr
