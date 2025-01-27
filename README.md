@@ -121,7 +121,7 @@ I'm more than happy to be honored with your support.
   <br/>
   Made in Brazil
   <br/>
-  <img src="https://user-images.githubusercontent.com/42843223/222024964-9494cd55-849c-40a3-8121-8fa00d575475.png" height="30px"/>
+  <img src="./assets/BrazilFlag.png" height="30px"/>
 </p>
 
 <!--
