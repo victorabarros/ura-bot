@@ -60,7 +60,7 @@ export const postUraStock = async (req: Request, res: Response) => {
       }
     }
   )
-
+  // TODO use Promise.allSettled instead
   const quotes = (await Promise.all(getStockTasks))
     .filter(quote => quote !== undefined) as GetQuoteResponse[]
 
@@ -133,6 +133,7 @@ const postMessage = async (messages: string[], now: Date, res: Response): Promis
       tasks.push(uraNostr.postMessage(message))
     })
 
+  // TODO use Promise.allSettled instead
     await Promise.all(tasks)
 
     return res

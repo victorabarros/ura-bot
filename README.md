@@ -1,19 +1,20 @@
 # ☢️ UraBot ☢️
 
+
 <p align="center">
   <!-- cover image -->
   <img width="70%" src="https://raw.githubusercontent.com/victorabarros/ura-bot/main/assets/UraBot_profile01.png" />
 </p>
 
 <!-- badges -->
+[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/uraniumStockBot)](https://x.com/uraniumStockBot)
 <p>
   <a href="https://railway.app/" target="_blank">
     <img height="32px" src="https://railway.app/button.svg" />
   </a>
-  </a>
-  <a href="https://codeclimate.com/github/victorabarros/ura-bot" target="_blank">
+  <!-- <a href="https://codeclimate.com/github/victorabarros/ura-bot" target="_blank">
     <img height="32px" src="https://api.codeclimate.com/v1/badges/1499a1923c708e6570ac/maintainability" />
-  </a>
+  </a> -->
   <a href="https://cron-job.org/en/" target="_blank">
     <img
       height="22px"
