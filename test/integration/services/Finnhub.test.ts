@@ -4,7 +4,6 @@ import { finnHub } from "../../../src/services"
 describe("Test Services Finhub", () => {
 
   describe("get stock news", () => {
-  // TODO use Promise.allSettled instead
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
         const resp = await finnHub.searchNews(stock)
@@ -14,7 +13,6 @@ describe("Test Services Finhub", () => {
   })
 
   describe("get quote real time", () => {
-  // TODO use Promise.allSettled instead
     Promise.all(STOCKS.map(async stock => {
       it(`success ${stock}`, async () => {
         const resp = await finnHub.getQuoteRealTime(stock)

@@ -10,8 +10,7 @@
     "lint": "eslint --fix .",
     "precommit": "yarn lint",
     "prepare-husky": "husky install server/.husky",
-    "pretest": "yarn lint && yarn build",
-    "test": "echo 'TODO fix me'"
+    "pretest": "yarn lint && yarn build"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.0",
