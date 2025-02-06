@@ -18,6 +18,11 @@
 - use Promise.allSettled instead of Promise.all
 - add script test to package.json
   - fix tests and use script "test": "jest --coverage"
+  - after fixed, re-introdude to ./nixpacks.toml:
+    [phases.test]
+    cmds = ["yarn test"]
+    dependsOn = ["build"]
+
 - re-introduce husky to code
 - use redis cache to isFirstPostOfDay and evenningMessage https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L170
 
