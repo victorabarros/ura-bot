@@ -4,7 +4,7 @@ import { NostrService } from "./Nostr"
 import { TwitterService } from "./Twitter"
 import { ReplicateAIService } from "./ReplicateAI"
 
-// data vendors
+// stock data vendors
 export const finnHub = new FinnHubService()
 
 // AI services

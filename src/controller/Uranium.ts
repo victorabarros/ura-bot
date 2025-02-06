@@ -109,7 +109,8 @@ export const postUraNews = async (req: Request, res: Response) => {
 
   const newsIndex = Math.floor(Math.random() * newsArray.length)
   const news: SearchNewsResponse = newsArray[newsIndex]
-  const prompt = "Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): " + JSON.stringify(news)
+  const prompt = "Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): " +
+    JSON.stringify(news)
   const comment = await replicateAI.GetAnswer(prompt, ReplicateAIPersona.URABOT)
 
   const lines = [
