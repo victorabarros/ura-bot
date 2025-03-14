@@ -1,0 +1,18 @@
+meta {
+  name: search news
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://finnhub.io/api/v1/company-news?symbol=AAPL&from=2023-04-01&to=2023-04-09&token=c66u80iad3icr57jne00
+  body: none
+  auth: none
+}
+
+params:query {
+  symbol: AAPL
+  from: 2023-04-01
+  to: 2023-04-09
+  token: c66u80iad3icr57jne00
+}

@@ -1,0 +1,15 @@
+meta {
+  name: post brlbot prices
+  type: http
+  seq: 4
+}
+
+post {
+  url: https://api.uraniumstockbot.com/brlbot/prices
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: {{UrabotXToken}}
+}

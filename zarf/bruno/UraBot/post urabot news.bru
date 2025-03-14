@@ -1,0 +1,15 @@
+meta {
+  name: post urabot news
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://api.uraniumstockbot.com/urabot/news
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: {{UrabotXToken}}
+}
