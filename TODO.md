@@ -30,10 +30,13 @@
 
 - use Bruno for dev collection
 - insert post details to DB
+- create react-native-web app w/ [uraniumstockbot.com](http://uraniumstockbot.com/) address [link](https://github.com/victorabarros/ura-bot/blob/c4393555f47b3a56d0c11b8a230151a893054413/README.md?plain=1#L130)
 
 ## product improvement
 
+- registrar nome no impo https://youtu.be/OAIjQSDdFcs?si=RbuI5VAX-_bstXkp
 - replicate if !holidayDetail.message, use replicate to generate a holiday message. Maybe with a image. https://github.com/victorabarros/ura-bot/blob/71d7cf7950786f53748a59da57042cb7501db8b1/src/services/Holidays.ts#L220
+- also look for top trending and republish with a comment (ai here too)
 - use a shorten url, like bit.ly to here https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L126 to avoid character limit
 - implement async ReplicateAIService.BuildImage(prompt: string): Promise<string>; copy from here https://github.com/victorabarros/Learning/blob/master/replicate/index.js
 - improve replicate prompt with this: https://github.com/f/awesome-chatgpt-prompts?tab=readme-ov-file#act-as-a-social-media-influencer
