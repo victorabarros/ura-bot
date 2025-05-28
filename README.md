@@ -63,7 +63,7 @@ Powered with AI.
      />
   </a>
 </p>
-**
+
 ## How to run
 
 You can find all commands on [Makefile](./Makefile)
