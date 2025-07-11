@@ -34,6 +34,7 @@
 
 ## product improvement
 
+- improve data source to have better news https://x.com/paulmitche24045/status/1943767794513772602
 - registrar nome no impo https://youtu.be/OAIjQSDdFcs?si=RbuI5VAX-_bstXkp
 - replicate if !holidayDetail.message, use replicate to generate a holiday message. Maybe with a image. https://github.com/victorabarros/ura-bot/blob/71d7cf7950786f53748a59da57042cb7501db8b1/src/services/Holidays.ts#L220
 - also look for top trending and republish with a comment (ai here too)
