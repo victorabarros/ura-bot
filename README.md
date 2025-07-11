@@ -109,7 +109,7 @@ It has integration with Telegram, so if a heartbeat fails it sends a message on 
 I'm more than happy to be honored with your support.
 
 <p>
-  <a href="https://victor.barros.engineer/wallet" target="_blank">
+  <a href="https://victor.barros.engineer/support" target="_blank">
     <img src="https://bitcoin.org/img/icons/logotop.svg?1671880122" height="40px">
   </a>
   <br/>
