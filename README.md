@@ -45,10 +45,7 @@
   </a>
 </p>
 
-**[Twitter/X](https://x.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news.
-
-Powered with AI.
-**
+**[Twitter/X](https://x.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news. Powered with AI.
 
 <p align="center">
   <a href="https://x.com/UraniumStockBot/status/1470423280712654850">
