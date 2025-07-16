@@ -49,6 +49,7 @@
 
 Powered with AI.
 **
+
 <p align="center">
   <a href="https://x.com/UraniumStockBot/status/1470423280712654850">
     <img
@@ -112,10 +113,12 @@ It has integration with Telegram, so if a heartbeat fails it sends a message on 
 
 I'm more than happy to be honored with your support.
 
+<p align="center">
 <p>
   <a href="https://victor.barros.engineer/support" target="_blank">
     <img src="https://bitcoin.org/img/icons/logotop.svg?1671880122" height="40px">
   </a>
+  <br/>
   <a href="https://www.buymeacoffee.com/victorbarros" target="_blank">
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px">
   </a>
