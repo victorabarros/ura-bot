@@ -116,7 +116,6 @@ I'm more than happy to be honored with your support.
   <a href="https://victor.barros.engineer/support" target="_blank">
     <img src="https://bitcoin.org/img/icons/logotop.svg?1671880122" height="40px">
   </a>
-  <br/>
   <a href="https://www.buymeacoffee.com/victorbarros" target="_blank">
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px">
   </a>
