@@ -104,6 +104,10 @@ make curl-ura-news
 To monitor the bot's server, it's using the [Uptime Kuma](https://uptime.kuma.pet/), a self-hosted monitoring tool.
 It has integration with Telegram, so if a heartbeat fails it sends a message on telegram.
 
+## Article
+
+#### [The journey to develop a twitter bot to publish uranium market’ stocks (only using free Saas)](https://victoralmeidabarros.medium.com/the-journey-to-develop-a-twitter-bot-to-publish-uranium-market-stocks-only-using-free-saas-152d197194)
+
 ## Support
 
 I'm more than happy to be honored with your support.
@@ -117,6 +121,8 @@ I'm more than happy to be honored with your support.
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px">
   </a>
 </p>
+
+---
 
 <p align="center">
   <br/>
