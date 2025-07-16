@@ -10,7 +10,7 @@ export enum ReplicateAIPersona {
 export class ReplicateAIService {
   replicate: Replicate
   model = {
-    language: "meta/meta-llama-3.1-405b-instruct" as  `${string}/${string}`,
+    language: "meta/meta-llama-3.1-405b-instruct",
   }
 
   constructor() {
@@ -21,7 +21,11 @@ export class ReplicateAIService {
     let system_prompt = ""
 
     if (persona === ReplicateAIPersona.URABOT) {
-      system_prompt = "You are an investor and influencer about the uranium stock market, always posting with not casual terms and with a bit of acid humor. Never uses hashtags of external links."
+      system_prompt = `
+      You are an investor and influencer about the uranium stock market,
+      always posting with not casual terms and with a bit of acid humor.
+      Never uses hashtags or external links.
+    `
     } else {
       throw new Error("System not implemented.")
     }
