@@ -47,6 +47,13 @@
 
 **[Twitter/X](https://x.com/UraniumStockBot)** and **[Nostr](https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps)** page dedicated to sharing uranium market stock prices, analyses and relevant news. Powered with AI.
 
+<!-- TODO substitute/increase the screenshots with more popular post:
+links:
+https://x.com/i/account_analytics/content/1913019706342351096?referrerUrl=%2Fi%2Faccount_analytics%2Fcontent%3F
+https://x.com/UraniumStockBot/status/1913019706342351096
+https://x.com/i/account_analytics/content/1928134273925828682?referrerUrl=%2Fi%2Faccount_analytics%2Fcontent%3F
+https://x.com/UraniumStockBot/status/1928134273925828682 -->
+
 <p align="center">
   <a href="https://x.com/UraniumStockBot/status/1470423280712654850">
     <img
