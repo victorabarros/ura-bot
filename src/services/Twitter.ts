@@ -24,6 +24,8 @@ export class TwitterService implements ISocialService {
   }
 
   async postMessage(message: string): Promise<PostMessageResponse> {
+    // TODO use "twitter-api-v2": "^1.18.2", instead
+    // like https://github.com/EnesCinr/twitter-mcp/blob/56f3e4df00ffd4f6a682771265b6e666d031f236/src/twitter-api.ts#L1
     const options = {
       method: "POST",
       url: baseUrl,

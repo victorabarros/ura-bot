@@ -1,0 +1,35 @@
+meta {
+  name: get latest news
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://api.perplexity.ai/chat/completions
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{PERPLEXITY_AI_API_TOKEN}}
+}
+
+body:json {
+  {
+    "model": "sonar-pro",
+    "messages": [
+      {
+        "role": "user",
+        "content": "What are the major Uranium developments and announcements from today across the industry?"
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: false
+}
