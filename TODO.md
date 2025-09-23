@@ -54,6 +54,15 @@
   - U.U
   - U.UN // Sprott: physical uranium trust
   - UXC // Future Contract
+- https://x.com/Speculator_io/status/1970210948104462833
+  - Small Modular & Micro Reactors $OKLO Oklo $SMR NuScale $NNE NANO Nuclear $GEV GE Vernova $RYCEF Rolls-Royce $BWXT BWX Technologies
+  - Uranium Enrichers $LEU Centrus Energy $ASPI ASP Isotopes
+  - Nuclear Fuel Technology $LTBR Lightbridge
+  - Services and Equipment $CW Curtiss-Wright $MIR Mirion Technologies $FLR Fluor $BEPC Brookfield Renewables $BWXT BWX Technologies $GEV GE Vernova $ATRL AtkinsRealis (CN) $ARE Aecon (CN)
+  - Power Producers $CEG Constellation Energy $VST Vistra $TLN Talen Energy $PEG Public Service Enterprise Group
+  - Uranium Producers $CCJ Cameco $UEC Uranium Energy $BHP BHP Group $URG Ur-Energy $EU enCore Energy $EFR Energy Fuels (CN)
+  - Developers $UUUU Energy Fuels $NXE NextGen Energy $LITM Snow Lake $DML Denison Mines (CN) $ISO Iso Energy (CN) $LAM Lamamide Resources (CN)
+  - Uranium+Nuclear ETFs $NLR VanEck Uranium+Nuclear ETF $URA Global X Uranium ETF $URNM Sprott Uranium Miners ETF $NUKZ  Nuclear Renaissance ETF
 
 ## public
 
