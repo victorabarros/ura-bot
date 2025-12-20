@@ -46,7 +46,14 @@
 
 - "Please add ETF NUKZ" - https://x.com/lhthome/status/1882431883503714677
 - other stocks:
-  - find another api that supports the stocks above. alternatives: data supplier alternative https://alpaca.markets/ | IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring | https://marketstack.com/ | yahoo finance api https://ranaroussi.github.io/yfinance/ | https://github.com/gadicc/node-yahoo-finance2 | https://fixer.io/
+  - find another api alternatives that supports the stocks above
+    - data supplier alternative https://alpaca.markets/
+    - IEX https://cs50.harvard.edu/x/2022/psets/9/finance/#configuring
+    - https://marketstack.com/
+    - yahoo finance api https://ranaroussi.github.io/yfinance/
+    - https://github.com/gadicc/node-yahoo-finance2
+    - https://fixer.io/
+    - https://www.quantiq.live/
   - $URM https://twitter.com/TheTSXDude/status/1631066976666763266?s=20
   - $NANO https://twitter.com/FayeKnoozIV/status/1806373643435282575
   - $SPUT https://x.com/derekrogden/status/1797668427936731459
