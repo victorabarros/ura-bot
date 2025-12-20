@@ -24,6 +24,7 @@
 - create react-native-web app w/ [uraniumstockbot.com](http://uraniumstockbot.com/) address [link](https://github.com/victorabarros/ura-bot/blob/c4393555f47b3a56d0c11b8a230151a893054413/README.md?plain=1#L130) | (https://account.squarespace.com/domains/managed/uraniumstockbot.com) and victor.barros.engineer/urabot ; same content of read plus footer from victor.barros.engineer
   - use this link in the bio ; readme and more ...
   - try add widget w/ view from x/twitter and nostr
+- use Fatify instead of express - https://www.thoughtworks.com/radar/languages-and-frameworks/fastify
 
 ## product improvement
 
