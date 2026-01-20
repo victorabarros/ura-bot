@@ -92,6 +92,13 @@ make curl-ura-stocks
 make curl-ura-news
 ```
 
+<p align="center">
+  <img
+    height="450px"
+    src="http://terminalgifapi.com/api/v1/gif/31313865-6361-3637-3435-623662356639"
+    />
+</p>
+
 ## Endpoint
 
 |     endpoint      |                   description                             |

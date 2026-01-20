@@ -6,6 +6,7 @@
 
 ## code debts
 
+- change API data source https://x.com/UraniumStockBot/status/2013055122486542519?s=20
 - use /internal/... path to internal routes and improve this rule https://github.com/victorabarros/ura-bot/blob/71d7cf7950786f53748a59da57042cb7501db8b1/src/midleware.ts#L11 of oauth
 - use Promise.allSettled instead of Promise.all
 - add script test to package.json
