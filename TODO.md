@@ -29,7 +29,7 @@
 ## product improvement
 
 - improve data source to have better news https://x.com/paulmitche24045/status/1943767794513772602
-- registrar nome no impo https://youtu.be/OAIjQSDdFcs?si=RbuI5VAX-_bstXkp
+<!-- - registrar nome no impo https://youtu.be/OAIjQSDdFcs?si=RbuI5VAX-_bstXkp also on trademark department -->
 - replicate if !holidayDetail.message, use replicate to generate a holiday message. Maybe with a image. https://github.com/victorabarros/ura-bot/blob/71d7cf7950786f53748a59da57042cb7501db8b1/src/services/Holidays.ts#L220 > Use Replicate to create a message on holiday
 - also look for top trending and republish with a comment (ai here too)
 - use a shorten url, like bit.ly to here https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L126 to avoid character limit
