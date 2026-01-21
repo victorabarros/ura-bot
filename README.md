@@ -75,6 +75,13 @@ You can find all commands on [Makefile](./Makefile)
 
 write .env file similar to .env.example
 
+<p align="center">
+  <img
+    height="450px"
+    src="http://terminalgifapi.com/api/v1/gif?commands=%5B%22Set%20FontSize%2025%22%2C%22Set%20Height%20900%22%2C%22Set%20Width%20900%22%2C%22Sleep%201s%22%2C%22Type%20%5C%22%23%20for%20automated%20tests%2C%20use%20%27make%20test-server%27%5C%22%22%2C%22Sleep%201s%22%2C%22Enter%22%2C%22Enter%22%2C%22Type%20%5C%22%23%20for%20local%20run%20with%20hot%20reload%2C%20use%20%27make%20debug-server%27%5C%22%22%2C%22Sleep%201s%22%2C%22Enter%22%2C%22Sleep%2010s%22%5D"
+    />
+</p>
+
 ```sh
 # automated tests
 make test-server
@@ -91,13 +98,6 @@ make curl-heart
 make curl-ura-stocks
 make curl-ura-news
 ```
-
-<p align="center">
-  <img
-    height="450px"
-    src="http://terminalgifapi.com/api/v1/gif/31313865-6361-3637-3435-623662356639"
-    />
-</p>
 
 ## Endpoint
 
