@@ -1,0 +1,21 @@
+meta {
+  name: EOD Data
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://api.marketstack.com/v2/eod?access_key={{marketstackAccessKey}}&symbols=URA
+  body: none
+  auth: inherit
+}
+
+params:query {
+  access_key: {{marketstackAccessKey}}
+  symbols: URA
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
