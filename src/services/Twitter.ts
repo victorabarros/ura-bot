@@ -42,5 +42,4 @@ export class TwitterService implements ISocialService {
 
     return { id: "TODO" }
   }
-
 }

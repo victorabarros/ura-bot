@@ -13,6 +13,11 @@ export default {
     },
     baseUrl: "https://api.twitter.com/2/tweets",
   },
+  xSocial:{
+    uraBot:{
+      // TODO xSocial ura
+  }
+},
   finnhub: {
     address: process.env.FINNHUB_ADDRESS || throwMissingVariable("FINNHUB_ADDRESS"),
     apiKey: process.env.FINNHUB_API_KEY || throwMissingVariable("FINNHUB_API_KEY"),

@@ -5,7 +5,7 @@ import {
   SearchNewsResponse,
 } from "../services/Finnhub"
 import { isHoliday, holidayMessage } from "../services/Holidays"
-import { finnHub, uraNostr, uraTwitter, replicateAI } from "../services"
+import { finnHub, uraNostr, uraTwitter, replicateAI, uraXSocial } from "../services"
 import { evenningMessage, isFirstPostOfDay, mapQuotesToBodyMessage, morningMessage, signature } from "./helper"
 import { PostMessageResponse } from "../services/ISocialService"
 import { ReplicateAIPersona } from "../services/ReplicateAI"
@@ -125,13 +125,13 @@ export const postUraNews = async (req: Request, res: Response) => {
 }
 
 const postMessage = async (messages: string[], now: Date, res: Response): Promise<any> => {
-
   try {
     const tasks = Array<Promise<PostMessageResponse>>()
 
     messages.forEach(async message => {
       tasks.push(uraTwitter.postMessage(message))
       tasks.push(uraNostr.postMessage(message))
+      tasks.push(uraXSocial.postMessage(message))
     })
 
     await Promise.all(tasks)
