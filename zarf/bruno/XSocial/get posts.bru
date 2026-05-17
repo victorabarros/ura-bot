@@ -1,0 +1,28 @@
+meta {
+  name: get posts
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://api.x.com/2/tweets?ids=2030010696268927037,2049885414467526712,2044790527548133578
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ids: 2030010696268927037,2049885414467526712,2044790527548133578
+}
+
+headers {
+  Authorization: Bearer
+}
+
+auth:bearer {
+  token: AAAAAAAAAAAAAAAAAAAAAD2pnwEAAAAAT30%2FRVaH0%2FH8MnUkrxZScjn5JPE%3Dax0wW9JkcqqmWGM5eYmekxusi9dVv67fmZAwDHk4PzVCBwzIBC
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

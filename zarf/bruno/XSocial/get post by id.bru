@@ -1,0 +1,24 @@
+meta {
+  name: get post by id
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://api.x.com/2/tweets/2030010696268927037
+  body: none
+  auth: bearer
+}
+
+headers {
+  Authorization: Bearer
+}
+
+auth:bearer {
+  token: AAAAAAAAAAAAAAAAAAAAAD2pnwEAAAAAT30%2FRVaH0%2FH8MnUkrxZScjn5JPE%3Dax0wW9JkcqqmWGM5eYmekxusi9dVv67fmZAwDHk4PzVCBwzIBC
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}
