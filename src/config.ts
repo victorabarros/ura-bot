@@ -13,11 +13,14 @@ export default {
     },
     baseUrl: "https://api.twitter.com/2/tweets",
   },
-  xSocial:{
-    uraBot:{
-      // TODO xSocial ura
-  }
-},
+  xSocial: {
+    uraBot: {
+      clientId: process.env.URA_BOT_X_CLIENT_ID || throwMissingVariable("URA_BOT_X_CLIENT_ID"),
+      clientSecret: process.env.URA_BOT_X_CLIENT_SECRET || throwMissingVariable("URA_BOT_X_CLIENT_SECRET"),
+      accessToken: process.env.URA_BOT_X_ACCESS_TOKEN || throwMissingVariable("URA_BOT_X_ACCESS_TOKEN"),
+      refreshToken: process.env.URA_BOT_X_REFRESH_TOKEN || throwMissingVariable("URA_BOT_X_REFRESH_TOKEN"),
+    },
+  },
   finnhub: {
     address: process.env.FINNHUB_ADDRESS || throwMissingVariable("FINNHUB_ADDRESS"),
     apiKey: process.env.FINNHUB_API_KEY || throwMissingVariable("FINNHUB_API_KEY"),

@@ -1,15 +1,27 @@
 import { ISocialService, PostMessageResponse } from "./ISocialService"
 
-// TODO xSocial ura
-type XSocialServiceProps = Record<string, never>
+type XSocialServiceProps = {
+  clientId: string
+  clientSecret: string
+  accessToken: string
+  refreshToken: string
+}
 
 export class XSocialService implements ISocialService {
+
+  private clientId: string
+  private clientSecret: string
+  private accessToken: string
+  private refreshToken: string
+
   constructor(props: XSocialServiceProps) {
-    // TODO xSocial ura
+    this.clientId= props.clientId
+    this.clientSecret= props.clientSecret
+    this.accessToken= props.accessToken
+    this.refreshToken= props.refreshToken
   }
 
   async postMessage(message: string): Promise<PostMessageResponse> {
-    // TODO xSocial ura
-    return { id: "TODO xSocial ura" }
+    return { id: "TODO" }
   }
 }
