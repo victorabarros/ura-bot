@@ -22,7 +22,7 @@ export default {
     },
   },
   finnhub: {
-    address: process.env.FINNHUB_ADDRESS || throwMissingVariable("FINNHUB_ADDRESS"),
+    address: process.env.FINNHUB_ADDRESS || "https://finnhub.io/api/v1/",
     apiKey: process.env.FINNHUB_API_KEY || throwMissingVariable("FINNHUB_API_KEY"),
   },
   replicate: {
