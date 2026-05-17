@@ -1,11 +1,11 @@
 meta {
-  name: healthcheck
+  name: heartbeat
   type: http
   seq: 3
 }
 
 get {
-  url: https://api.uraniumstockbot.com/health
+  url: {{urabotBaseUrl}}/heartbeat
   body: none
   auth: none
 }

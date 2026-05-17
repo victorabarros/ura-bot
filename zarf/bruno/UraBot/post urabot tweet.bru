@@ -5,11 +5,15 @@ meta {
 }
 
 post {
-  url: https://api.uraniumstockbot.com/urabot/stocks
+  url: {{urabotBaseUrl}}/urabot/stocks
   body: none
   auth: none
 }
 
 headers {
   authorization: {{UrabotXToken}}
+}
+
+vars:pre-request {
+  UrabotXToken: McChickenPromo
 }
