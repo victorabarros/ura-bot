@@ -3,7 +3,7 @@ const throwMissingVariable = (name: string) => { throw new Error(`missing requir
 export default {
   port: process.env.PORT || "8082",
   apiKey: process.env.API_KEY || throwMissingVariable("API_KEY"),
-  version: process.env.VERSION || "1.10.0",
+  version: process.env.VERSION || "1.11.0",
   twitter: {
     uraBot: {
       apiKey: process.env.URA_BOT_TWITTER_API_KEY || throwMissingVariable("URA_BOT_TWITTER_API_KEY"),
@@ -32,4 +32,10 @@ export default {
     privateKey: process.env.URA_BOT_NOSTR_SECRET_KEY || throwMissingVariable("URA_BOT_NOSTR_SECRET_KEY"),
     relayUrls: (process.env.NOSTR_RELAY_URLS || "wss://nostr.bitcoiner.social,wss://nostr-pub.wellorder.net,wss://nostr.mom,wss://nos.lol,wss://relay.mostr.pub,wss://relay.damus.io").split(","),
   },
+  redisCloud: {
+    username: process.env.REDIS_CLOUD_USERNAME || throwMissingVariable("REDIS_CLOUD_USERNAME"),
+    password: process.env.REDIS_CLOUD_PASSWORD || throwMissingVariable("REDIS_CLOUD_PASSWORD"),
+    host: process.env.REDIS_CLOUD_HOST || throwMissingVariable("REDIS_CLOUD_HOST"),
+    port: process.env.REDIS_CLOUD_PORT || throwMissingVariable("REDIS_CLOUD_PORT"),
+  }
 }

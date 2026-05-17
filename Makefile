@@ -1,6 +1,6 @@
 APP_NAME=ura-bot-server
 APP_DIR=/${APP_NAME}/src
-DOCKER_BASE_IMAGE=node:20.14.0
+DOCKER_BASE_IMAGE?=node:20.14.0
 PORT=8082
 URL?=http://localhost:${PORT}/
 PROD_URL=https://api.uraniumstockbot.com/
@@ -124,3 +124,9 @@ curl-ura-stocks-prod:
 
 curl-ura-news-prod:
 	@make curl-ura-news URL=${PROD_URL}
+
+# troubleshooting cache
+
+connect-redis:
+	@make -s docker-command \
+    DOCKER_BASE_IMAGE=redis:latest PORT=6379 COMMAND="./zarf/scripts/connect-redis.sh"
