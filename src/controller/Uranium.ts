@@ -9,6 +9,7 @@ import { finnHub, uraNostr, uraTwitter, replicateAI, uraXSocial } from "../servi
 import { evenningMessage, isFirstPostOfDay, mapQuotesToBodyMessage, morningMessage, signature } from "./helper"
 import { PostMessageResponse } from "../services/ISocialService"
 import { ReplicateAIPersona } from "../services/ReplicateAI"
+import { cacheRepository } from "../repositories"
 
 // In order to avoid achieve maximum number of characters in a tweet, we need to limit the number of stocks per message
 const MAX_STOCKS_PER_MESSAGE = 6
@@ -126,12 +127,23 @@ export const postUraNews = async (req: Request, res: Response) => {
 
 const postMessage = async (messages: string[], now: Date, res: Response): Promise<any> => {
   try {
+
+    const postMessageToX = async (message: string): Promise<PostMessageResponse> => {
+      const accessToken = await cacheRepository.get("access_token")
+      if (!accessToken) {
+        const newAccessToken = await uraXSocial.refreshAccessToken()
+        await cacheRepository.set("access_token", newAccessToken, 3600)
+      }
+
+      return await uraXSocial.postMessage(message)
+    }
+
     const tasks = Array<Promise<PostMessageResponse>>()
 
     messages.forEach(async message => {
       tasks.push(uraTwitter.postMessage(message))
       tasks.push(uraNostr.postMessage(message))
-      tasks.push(uraXSocial.postMessage(message))
+      tasks.push(postMessageToX(message))
     })
 
     await Promise.all(tasks)

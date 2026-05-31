@@ -10,12 +10,14 @@ export class XSocialService implements ISocialService {
   private clientSecret: string
   private accessToken: string
   private refreshToken: string
+  private onRefreshToken: (token: string) => Promise<void>
 
   constructor(props: XSocialServiceProps) {
     this.clientId= props.clientId
     this.clientSecret= props.clientSecret
     this.accessToken= props.accessToken
     this.refreshToken= props.refreshToken
+    this.onRefreshToken= props.onRefreshToken
   }
 
   async postMessage(message: string): Promise<PostMessageResponse> {
@@ -46,7 +48,7 @@ export class XSocialService implements ISocialService {
       return await request()
     } catch (error) {
       if (this.isUnauthorizedError(error)) {
-        await this.refreshAccessToken()
+        await this.refreshToken()
         return await request()
       }
 
@@ -54,7 +56,7 @@ export class XSocialService implements ISocialService {
     }
   }
 
-  private async refreshAccessToken(): Promise<void> {
+  private async refreshToken(): Promise<void> {
     const body = new URLSearchParams({
       grant_type: "refresh_token",
       refresh_token: this.refreshToken,
@@ -75,7 +77,8 @@ export class XSocialService implements ISocialService {
     )
 
     this.accessToken = response.data.access_token
-    this.refreshToken = response.data.refresh_token || this.refreshToken
+    this.refreshToken = response.data.refresh_token
+    await this.onRefreshToken({accessToken: response.data.access_token, refreshToken: response.data.refresh_token})
   }
 
   private isUnauthorizedError(error: unknown): error is AxiosError {

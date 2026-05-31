@@ -3,6 +3,7 @@ export type XSocialServiceProps = {
   clientSecret: string
   accessToken: string
   refreshToken: string
+  onRefreshToken: (token: {accessToken: string, refreshToken: string}) => Promise<void>
 }
 
 export type CreateTweetResponse = {
@@ -13,5 +14,5 @@ export type CreateTweetResponse = {
 
 export type RefreshTokenResponse = {
   access_token: string
-  refresh_token?: string
+  refresh_token: string
 }

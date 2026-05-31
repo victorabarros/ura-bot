@@ -1,5 +1,12 @@
-class CacheService {
-  constructor() {
+export type RedisCloudConfig = {
+  username: string
+  password: string
+  host: string
+  port: number
+}
+
+export class CacheRepository {
+  constructor(private readonly config: RedisCloudConfig) {
   }
 
   async get(key: string): Promise<string | null> {
@@ -10,5 +17,3 @@ class CacheService {
     return
   }
 }
-
-export default CacheService
