@@ -1,0 +1,51 @@
+---
+description: Social platform service conventions — ISocialService interface and resilient fan-out
+globs: src/**/services/**
+alwaysApply: false
+---
+
+# Social Services
+
+## The interface
+
+Every social platform **must** implement this interface and nothing else:
+
+```typescript
+interface ISocialService {
+  postMessage(message: string): Promise<{ id: string }>
+}
+```
+
+- `id` must be the real platform-assigned post/event ID — never a stub like `"TODO"`.
+- Throw on failure; let the caller handle it.
+
+## Fan-out rule
+
+Fan-out **must** use `Promise.allSettled`, not `Promise.all`.
+
+```typescript
+// ✅ GOOD — one failure does not cancel others
+const results = await Promise.allSettled(
+  targets.map(t => t.postMessage(message))
+)
+results.forEach(r => {
+  if (r.status === "rejected") console.error("post failed", r.reason)
+})
+
+// ❌ BAD — one failure rejects all
+await Promise.all(targets.map(t => t.postMessage(message)))
+```
+
+## One client per platform
+
+Do **not** create two clients for the same platform (e.g. both OAuth 1.0a and OAuth 2.0 for X).
+Pick one, register it, delete the other.
+
+## Adding a new platform
+
+1. Create one file in `src/services/<PlatformName>.ts`.
+2. Implement `ISocialService`.
+3. Register it in the fan-out list.
+4. Add its env vars to `docs/CONFIGURATION.md`.
+
+No other files should need to change.

@@ -1,0 +1,48 @@
+---
+description: API route and authentication conventions for UraBot
+globs: src/**/routes*, src/**/controller*, src/**/middleware*
+alwaysApply: false
+---
+
+# API Contract
+
+The canonical route list lives in `docs/API.md`. Do not add, rename, or remove routes without updating that file first.
+
+## Routes
+
+| Method | Path | Auth |
+|---|---|---|
+| GET | `/heartbeat` | None |
+| GET | `/callback` | None |
+| POST | `/urabot/stocks` | API key |
+| POST | `/urabot/news` | API key |
+
+`POST /tweet` is **deprecated** — do not reintroduce it.
+
+## Authentication
+
+Auth is enforced in middleware, not in individual controllers.
+
+```typescript
+// ✅ GOOD — middleware checks Authorization header against API_KEY env var
+// and skips check only for the exempt list: ["/heartbeat", "/callback"]
+
+// ❌ BAD — per-route auth checks, or skipping auth by default
+```
+
+## Controller responsibilities
+
+Controllers must:
+1. Determine post context (time, holiday).
+2. Fetch data.
+3. Format messages.
+4. Call the fan-out layer.
+
+Controllers must **not** contain auth logic, persistence, or direct HTTP client calls.
+
+## Response codes
+
+- `200` — success
+- `204` — no content found (news endpoint only)
+- `401` — missing or invalid API key
+- `500` — unexpected error during data fetch or broadcast
