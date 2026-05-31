@@ -16,12 +16,11 @@ Authorization: <API_KEY>
 
 If the key is missing or wrong the server returns `401 Unauthorized`.
 
-Two endpoint groups are **exempt** from this check:
+One endpoint is **exempt** from this check:
 
-| Group | Endpoints |
+| Group | Endpoint |
 |---|---|
 | Health / monitoring | `GET /heartbeat` |
-| OAuth callbacks | `GET /callback` |
 
 ---
 
@@ -75,14 +74,17 @@ and broadcasts it to all configured social platforms.
 
 ---
 
-### `GET /callback`
+## X credentials
 
-OAuth redirect target used by social platform authorization flows (e.g. X /
-Twitter OAuth 2.0 PKCE). No authentication required — the platform drives the
-request.
+UraBot is a headless server-side bot — there is no interactive OAuth flow.
+The initial `access_token` and `refresh_token` for X are obtained manually from
+the [X developer portal](https://developer.x.com) and injected as environment
+variables (`URA_BOT_X_ACCESS_TOKEN`, `URA_BOT_X_REFRESH_TOKEN`). See
+`docs/CONFIGURATION.md` for the full variable list.
 
-Query parameters and response shape are provider-specific and handled
-internally.
+Token rotation is handled automatically: when the access token expires (`401`),
+`XService` exchanges the refresh token for a new pair and persists both to Redis
+so subsequent requests use the fresh tokens without requiring a restart.
 
 ---
 
