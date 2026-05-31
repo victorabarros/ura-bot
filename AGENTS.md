@@ -1,125 +1,55 @@
 # AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for AI coding agents working in this repository.
 
-## What this is
+> **This project is being rewritten from scratch.** This document describes what
+> UraBot *should be* — its purpose and behavioral contract — not the current
+> implementation. Do not preserve quirks of the legacy code; treat this as the
+> north-star for the new build.
 
-UraBot is a stateless HTTP server (Node/TypeScript + Express) that, when its POST
-endpoints are hit, fetches uranium-related stock quotes / news, formats a message
-(optionally commented by an LLM), and broadcasts it to social platforms
-(Twitter, X, Nostr). It does **not** schedule itself — an external cron service
-(cron-job.org) calls the endpoints on a schedule. There is no database; persistence
-is effectively disabled (see "Gotchas").
+## What UraBot is
 
-## Commands
+UraBot is a bot that posts about the uranium market. On a schedule it:
 
-Everything is meant to run inside Docker via the `Makefile` (the host needs only
-Docker + make). All targets read env vars from an `.env` file (`.env.test` for tests);
-copy `.env.example` and fill it in. `config.ts` throws at startup for most missing vars.
+1. Fetches uranium-related **stock quotes** and **news**.
+2. Formats them into a human-readable message, optionally with an LLM-generated comment.
+3. Broadcasts that message to social platforms (X, Nostr, and any future targets).
 
-```sh
-make debug-server        # run with hot reload (yarn dev) on PORT 8082
-make test-server         # run tests against .env.test, then open coverage/index.html
-make build-server-image  # yarn install + yarn build (compile to dist/)
-make run-server          # yarn start (runs compiled dist/)
+It is a small, single-purpose service. Keep it simple.
 
-# hit the local server (API_KEY defaults to "McChickenPromo" in the Makefile)
-make curl-heart          # GET /heartbeat
-make curl-ura-stocks     # POST /urabot/stocks  (sends Authorization header)
-make curl-ura-news       # POST /urabot/news
-# ...-prod variants hit https://api.uraniumstockbot.com/
-```
+## Behavioral contract
 
-Direct yarn scripts (if running outside Docker): `yarn dev`, `yarn build`, `yarn lint`,
-`yarn start`. `prebuild` wipes `dist/`; `preinstall` wipes `node_modules/`.
+These are the requirements the rewrite must satisfy. *How* they're met is open.
 
-### Tests — important
+- **Triggered, not self-scheduling.** Posting is kicked off externally (e.g. a cron
+  caller). The service exposes actions to "post stocks" and "post news"; it does not
+  own its own timer.
+- **Two post types:** a stock-quote roundup and a news post.
+- **Resilient fan-out.** A message goes to every configured social target. One
+  platform failing must not prevent the others from posting.
+- **Pluggable targets.** Adding or removing a social platform should be a localized
+  change — define a common posting interface and register implementations.
+- **Time/context-aware messaging.** Message wording can vary by context (e.g. market
+  hours, first post of the day, holidays, market timezone).
+- **Configurable, fail-fast config.** All secrets/settings come from the environment
+  and are validated at startup, failing loudly when something required is missing.
+- **Authenticated entry points.** Externally-triggered actions require authentication;
+  health checks do not.
+- **Observable health.** Expose a lightweight health/heartbeat signal for monitoring.
 
-- Jest's `roots` is `./dist/test/`, so **tests run against compiled JS, not `.ts` source**.
-  You must `yarn build` before testing. `make test-server` does this implicitly
-  (`pretest` runs `yarn lint && yarn build`).
-- There is currently **no `test` script in `package.json`**, yet `make test-server`
-  invokes `yarn test`. This is a known gap (see `TODO.md`); add the script or run jest
-  directly. Run a single test file after building, e.g.:
-  `npx jest dist/test/unit/services/Holiday.test.js`
-- The deploy build (`nixpacks.toml`) intentionally has **no test phase** — tests are not
-  gated on deploy.
+## Principles for the rewrite
 
-## Deployment
+- One integration per concern — no parallel "legacy + new" clients living side by side.
+- Prefer real, simple persistence (or none) over dead stubs that pretend to cache.
+- Fail-soft on outbound posting, fail-fast on misconfiguration.
+- Keep the surface area small; this is a bot, not a platform.
 
-Deployed on Railway via `nixpacks.toml` (setup → `yarn install --frozen-lockfile` →
-`yarn build` → `./start.sh`). Note `start.sh` is the prod entrypoint (not the `yarn start`
-script). Uptime Kuma pings `/heartbeat` for monitoring.
+## External dependencies (capabilities, not commitments)
 
-## Architecture
+The product needs, conceptually:
 
-Request flow:
+- A **market data** source for uranium-related stock quotes and news.
+- An **LLM** to optionally generate commentary in the bot's voice.
+- **Social platform** APIs to publish to (X, Nostr, …).
 
-```
-cron-job.org → Express (index.ts)
-             → middleware.ts        (API-key auth via Authorization header;
-                                      bypassed for /heartbeat and /callback)
-             → routes.ts            (POST /urabot/stocks, /urabot/news, GET /heartbeat)
-             → controller/Uranium.ts (orchestration)
-             → services/*           (data in, posts out)
-```
-
-The controller is the brain. `postUraStock` / `postUraNews` pull data, build the message
-in `controller/helper.ts`, then call the private `postMessage()` which **fans out the same
-message to every social service** and awaits them with `Promise.all`.
-
-### Services (`src/services`)
-
-All instances are constructed once as singletons in `src/services/index.ts` and imported
-from there.
-
-- **Data in:**
-  - `Finnhub.ts` — real-time stock quotes (`getQuoteRealTime`) and news (`searchNews`).
-  - `Holidays.ts` — US market holiday detection for special messages.
-  - `ReplicateAI.ts` — wraps Replicate; `GetAnswer(prompt, persona)` generates the AI
-    comment for news posts. The bot's voice lives in the `URABOT` persona's system prompt.
-- **Posts out** — all implement `ISocialService.postMessage(message): Promise<{id}>`:
-  - `Nostr.ts` — posts to Nostr relays.
-  - `Twitter.ts` — **legacy**, X API v1.1 via OAuth1 using the deprecated `request` lib.
-    Fire-and-forget: it does not await the HTTP call and returns `{ id: "TODO" }`. Its own
-    code comment says to migrate to `twitter-api-v2`.
-  - `XSocial/` — current X API **v2** client via raw `axios` + OAuth2. Hand-rolls bearer
-    auth and a `withRefreshedTokenRetry` that refreshes the token on a 401 and retries once.
-
-To add or change a posting target, implement `ISocialService` and wire it in
-`services/index.ts` + the fan-out in `controller/Uranium.ts:postMessage`.
-
-### Message composition
-
-`controller/helper.ts` is **time-zone aware (America/New_York) and time-gated**: the
-greeting, evening sign-off, and "first post of day" logic key off specific clock times
-(`isFirstPostOfDay` = 14:00, evening = 21:00). Behavior therefore depends on when the cron
-job fires. Stock messages are chunked to `MAX_STOCKS_PER_MESSAGE` (6) to stay under X's
-character limit; the tracked tickers are the `STOCKS` array in `controller/Uranium.ts`.
-
-### Config
-
-`src/config.ts` is the single typed source of env config; it throws on missing required
-vars at import time. Note there are **two distinct X/Twitter credential sets**:
-`URA_BOT_TWITTER_*` (OAuth1, for `Twitter.ts`) and `URA_BOT_X_*` (OAuth2, for `XSocial/`).
-
-## Gotchas / known debt (see `TODO.md`)
-
-- **No persistence.** `repositories/cache` (`CacheRepository`) is a **no-op stub**:
-  `get` always returns `null`, `set` does nothing. The controller's X access-token caching
-  (`cacheRepository.get/set("access_token")`) is therefore effectively dead — every X path
-  behaves as a cache miss. The Postgres DB and migrations under `repositories/migrations`
-  are deprecated and unused (see `repositories/README.md`).
-- **Two competing X integrations** (`Twitter.ts` and `XSocial/`) both run in the fan-out.
-  When reworking X posting, reconcile these rather than adding a third.
-- `XSocialService` requires an `onRefreshToken` callback in its props/type, but
-  `services/index.ts` constructs it without one — calling the refresh path will throw.
-- The fan-out uses `Promise.all`, so one failing platform fails the whole request
-  (TODO notes switching to `Promise.allSettled`).
-- `src/midleware.ts` is misspelled on purpose (imports rely on it); don't "fix" the name
-  without updating imports.
-
-## API testing collections
-
-`zarf/bruno/` (Bruno) and `zarf/*.postman_collection.json` hold ready-made requests for
-UraBot, Finnhub, and the X API — useful for poking endpoints by hand.
+Specific providers and SDKs are an implementation choice for the rewrite.
