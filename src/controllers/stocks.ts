@@ -7,6 +7,10 @@ import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stock
 import { fanoutAll } from "../fanout"
 import { getSocialTargets } from "./targets"
 
+/**
+ * POST /urabot/stocks: holiday message or uranium quote roundup.
+ * Fans out to all social targets; partial quote failures are tolerated.
+ */
 export async function postUraStock(req: Request, res: Response): Promise<void> {
   const now = new Date()
   const ctx = getPostContext(now)

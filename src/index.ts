@@ -15,4 +15,5 @@ app.listen(config.port, () => {
   console.log(`[ura-bot] v${config.version} listening on port ${config.port}`)
 })
 
+/** Express application wired with auth middleware and routes. */
 export default app

@@ -4,6 +4,7 @@ import { NostrService } from "../services/nostr"
 
 let targets: { name: string; service: ISocialService }[] | null = null
 
+/** Lazily constructs the registered social posting targets (X, Nostr). */
 export function getSocialTargets(): { name: string; service: ISocialService }[] {
   if (!targets) {
     targets = [

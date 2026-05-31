@@ -3,6 +3,7 @@ import { getMarketHolidays } from "../services/finnhub"
 
 const MARKET_TZ = "America/New_York"
 
+/** US market holiday row (full close or early-close window). */
 export type HolidayEntry = {
   eventName: string
   atDate: string      // YYYY-MM-DD
@@ -60,6 +61,13 @@ function currentTimeString(now: Date): string {
   return moment(now).tz(MARKET_TZ).format("HH:mm")
 }
 
+/**
+ * True when the NY date is a full holiday or inside an early-close window.
+ * Loads calendar from Finnhub with a static fallback.
+ *
+ * @see https://finnhub.io/docs/api
+ * @see docs/3rd-parties/finhub.md
+ */
 export async function isHoliday(now: Date): Promise<boolean> {
   const holidays = await getHolidays()
   const today = todayString(now)
@@ -73,6 +81,7 @@ export async function isHoliday(now: Date): Promise<boolean> {
   return currentTime >= start && currentTime <= end
 }
 
+/** Returns today's holiday entry in NY, if any. */
 export async function getHolidayEntry(now: Date): Promise<HolidayEntry | undefined> {
   const holidays = await getHolidays()
   const today = todayString(now)

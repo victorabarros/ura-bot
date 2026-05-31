@@ -4,6 +4,10 @@ import config from "../config"
 
 const UNAUTHENTICATED_PATHS = new Set(["/heartbeat"])
 
+/**
+ * Requires API key on all paths except `/heartbeat`.
+ * Logs method and path for each request.
+ */
 export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
   const { method, path } = req
   console.log(`${new Date().toISOString()} ${method} ${path}`)

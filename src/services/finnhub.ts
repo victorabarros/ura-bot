@@ -7,6 +7,7 @@ const http = axios.create({
   timeout: 10_000,
 })
 
+/** Normalized real-time quote for one ticker. */
 export type Quote = {
   symbol: string
   price: number
@@ -16,6 +17,7 @@ export type Quote = {
   previousClosePrice: number
 }
 
+/** Company news article from Finnhub. */
 export type NewsItem = {
   id: number
   headline: string
@@ -50,6 +52,13 @@ type FinnhubMarketHolidayResponse = {
 
 const round2 = (n: number) => Math.round(n * 100) / 100
 
+/**
+ * Fetches the latest quote for a symbol.
+ * Throws when price data is missing or zero.
+ *
+ * @see https://finnhub.io/docs/api
+ * @see docs/3rd-parties/finhub.md
+ */
 export async function getQuote(symbol: string): Promise<Quote> {
   const { data } = await http.get<FinnhubQuoteResponse>("/quote", {
     params: { symbol },
@@ -69,6 +78,12 @@ export async function getQuote(symbol: string): Promise<Quote> {
   }
 }
 
+/**
+ * Lists company news for a symbol between inclusive YYYY-MM-DD dates.
+ *
+ * @see https://finnhub.io/docs/api
+ * @see docs/3rd-parties/finhub.md
+ */
 export async function searchNews(symbol: string, fromDate: string, toDate: string): Promise<NewsItem[]> {
   const { data } = await http.get<NewsItem[]>("/company-news", {
     params: { symbol, from: fromDate, to: toDate },
@@ -76,6 +91,12 @@ export async function searchNews(symbol: string, fromDate: string, toDate: strin
   return data ?? []
 }
 
+/**
+ * Returns exchange holiday calendar entries from Finnhub.
+ *
+ * @see https://finnhub.io/docs/api
+ * @see docs/3rd-parties/finhub.md
+ */
 export async function getMarketHolidays(exchange: string = "US"): Promise<FinnhubMarketHolidayResponse> {
   const { data } = await http.get<FinnhubMarketHolidayResponse>("/stock/market-holiday", {
     params: { exchange },

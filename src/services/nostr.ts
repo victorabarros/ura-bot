@@ -6,6 +6,13 @@ import config from "../config"
 const CONNECT_TIMEOUT_MS = 5_000
 const PUBLISH_TIMEOUT_MS = 8_000
 
+/**
+ * Signs and publishes text notes to configured Nostr relays.
+ * Enforces connect and publish timeouts.
+ *
+ * @see https://github.com/nostr-protocol/nostr
+ * @see docs/3rd-parties/nostr.md
+ */
 export class NostrService implements ISocialService {
   private ndk: NDK
 
@@ -16,6 +23,7 @@ export class NostrService implements ISocialService {
     })
   }
 
+  /** Publishes a kind-1 text note; returns the event id. */
   async postMessage(message: string): Promise<PostMessageResponse> {
     const text = message.trim()
     if (!text) throw new Error("Nostr: message cannot be empty")

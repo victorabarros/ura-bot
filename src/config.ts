@@ -45,4 +45,8 @@ const config = {
   },
 } as const
 
+/**
+ * Validated environment configuration; loaded at import.
+ * Throws immediately when a required variable is missing.
+ */
 export default config

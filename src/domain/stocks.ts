@@ -1,6 +1,7 @@
 import moment from "moment-timezone"
 import { Quote } from "../services/finnhub"
 
+/** Uranium-related tickers fetched for quotes and news sampling. */
 export const STOCKS = [
   "CCJ",   // Cameco — second-largest producer in the world
   "DNN",   // Denison Mines
@@ -15,11 +16,13 @@ export const STOCKS = [
   "UROY",  // Uranium Royalty Corp
 ]
 
+/** Max tickers per social post before chunking. */
 export const MAX_STOCKS_PER_MESSAGE = 6
 
 const MARKET_TZ = "America/New_York"
 const TIME_FORMAT = { timeZone: MARKET_TZ, hour: "2-digit", minute: "2-digit", hour12: false } as const
 
+/** One ticker line with price, day change %, and direction emoji. */
 export function formatQuoteLine(quote: Quote): string {
   const ticker = `$${quote.symbol}`.padEnd(7)
   const delta = quote.openPrice > 0
@@ -30,11 +33,16 @@ export function formatQuoteLine(quote: Quote): string {
   return `${ticker} ${quote.price.toFixed(2)} ${sign}${delta.toFixed(2)}% ${arrow}`
 }
 
+/** Market-local timestamp footer and uranium hashtag. */
 export function buildSignature(now: Date): string {
   const time = now.toLocaleString("en-US", TIME_FORMAT)
   return `${time} ${MARKET_TZ}\n#Uranium☢️`
 }
 
+/**
+ * Builds one or more stock roundup messages chunked by ticker count.
+ * Adds morning/evening copy from post context on first/last chunk.
+ */
 export function buildStockMessages(quotes: Quote[], now: Date, ctx: PostContext): string[] {
   const messages: string[] = []
 
@@ -58,6 +66,7 @@ export function buildStockMessages(quotes: Quote[], now: Date, ctx: PostContext)
   return messages
 }
 
+/** Holiday post with optional custom copy and standard signature. */
 export function buildHolidayMessage(holidayName: string, customMessage: string | undefined, now: Date, ctx: PostContext): string {
   const parts: string[] = []
   if (ctx.isMorning) parts.push("Good Morning, everyone!")
@@ -66,16 +75,19 @@ export function buildHolidayMessage(holidayName: string, customMessage: string |
   return parts.filter(Boolean).join("\n\n")
 }
 
+/** Time-of-day flags for greetings (mirrors domain/context). */
 export type PostContext = {
   isMorning: boolean
   isEvening: boolean
   isFriday: boolean
 }
 
+/** News post body: comment, hashtag, and article URL. */
 export function buildNewsMessage(comment: string, articleUrl: string): string {
   return [comment, "", "#Uranium☢️", articleUrl].join("\n")
 }
 
+/** Formats a date as YYYY-MM-DD in US market timezone. */
 export function formatDateYMD(d: Date): string {
   return moment(d).tz(MARKET_TZ).format("YYYY-MM-DD")
 }

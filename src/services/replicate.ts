@@ -14,6 +14,13 @@ type NewsContext = {
   summary: string
 }
 
+/**
+ * Generates a short news comment in the UraBot voice via Llama 3.1.
+ * Strips surrounding quotes from the model output.
+ *
+ * @see https://replicate.com/docs
+ * @see docs/3rd-parties/replicate-ai.md
+ */
 export async function generateNewsComment(news: NewsContext): Promise<string> {
   const userPrompt =
     `Write a post (up to 200 characters) about this news item ` +

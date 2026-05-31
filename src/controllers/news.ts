@@ -8,6 +8,10 @@ import { getSocialTargets } from "./targets"
 
 const MAX_ATTEMPTS = STOCKS.length * 4
 
+/**
+ * POST /urabot/news: picks recent uranium news, optional LLM comment, then posts.
+ * Returns 204 when no article is found after sampling tickers.
+ */
 export async function postUraNews(_req: Request, res: Response): Promise<void> {
   const now = new Date()
   const toDate = formatDateYMD(now)

@@ -19,6 +19,13 @@ type TokenResponse = {
   expires_in: number
 }
 
+/**
+ * Outbound posts to X via API v2 and OAuth2 user tokens.
+ * Refreshes tokens on 401 and persists them to cache.
+ *
+ * @see https://docs.x.com/
+ * @see docs/3rd-parties/twitter-x-dot-com.md
+ */
 export class XService implements ISocialService {
   private accessToken: string
   private refreshToken: string
@@ -28,6 +35,10 @@ export class XService implements ISocialService {
     this.refreshToken = config.x.refreshToken
   }
 
+  /**
+   * Creates a tweet from trimmed non-empty text.
+   * Loads cached tokens before the request.
+   */
   async postMessage(message: string): Promise<PostMessageResponse> {
     const text = message.trim()
     if (!text) throw new Error("X: message cannot be empty")

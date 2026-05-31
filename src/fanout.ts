@@ -1,5 +1,6 @@
 import { ISocialService, PostMessageResponse } from "./services/ISocialService"
 
+/** Per-platform outcome after attempting one post. */
 export type FanoutResult = {
   platform: string
   success: boolean
@@ -7,6 +8,10 @@ export type FanoutResult = {
   error?: string
 }
 
+/**
+ * Posts one message to every target in parallel.
+ * Each target succeeds or fails independently.
+ */
 export async function fanout(
   message: string,
   targets: { name: string; service: ISocialService }[]
@@ -28,6 +33,10 @@ export async function fanout(
   return Promise.all(tasks)
 }
 
+/**
+ * Posts multiple messages sequentially, fanning out each one.
+ * Used when stock roundups exceed one social post.
+ */
 export async function fanoutAll(
   messages: string[],
   targets: { name: string; service: ISocialService }[]
