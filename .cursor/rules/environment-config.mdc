@@ -1,0 +1,48 @@
+---
+description: Environment variable validation and configuration conventions
+globs: src/**/config*, .env*
+alwaysApply: false
+---
+
+# Environment & Config
+
+All configuration comes from environment variables. See `docs/CONFIGURATION.md` for the full variable list.
+
+## Fail-fast pattern
+
+Every required variable must throw at startup if missing — never silently default to `undefined`.
+
+```typescript
+// ✅ GOOD
+const apiKey = process.env.API_KEY
+if (!apiKey) throw new Error('Missing required env var: API_KEY')
+
+// ❌ BAD — silently broken at runtime
+const apiKey = process.env.API_KEY ?? ""
+
+// ❌ BAD — throws too late (on first use, not at startup)
+const getApiKey = () => {
+  if (!process.env.API_KEY) throw new Error(...)
+  return process.env.API_KEY
+}
+```
+
+## Grouping
+
+Group vars by integration, not alphabetically. Each integration block maps to one external dependency:
+
+```
+server → PORT, API_KEY, VERSION
+finnhub → FINNHUB_API_KEY, FINNHUB_ADDRESS
+x → URA_BOT_X_CLIENT_ID, URA_BOT_X_CLIENT_SECRET, URA_BOT_X_ACCESS_TOKEN, URA_BOT_X_REFRESH_TOKEN
+nostr → URA_BOT_NOSTR_SECRET_KEY, NOSTR_RELAY_URLS
+replicate → REPLICATE_API_TOKEN
+redis → REDIS_CLOUD_HOST, REDIS_CLOUD_PORT, REDIS_CLOUD_USERNAME, REDIS_CLOUD_PASSWORD
+```
+
+## Rules
+
+- Update `docs/CONFIGURATION.md` whenever you add or remove a variable.
+- Update `.env.example` with the new key (no value).
+- Optional vars must have a documented default.
+- Do not use `.env` files for secrets in production — use the host's secret manager.
