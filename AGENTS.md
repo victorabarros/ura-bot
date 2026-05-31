@@ -53,3 +53,35 @@ The product needs, conceptually:
 - **Social platform** APIs to publish to (X, Nostr, …).
 
 Specific providers and SDKs are an implementation choice for the rewrite.
+
+## Forbidden patterns
+
+- Do **not** use `Promise.all` for fan-out — use `Promise.allSettled`.
+- Do **not** silently default missing env vars to `""` or `undefined` — throw at startup.
+- Do **not** add two clients for the same platform (e.g. both OAuth 1.0a and 2.0 for X).
+- Do **not** add a route without a corresponding entry in `docs/API.md`.
+- Do **not** add an env var without adding it to `docs/CONFIGURATION.md` and `.env.example`.
+- Do **not** hardcode a static holiday list — fetch from market-data API, fallback to config.
+- Do **not** use exact-minute clock checks for post context — use a time window or explicit param.
+
+## Key reference docs
+
+| File | What it covers |
+|---|---|
+| `docs/API.md` | HTTP routes and auth contract |
+| `docs/CONFIGURATION.md` | All environment variables |
+| `docs/DOMAIN.md` | Stocks, schedule, message format, LLM persona |
+| `docs/agents/ARCHITECTURE.md` | Layer responsibilities, ISocialService interface |
+| `docs/agents/ANTI-PATTERNS.md` | Known gaps and open decisions |
+| `docs/3rd-parties/` | Integration notes per external provider |
+
+## Definition of Done
+
+Before declaring any task complete:
+
+- [ ] All affected `docs/` files updated in the same commit
+- [ ] `.env.example` has a key (no value) for every new env var
+- [ ] No new route without an entry in `docs/API.md`
+- [ ] Fan-out uses `Promise.allSettled`
+- [ ] Every required env var throws at startup if missing
+- [ ] No two clients for the same social platform
