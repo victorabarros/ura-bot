@@ -1,0 +1,32 @@
+{
+  "name": "ura-bot",
+  "version": "2.0.0",
+  "description": "A bot that posts uranium market stock quotes and news to X and Nostr.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "lint": "eslint 'src/**/*.ts'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nostr-dev-kit/ndk": "^2.11.0",
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "http-status": "^1.7.4",
+    "ioredis": "^5.4.1",
+    "moment-timezone": "^0.5.46",
+    "replicate": "^1.0.1",
+    "websocket-polyfill": "^0.0.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.17.9",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

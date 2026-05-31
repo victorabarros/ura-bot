@@ -54,6 +54,25 @@ The product needs, conceptually:
 
 Specific providers and SDKs are an implementation choice for the rewrite.
 
+## Build and run
+
+```bash
+# Install dependencies
+npm install
+
+# Type-check without emitting
+npm run typecheck      # or: make typecheck
+
+# Development server (hot-reload)
+npm run dev            # or: make dev
+
+# Production build
+npm run build          # or: make build
+
+# Run built output
+npm run start          # or: make start
+```
+
 ## Forbidden patterns
 
 - Do **not** use `Promise.all` for fan-out — use `Promise.allSettled`.
