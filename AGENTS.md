@@ -57,11 +57,13 @@ Specific providers and SDKs are an implementation choice for the rewrite.
 ## Build and run
 
 ```bash
-# Install dependencies
+# Install dependencies (also installs git hooks via husky)
 npm install
 
 # Type-check without emitting
 npm run typecheck      # or: make typecheck
+
+# Pre-commit runs `npm run validate` (typecheck) automatically
 
 # Development server (hot-reload)
 npm run dev            # or: make dev
