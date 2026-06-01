@@ -1,0 +1,16 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+.cursor
+docs
+test
+zarf
+assets
+*.md
+*.png
+*.excalidraw*
+Makefile

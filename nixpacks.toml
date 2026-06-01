@@ -1,13 +1,15 @@
+# Railway / Nixpacks — matches package.json (npm, Node 20+, dist/index.js)
 providers = ["node"]
 
-[phases.setup]
-nixPkgs = ['nodejs', 'yarn']
+[variables]
+HUSKY = "0"
+NIXPACKS_NODE_VERSION = "20"
 
 [phases.install]
-cmds = ["yarn install --frozen-lockfile"]
+cmds = ["npm ci --ignore-scripts"]
 
 [phases.build]
-cmds = ["yarn build"]
+cmds = ["npm run build"]
 
 [start]
-cmd = "./start.sh"
+cmd = "npm start"

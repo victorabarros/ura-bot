@@ -1,0 +1,46 @@
+---
+description: Environment variable validation and configuration conventions
+globs: src/**/config*, .env*
+alwaysApply: false
+---
+
+# Environment & Config
+
+**Only secrets use env vars.** See `environment-secrets-only.mdc` and `docs/CONFIGURATION.md`.
+
+## Fail-fast pattern
+
+Every required variable must throw at startup if missing — never silently default to `undefined`.
+
+```typescript
+// ✅ GOOD
+const apiKey = process.env.API_KEY
+if (!apiKey) throw new Error('Missing required env var: API_KEY')
+
+// ❌ BAD — silently broken at runtime
+const apiKey = process.env.API_KEY ?? ""
+
+// ❌ BAD — throws too late (on first use, not at startup)
+const getApiKey = () => {
+  if (!process.env.API_KEY) throw new Error(...)
+  return process.env.API_KEY
+}
+```
+
+## Grouping
+
+Group vars by integration, not alphabetically. Each integration block maps to one external dependency:
+
+```
+server → API_KEY
+finnhub → FINNHUB_API_KEY
+x → URA_BOT_X_CONSUMER_KEY, URA_BOT_X_CONSUMER_KEY_SECRET, URA_BOT_X_ACCESS_TOKEN, URA_BOT_X_ACCESS_TOKEN_SECRET
+replicate → REPLICATE_API_TOKEN
+```
+
+## Rules
+
+- New **secret** → env + `docs/CONFIGURATION.md` + `.env.example` key (no value).
+- New **non-secret** default → `src/config.ts` constant; do not add an env var.
+- Do not use `envOpt` for public defaults.
+- Do not use `.env` files for secrets in production — use the host's secret manager.

@@ -1,0 +1,64 @@
+---
+description: Controllers must surface integration failures with correct HTTP status, logs, and client errors
+globs: src/controllers/**,src/http/**
+alwaysApply: false
+---
+
+# Controller error handling
+
+Controllers orchestrate integrations; they must **not** swallow upstream failures as success or silent fallbacks.
+
+## Status codes
+
+| Situation | Status | Client body |
+|-----------|--------|-------------|
+| Success | `200` | Normal payload |
+| Legitimate empty result (news search OK, zero articles) | `204` | Empty body |
+| Upstream unavailable / rate limit (Finnhub 429, Replicate 422/503, etc.) | `503` | `{ "error": "...", "integration": "finnhub" \| "replicate" }` |
+| All social targets failed to post | `502` | `{ "error": "...", "integration": "social" }` |
+| No usable data after partial upstream success (e.g. zero quotes) | `500` | `{ "error": "...", "integration": "finnhub" }` |
+| Unexpected throw | `500` | `{ "error": "...", "integration": "..." }` |
+
+Use helpers in `src/http/errors.ts` (`logIntegrationError`, `respondUpstreamUnavailable`, etc.).
+
+## Logging
+
+- **`console.error`** for integration failures (include route prefix: `[news]`, `[stocks]`).
+- Log **provider name** and **response detail** when the SDK exposes it (axios `response.data`, twitter-api-v2 `data`).
+- **`console.warn`** only for expected soft cases (e.g. single ticker quote miss on stocks when others succeed).
+
+## Do not
+
+```typescript
+// ❌ BAD — rate limit becomes 204
+catch (err) {
+  if (isRateLimited(err)) return undefined
+}
+
+// ❌ BAD — LLM failure hidden; posts raw headline as if success
+catch { comment = news.headline }
+
+// ❌ BAD — all fanout failed but client gets 200
+res.status(200).json({ created_at: now })
+```
+
+## Do
+
+```typescript
+// ✅ GOOD — distinguish empty vs upstream down
+if (outcome.status === "empty") return res.sendStatus(204)
+if (outcome.status === "rate_limited") {
+  return respondUpstreamUnavailable(res, "finnhub", "Finnhub rate limit exceeded")
+}
+
+// ✅ GOOD — partial fan-out still 200 (fail-soft on posting)
+const posts = await fanout(message, targets)
+if (!fanoutHadSuccess(posts)) return respondSocialPublishFailed(res, posts)
+res.status(200).json(buildPostApiResponse(now, posts))
+```
+
+## Scope
+
+- **Fan-out:** one platform failing → still `200` if another succeeded (north-star fail-soft).
+- **Domain fallbacks** (e.g. holiday list when Finnhub calendar fails) stay in domain/services, not controllers.
+- Update `docs/API.md` when response codes or error bodies change.

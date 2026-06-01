@@ -1,0 +1,24 @@
+meta {
+  name: get posts by userId
+  type: http
+  seq: 5
+}
+
+get {
+  url: https://api.x.com/2/users/1457005919410311171/tweets
+  body: none
+  auth: bearer
+}
+
+headers {
+  Authorization: Bearer
+}
+
+auth:bearer {
+  token: M1V0VDhBT1BueVRpNnBqZXdvczNYU2VwZ3lsMkVIWHdNdGNMd3V1R0JJeEFEOjE3NzkwNTUxOTY1NDE6MToxOmF0OjE
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

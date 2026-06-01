@@ -1,0 +1,71 @@
+---
+description: Short JSDoc on every exported function, class, and public method; link third-party APIs
+globs: src/**/*.ts
+alwaysApply: false
+---
+
+# Public symbol documentation
+
+Every **exported** function, class, interface, and **public** method (not `private` / `#`) must have a JSDoc block directly above it.
+
+## Length
+
+- **At most 3 lines** of description (not counting `@param` / `@returns` / `@see`).
+- **Prefer 2 lines** — one for purpose, one for non-obvious behavior or constraints.
+- No filler (“This function…”, “Handles the…”); state *what* and *when* it matters.
+
+## Third-party resources
+
+When code calls an external HTTP API, SDK, relay, or model provider, the doc **must** include links:
+
+1. **Official API/docs URL** (the provider’s public reference).
+2. **Project integration doc** under `docs/3rd-parties/` when one exists.
+
+Use `@see` for links. Keep the description short; put URLs in `@see`, not inline prose walls.
+
+| Integration | Project doc | Official docs |
+|-------------|-------------|---------------|
+| X | `docs/3rd-parties/twitter-x-dot-com.md` | https://docs.x.com/ |
+| Finnhub | `docs/3rd-parties/finhub.md` | https://finnhub.io/docs/api |
+| Nostr | `docs/3rd-parties/nostr.md` | (relay / NIP docs as appropriate) |
+| Replicate | `docs/3rd-parties/replicate-ai.md` | https://replicate.com/docs |
+
+If you add a new third-party integration, add or update its row in `docs/3rd-parties/` and link it from the service doc.
+
+## Examples
+
+```typescript
+// ❌ BAD — no doc on exported class or public method
+export class XService implements ISocialService {
+  async postMessage(message: string): Promise<PostMessageResponse> { ... }
+}
+
+// ✅ GOOD — short description + @see for external API
+/**
+ * Posts plain text to X via API v2.
+ * Refreshes OAuth2 tokens on 401 and retries once.
+ *
+ * @see https://docs.x.com/
+ * @see docs/3rd-parties/twitter-x-dot-com.md
+ */
+async postMessage(message: string): Promise<PostMessageResponse> { ... }
+
+// ✅ GOOD — internal module, no third party (2 lines, no @see required)
+/**
+ * Fans out a message to every registered social target.
+ * Uses allSettled so one failure does not block others.
+ */
+export async function fanOut(message: string): Promise<void> { ... }
+
+// ❌ BAD — essay, no links on X API usage
+/**
+ * This method is responsible for posting messages to the X platform.
+ * It uses axios and handles errors and token refresh in various cases...
+ */
+```
+
+## Scope
+
+- **Required:** `export` functions, classes, interfaces; public methods on exported classes.
+- **Optional:** `private` helpers, file-local functions, one-liner route wiring in `routes.ts`.
+- Do not document obvious getters/setters unless behavior is non-obvious.

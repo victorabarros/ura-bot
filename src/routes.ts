@@ -1,14 +1,17 @@
 import { Router } from "express"
-import { postUraNews, postUraStock, heartbeat } from "./controller"
+import { heartbeat } from "./controllers/heartbeat"
+import { healthcheck } from "./controllers/healthcheck"
+import { postUraStock } from "./controllers/stocks"
+import { postUraNews } from "./controllers/news"
 
-const routes = Router()
+const router = Router()
 
-// health
-routes.get("/heartbeat", heartbeat)
+// Health — no auth
+router.get("/heartbeat", heartbeat)
+router.get("/healthcheck", healthcheck)
 
-// uranium stocks bot
-routes.post("/urabot/news", postUraNews)
-routes.post("/urabot/stocks", postUraStock)
-routes.post("/tweet", postUraStock) // deprecated
+// Uranium bot actions — require API key (enforced by authMiddleware)
+router.post("/urabot/stocks", postUraStock)
+router.post("/urabot/news", postUraNews)
 
-export default routes
+export default router

@@ -1,0 +1,24 @@
+meta {
+  name: get user
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://api.x.com/2/users/by/username/UraniumStockBot
+  body: none
+  auth: bearer
+}
+
+headers {
+  Authorization: Bearer
+}
+
+auth:bearer {
+  token: AAAAAAAAAAAAAAAAAAAAAD2pnwEAAAAAT30%2FRVaH0%2FH8MnUkrxZScjn5JPE%3Dax0wW9JkcqqmWGM5eYmekxusi9dVv67fmZAwDHk4PzVCBwzIBC
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

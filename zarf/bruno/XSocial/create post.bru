@@ -1,0 +1,39 @@
+meta {
+  name: create post
+  type: http
+  seq: 6
+}
+
+post {
+  url: https://api.x.com/2/tweets
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: a1hRSTVNdUJ1ZHlJeWVjX2t2MlB1eUF6Qm9WcFdXQkhSTkctLUdiTy00Vmg3OjE3NzkwNDIwMTI0NjI6MToxOmF0OjE
+}
+
+body:json {
+  {
+  //   "card_uri": "<string>",
+  //   "community_id": "1146654567674912769",
+  //   "direct_message_deep_link": "<string>",
+  //   "for_super_followers_only": false,
+  //   "geo": {
+  //     "place_id": "<string>"
+  //   },
+  //   "made_with_ai": true,
+  //   "nullcast": false,
+  //   "paid_partnership": true,
+  //   "quote_tweet_id": "1346889436626259968",
+  //   "reply_settings": "following",
+  //   "share_with_followers": false,
+    "text": "foobar"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

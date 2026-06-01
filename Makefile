@@ -1,126 +1,77 @@
-APP_NAME=ura-bot-server
-APP_DIR=/${APP_NAME}/src
-DOCKER_BASE_IMAGE=node:20.14.0
-PORT=8082
-URL?=http://localhost:${PORT}/
-PROD_URL=https://api.uraniumstockbot.com/
-ENV_FILE?=.env
-COMMAND?=bash
-API_KEY=McChickenPromo
-OLLAMA_MODEL?=qwen2.5:7b
+APP_NAME=ura-bot
+PORT?=8082
 
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
 
+.PHONY: welcome install dev build start typecheck lint validate clean \
+        docker-build docker-run docker-dev docker-stop docker-logs docker-clean
+
 welcome:
 	@clear
-	@echo "${BOLD_YELLOW}"
+	@echo "${YELLOW}"
 	@echo " ____ ___                   __________             __   " && sleep .02
 	@echo "|    |   \ _______  _____   \______   \   ____   _/  |_ " && sleep .02
 	@echo "|    |   / \_  __ \ \__  \   |    |  _/  /  _ \  \   __\ " && sleep .02
 	@echo "|    |  /   |  | \/  / __ \_ |    |   \ (  <_> )  |  |  " && sleep .02
 	@echo "|______/    |__|    (____  / |______  /  \____/   |__|  " && sleep .02
 	@echo "                        \/         \/                  " && sleep .02
-	@echo "${NOCOLOR}"
+	@echo "${COLOR_OFF}"
 	@# http://patorjk.com/software/taag font Graffiti full
 
-docker-command: remove-containers
-	@docker run -it -v $(shell pwd):${APP_DIR} -w ${APP_DIR} \
-    --env-file ${ENV_FILE} \
-    --env PORT=${PORT} \
-    --env API_KEY=${API_KEY} \
-		-p ${PORT}:${PORT} --name ${APP_NAME} \
-		${DOCKER_BASE_IMAGE} bash -c "${COMMAND}"
+# ── Local (Node) ────────────────────────────────────────────────────────────
 
-remove-containers:
-ifneq ($(shell docker ps -a --filter "name=${APP_NAME}" -aq 2> /dev/null | wc -l | bc), 0)
-	@echo "${YELLOW}Removing containers${COLOR_OFF}"
-	@docker ps -a --filter "name=${APP_NAME}" -aq | xargs docker rm -f
-endif
+install:
+	npm install
 
-# commands to debug and run w/ hot reload
+dev: install
+	npm run dev
 
-commit-llm-generated:
-	@msg_file="$$(mktemp)"; \
-	{ \
-		printf '%s\n\n' 'Write the final git commit message for the staged changes.'; \
-		printf '%s\n' 'Return only the commit message text that should be passed to git commit.'; \
-		printf '%s\n' 'Do not repeat these instructions.'; \
-		printf '%s\n' 'Do not include markdown, code examples, code fences, labels, quotes, explanations, or diff summaries.'; \
-		printf '%s\n' 'Use imperative mood.'; \
-		printf '%s\n' 'Keep the subject line under 72 characters.'; \
-		printf '%s\n' 'Add a short body only if it materially improves clarity.'; \
-		printf '%s\n' 'If there is a body, separate it from the subject with one blank line.'; \
-		printf '\n%s\n' 'git status --short:'; \
-		git status --short; \
-		printf '\n%s\n' 'git diff --cached --stat:'; \
-		git diff --cached --stat; \
-		printf '\n%s\n' 'git diff --cached:'; \
-		git diff --cached; \
-	} | ollama run "$(OLLAMA_MODEL)" > "$$msg_file"; \
-	printf '🦙 ollama generated\n🧠 model $(OLLAMA_MODEL)' >> "$$msg_file"; \
-	printf '%s\n' 'Generated commit message:'; \
-	cat "$$msg_file"; \
-	printf '\n'; \
-	commit_msg="$$(perl -pe 's/\e\[[0-9;?]*[ -\/]*[@-~]//g' "$$msg_file")"; \
-	rm -f "$$msg_file"; \
-	git commit -m "$$commit_msg"
+build: install
+	npm run build
 
-push p:
-	git add .
-	make commit-llm-generated
-	git push
+start: build
+	npm run start
 
-debug: docker-command
+typecheck:
+	npm run typecheck
 
-debug-server:
-	@clear
-	@make welcome
-	@echo "${YELLOW}Running ${APP_NAME} on port ${PORT}${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn dev"
+lint:
+	npm run lint
 
-# commands to run tests
+validate:
+	npm run validate
 
-test-server:
-	@reset
-	@make welcome
-	@echo "${YELLOW}Testing${COLOR_OFF}"
-	@rm -rf coverage/
-	@make -s docker-command ENV_FILE=.env.test COMMAND="yarn test"
-	@open coverage/index.html
+clean:
+	rm -rf dist node_modules
 
-# commands to build and run like prod
+# ── Docker ──────────────────────────────────────────────────────────────────
 
-build-server-image:
-	@clear
-	@echo "${YELLOW}Building project${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn install"
-	@make -s docker-command COMMAND="yarn build"
+docker-build:
+	docker build -t $(APP_NAME):latest .
 
-run-server:
-	@clear
-	@make welcome
-	@echo "${YELLOW}Running project${COLOR_OFF}"
-	@make -s docker-command COMMAND="yarn start"
+docker-run: docker-build
+	docker run --rm -d \
+		--name $(APP_NAME) \
+		--env-file .env \
+		-p $(PORT):$(PORT) \
+		$(APP_NAME):latest
 
-# commands to hit local
+docker-dev:
+	docker build --target builder -t $(APP_NAME):dev .
+	docker run --rm -it \
+		--name $(APP_NAME)-dev \
+		--env-file .env \
+		-p $(PORT):$(PORT) \
+		-v $(PWD)/src:/app/src \
+		$(APP_NAME):dev \
+		npm run dev
 
-curl-heart:
-	curl -v ${URL}heartbeat
+docker-stop:
+	docker stop $(APP_NAME) 2>/dev/null || true
 
-curl-ura-stocks:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/stocks
+docker-logs:
+	docker logs -f $(APP_NAME)
 
-curl-ura-news:
-	curl -v -X POST --header 'Authorization: ${API_KEY}' ${URL}urabot/news
-
-# commands to hit production
-
-curl-heart-prod:
-	@make curl-heart URL=${PROD_URL}
-
-curl-ura-stocks-prod:
-	@make curl-ura-stocks URL=${PROD_URL}
-
-curl-ura-news-prod:
-	@make curl-ura-news URL=${PROD_URL}
+docker-clean: docker-stop
+	docker rmi $(APP_NAME):latest 2>/dev/null || true

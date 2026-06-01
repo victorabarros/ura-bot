@@ -1,0 +1,15 @@
+meta {
+  name: healthcheck
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{urabotBaseUrl}}/healthcheck
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: {{UrabotXToken}}
+}

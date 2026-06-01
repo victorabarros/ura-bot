@@ -1,45 +1,37 @@
 {
   "name": "ura-bot",
-  "homepage": "https://github.com/victorabarros/ura-bot",
+  "version": "2.0.0",
+  "description": "A bot that posts uranium market stock quotes and news to X and Nostr.",
+  "main": "dist/index.js",
   "scripts": {
-    "preinstall": "rm -rf node_modules",
-    "prebuild": "rm -rf dist",
     "build": "tsc",
-    "start": "node dist/src/index.js",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "lint": "eslint --fix .",
-    "precommit": "yarn lint",
-    "prepare-husky": "husky install server/.husky",
-    "pretest": "yarn lint && yarn build"
-  },
-  "devDependencies": {
-    "@babel/preset-typescript": "^7.16.0",
-    "@types/axios": "0.14.0",
-    "@types/express": "4.17.13",
-    "@types/jest": "^27.0.3",
-    "@types/moment-timezone": "^0.5.30",
-    "@types/node": "16.11.7",
-    "@types/pg": "^8.6.1",
-    "@types/request": "^2.48.9",
-    "@typescript-eslint/eslint-plugin": "^5.4.0",
-    "@typescript-eslint/parser": "^5.4.0",
-    "eslint": "^8.2.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.3",
-    "husky": "^7.0.4",
-    "jest": "^27.3.1",
-    "ts-node-dev": "1.1.8"
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "typecheck": "tsc --noEmit",
+    "validate": "npm run typecheck && npm run lint",
+    "prepare": "husky"
   },
   "dependencies": {
-    "@nostr-dev-kit/ndk": "^2.8.2",
-    "axios": "0.24.0",
-    "express": "4.17.1",
-    "http-status": "1.5.0",
-    "moment-timezone": "^0.5.45",
-    "pg": "^8.7.1",
-    "pg-hstore": "^2.3.4",
-    "replicate": "^0.32.1",
-    "request": "^2.88.2",
-    "typescript": "5.4.5"
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "http-status": "^1.7.4",
+    "moment-timezone": "^0.5.46",
+    "replicate": "^1.0.1",
+    "twitter-api-v2": "^1.29.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.17.9",
+    "eslint": "^10.4.1",
+    "husky": "^9.1.7",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.60.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

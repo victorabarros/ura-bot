@@ -1,0 +1,30 @@
+meta {
+  name: refresh token web server
+  type: http
+  seq: 7
+}
+
+post {
+  url: https://api.x.com/2/oauth2/token
+  body: formUrlEncoded
+  auth: basic
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+}
+
+auth:basic {
+  username: WDYyOExYSWZhVGthOGlpODJZSGw6MTpjaQ
+  password: mf5eNIRl1lQza5NdCFMlGGSAolahASBu77sv-mu9Gy4u7bD72b
+}
+
+body:form-urlencoded {
+  grant_type: refresh_token
+  refresh_token: TnBkRHRTd3VudEs0bVVkTlhsYUItOGdqdzV3X1JFQ1YxanNFZTRYZm52WWNvOjE3NzkwNTUyMjQ5MTE6MToxOnJ0OjE
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}
