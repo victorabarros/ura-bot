@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Environment & Config
 
-All configuration comes from environment variables. See `docs/CONFIGURATION.md` for the full variable list.
+**Only secrets use env vars.** See `environment-secrets-only.mdc` and `docs/CONFIGURATION.md`.
 
 ## Fail-fast pattern
 
@@ -32,17 +32,15 @@ const getApiKey = () => {
 Group vars by integration, not alphabetically. Each integration block maps to one external dependency:
 
 ```
-server → PORT, API_KEY, VERSION
-finnhub → FINNHUB_API_KEY, FINNHUB_ADDRESS
-x → URA_BOT_X_CLIENT_ID, URA_BOT_X_CLIENT_SECRET, URA_BOT_X_ACCESS_TOKEN, URA_BOT_X_REFRESH_TOKEN
-nostr → URA_BOT_NOSTR_SECRET_KEY, NOSTR_RELAY_URLS
+server → API_KEY
+finnhub → FINNHUB_API_KEY
+x → URA_BOT_X_CONSUMER_KEY, URA_BOT_X_CONSUMER_KEY_SECRET, URA_BOT_X_ACCESS_TOKEN, URA_BOT_X_ACCESS_TOKEN_SECRET
 replicate → REPLICATE_API_TOKEN
-redis → REDIS_CLOUD_HOST, REDIS_CLOUD_PORT, REDIS_CLOUD_USERNAME, REDIS_CLOUD_PASSWORD
 ```
 
 ## Rules
 
-- Update `docs/CONFIGURATION.md` whenever you add or remove a variable.
-- Update `.env.example` with the new key (no value).
-- Optional vars must have a documented default.
+- New **secret** → env + `docs/CONFIGURATION.md` + `.env.example` key (no value).
+- New **non-secret** default → `src/config.ts` constant; do not add an env var.
+- Do not use `envOpt` for public defaults.
 - Do not use `.env` files for secrets in production — use the host's secret manager.

@@ -4,18 +4,20 @@ function env(name: string): string {
   return value
 }
 
-function envOpt(name: string, fallback: string): string {
-  return process.env[name] || fallback
-}
+/** Non-secret defaults — change in code, not via env. */
+const SERVER_PORT = 8082
+const SERVER_VERSION = "2.0.0"
+const FINNHUB_BASE_URL = "https://finnhub.io/api/v1/"
+const REPLICATE_MODEL = "meta/meta-llama-3-70b-instruct"
 
 const config = {
-  port: envOpt("PORT", "8082"),
+  port: SERVER_PORT,
   apiKey: env("API_KEY"),
-  version: envOpt("VERSION", "2.0.0"),
+  version: SERVER_VERSION,
 
   finnhub: {
     apiKey: env("FINNHUB_API_KEY"),
-    baseUrl: envOpt("FINNHUB_ADDRESS", "https://finnhub.io/api/v1/"),
+    baseUrl: FINNHUB_BASE_URL,
   },
 
   x: {
@@ -27,13 +29,13 @@ const config = {
 
   replicate: {
     apiKey: env("REPLICATE_API_TOKEN"),
-    model: envOpt("REPLICATE_MODEL", "meta/meta-llama-3-70b-instruct"),
+    model: REPLICATE_MODEL,
   },
 
 } as const
 
 /**
- * Validated environment configuration; loaded at import.
- * Throws immediately when a required variable is missing.
+ * Configuration: secrets from env (fail-fast), defaults in code.
+ * See `docs/CONFIGURATION.md` and `.cursor/rules/environment-secrets-only.mdc`.
  */
 export default config

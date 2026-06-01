@@ -31,8 +31,8 @@ These are the requirements the rewrite must satisfy. *How* they're met is open.
   change — define a common posting interface and register implementations.
 - **Time/context-aware messaging.** Message wording can vary by context (e.g. market
   hours, first post of the day, holidays, market timezone).
-- **Configurable, fail-fast config.** All secrets/settings come from the environment
-  and are validated at startup, failing loudly when something required is missing.
+- **Configurable, fail-fast config.** Secrets come from the environment and are
+  validated at startup; non-sensitive defaults live in code (`src/config.ts`).
 - **Authenticated entry points.** Externally-triggered actions require authentication;
   health checks do not.
 - **Observable health.** Expose a lightweight health/heartbeat signal for monitoring.
@@ -79,7 +79,8 @@ npm run start          # or: make start
 - Do **not** silently default missing env vars to `""` or `undefined` — throw at startup.
 - Do **not** add two clients for the same platform (e.g. both OAuth 1.0a and 2.0 for X).
 - Do **not** add a route without a corresponding entry in `docs/API.md`.
-- Do **not** add an env var without adding it to `docs/CONFIGURATION.md` and `.env.example`.
+- Do **not** add an env var for non-secret defaults (port, version, public API URLs, model slugs).
+- Do **not** add a **secret** env var without `docs/CONFIGURATION.md` and `.env.example`.
 - Do **not** hardcode a static holiday list — fetch from market-data API, fallback to config.
 - Do **not** use exact-minute clock checks for post context — use a time window or explicit param.
 
@@ -99,7 +100,7 @@ npm run start          # or: make start
 Before declaring any task complete:
 
 - [ ] All affected `docs/` files updated in the same commit
-- [ ] `.env.example` has a key (no value) for every new env var
+- [ ] `.env.example` has a key (no value) for every new **secret** env var
 - [ ] No new route without an entry in `docs/API.md`
 - [ ] Fan-out uses `Promise.allSettled`
 - [ ] Every required env var throws at startup if missing

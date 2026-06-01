@@ -129,7 +129,7 @@ randomly from recent news for a randomly selected ticker in the stocks list.
 
 ## LLM persona (Replicate / Llama)
 
-**Model:** `meta/meta-llama-3-70b-instruct` on Replicate (configurable via `REPLICATE_MODEL`;
+**Model:** `meta/meta-llama-3-70b-instruct` on Replicate (`REPLICATE_MODEL` in `src/config.ts`;
 legacy `meta/meta-llama-3.1-405b-instruct` was retired by the provider)
 
 **System prompt:**

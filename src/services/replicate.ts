@@ -2,7 +2,7 @@ import Replicate from "replicate"
 import config from "../config"
 import { NewsItem } from "./finnhub"
 
-/** Replicate model slug; override with `REPLICATE_MODEL` (see docs/3rd-parties/replicate-ai.md). */
+/** Replicate model slug from config (see docs/3rd-parties/replicate-ai.md). */
 const MODEL = config.replicate.model
 
 /** Persona voice — verbatim from legacy `ReplicateAIService` (URABOT). */

@@ -19,7 +19,7 @@ API key from config; required at startup.
 | Model | Notes |
 |-------|--------|
 | **`meta/meta-llama-3-70b-instruct`** (default) | Drop-in replacement for retired `meta/meta-llama-3.1-405b-instruct`. Same `system_prompt` + `prompt` API as legacy. Good for acid-humor market takes; news context is supplied in the user prompt (Finnhub JSON). |
-| **`openai/gpt-4o-mini`** | Set `REPLICATE_MODEL=openai/gpt-4o-mini`. Stronger instruction-following and cleaner output; uses `max_completion_tokens` instead of `max_tokens`. Slightly higher cost. |
+| **`openai/gpt-4o-mini`** | Set `REPLICATE_MODEL` in `src/config.ts`. Stronger instruction-following; uses `max_completion_tokens`. Slightly higher cost. |
 
 `meta/meta-llama-3.1-405b-instruct` returns HTTP 422 on Replicate as of 2026 — do not use.
 
