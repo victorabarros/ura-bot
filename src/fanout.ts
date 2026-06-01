@@ -8,6 +8,39 @@ export type FanoutResult = {
   error?: string
 }
 
+/** JSON body for POST /urabot/stocks and POST /urabot/news success responses. */
+export type PostApiResponse = {
+  created_at: Date
+  tweet_id?: string
+  tweet_ids?: string[]
+}
+
+const X_PLATFORM = "X"
+
+function xTweetIds(results: FanoutResult[]): string[] {
+  return results
+    .filter((r) => r.platform === X_PLATFORM && r.success && r.id)
+    .map((r) => r.id!)
+}
+
+/**
+ * Builds the success response payload with X tweet id(s) from fan-out.
+ * One id uses `tweet_id`; multiple chunked posts use `tweet_ids`.
+ */
+export function buildPostApiResponse(
+  createdAt: Date,
+  results: FanoutResult[] | FanoutResult[][]
+): PostApiResponse {
+  const ids = Array.isArray(results[0])
+    ? (results as FanoutResult[][]).flatMap(xTweetIds)
+    : xTweetIds(results as FanoutResult[])
+
+  const body: PostApiResponse = { created_at: createdAt }
+  if (ids.length === 1) body.tweet_id = ids[0]
+  else if (ids.length > 1) body.tweet_ids = ids
+  return body
+}
+
 /**
  * Posts one message to every target in parallel.
  * Each target succeeds or fails independently.

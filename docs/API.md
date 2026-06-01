@@ -48,8 +48,17 @@ all configured social platforms.
 **Response `200 OK`**
 
 ```json
-{ "created_at": "<ISO-8601 timestamp>" }
+{ "created_at": "<ISO-8601 timestamp>", "tweet_id": "<X post id>" }
 ```
+
+When the roundup is split into multiple X posts (chunked tickers), successful ids
+are returned as an array:
+
+```json
+{ "created_at": "<ISO-8601 timestamp>", "tweet_ids": ["<id>", "..."] }
+```
+
+`tweet_id` / `tweet_ids` are omitted when X posting did not succeed.
 
 **Response `500 Internal Server Error`** – no quotes could be retrieved.
 
@@ -65,8 +74,10 @@ and broadcasts it to all configured social platforms.
 **Response `200 OK`**
 
 ```json
-{ "created_at": "<ISO-8601 timestamp>" }
+{ "created_at": "<ISO-8601 timestamp>", "tweet_id": "<X post id>" }
 ```
+
+`tweet_id` is omitted when X posting did not succeed.
 
 **Response `204 No Content`** – no news articles were found.
 

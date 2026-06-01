@@ -4,12 +4,12 @@ import { getQuote } from "../services/finnhub"
 import { isHoliday, getHolidayEntry } from "../domain/holidays"
 import { getPostContext } from "../domain/context"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
-import { fanoutAll } from "../fanout"
+import { buildPostApiResponse, fanoutAll } from "../fanout"
 import { getSocialTargets } from "./targets"
 
 /**
  * POST /urabot/stocks: holiday message or uranium quote roundup.
- * Fans out to all social targets; partial quote failures are tolerated.
+ * Fans out to all social targets; 200 includes X `tweet_id` or `tweet_ids`.
  */
 export async function postUraStock(req: Request, res: Response): Promise<void> {
   const now = new Date()
@@ -19,8 +19,8 @@ export async function postUraStock(req: Request, res: Response): Promise<void> {
     const entry = await getHolidayEntry(now)
     if (entry) {
       const message = buildHolidayMessage(entry.eventName, entry.message, now, ctx)
-      await fanoutAll([message], getSocialTargets())
-      res.status(httpStatus.OK).json({ created_at: now })
+      const posts = await fanoutAll([message], getSocialTargets())
+      res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
       return
     }
   }
@@ -43,7 +43,7 @@ export async function postUraStock(req: Request, res: Response): Promise<void> {
   }
 
   const messages = buildStockMessages(quotes, now, ctx)
-  await fanoutAll(messages, getSocialTargets())
+  const posts = await fanoutAll(messages, getSocialTargets())
 
-  res.status(httpStatus.OK).json({ created_at: now })
+  res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
 }

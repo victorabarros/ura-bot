@@ -3,14 +3,14 @@ import httpStatus from "http-status"
 import { searchNews, NewsItem } from "../services/finnhub"
 import { generateNewsComment } from "../services/replicate"
 import { STOCKS, buildNewsMessage, formatDateYMD } from "../domain/stocks"
-import { fanout } from "../fanout"
+import { buildPostApiResponse, fanout } from "../fanout"
 import { getSocialTargets } from "./targets"
 
 const MAX_ATTEMPTS = STOCKS.length * 4
 
 /**
  * POST /urabot/news: picks recent uranium news, optional LLM comment, then posts.
- * Returns 204 when no article is found after sampling tickers.
+ * Returns 204 when no article is found; 200 includes `tweet_id` when X succeeds.
  */
 export async function postUraNews(_req: Request, res: Response): Promise<void> {
   const now = new Date()
@@ -48,7 +48,7 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
   }
 
   const message = buildNewsMessage(comment, news.url)
-  await fanout(message, getSocialTargets())
+  const posts = await fanout(message, getSocialTargets())
 
-  res.status(httpStatus.OK).json({ created_at: now })
+  res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
 }
