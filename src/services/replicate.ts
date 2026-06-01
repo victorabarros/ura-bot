@@ -2,8 +2,7 @@ import Replicate from "replicate"
 import config from "../config"
 import { NewsItem } from "./finnhub"
 
-/** Replicate model slug from config (see docs/3rd-parties/replicate-ai.md). */
-const MODEL = config.replicate.model
+const MODEL = "meta/meta-llama-3-70b-instruct"
 
 /** Persona voice — verbatim from legacy `ReplicateAIService` (URABOT). */
 const SYSTEM_PROMPT = `

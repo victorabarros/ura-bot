@@ -4,20 +4,13 @@ function env(name: string): string {
   return value
 }
 
-/** Non-secret defaults — change in code, not via env. */
-const SERVER_PORT = 8082
-const SERVER_VERSION = "2.0.0"
-const FINNHUB_BASE_URL = "https://finnhub.io/api/v1/"
-const REPLICATE_MODEL = "meta/meta-llama-3-70b-instruct"
-
 const config = {
-  port: SERVER_PORT,
+  port: 8082,
   apiKey: env("API_KEY"),
-  version: SERVER_VERSION,
+  version: "2.0.0",
 
   finnhub: {
     apiKey: env("FINNHUB_API_KEY"),
-    baseUrl: FINNHUB_BASE_URL,
   },
 
   x: {
@@ -29,13 +22,8 @@ const config = {
 
   replicate: {
     apiKey: env("REPLICATE_API_TOKEN"),
-    model: REPLICATE_MODEL,
   },
 
 } as const
 
-/**
- * Configuration: secrets from env (fail-fast), defaults in code.
- * See `docs/CONFIGURATION.md` and `.cursor/rules/environment-secrets-only.mdc`.
- */
 export default config

@@ -2,7 +2,7 @@ import axios from "axios"
 import config from "../config"
 
 const http = axios.create({
-  baseURL: config.finnhub.baseUrl,
+  baseURL: "https://finnhub.io/api/v1/",
   params: { token: config.finnhub.apiKey },
   timeout: 10_000,
 })
