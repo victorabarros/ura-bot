@@ -9,6 +9,16 @@ const client = new TwitterApi({
   accessSecret: config.x.accessTokenSecret,
 })
 
+/**
+ * Verifies X OAuth 1.0a credentials via the authenticated user lookup.
+ *
+ * @see https://docs.x.com/
+ * @see docs/3rd-parties/twitter-x-dot-com.md
+ */
+export async function checkXHealth(): Promise<void> {
+  await client.v2.me()
+}
+
 export class XService implements ISocialService {
   async postMessage(message: string): Promise<PostMessageResponse> {
     const text = message.trim()

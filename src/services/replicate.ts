@@ -70,3 +70,14 @@ export async function generateNewsComment(news: NewsItem): Promise<string> {
   const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
   return parseModelOutput(output)
 }
+
+/**
+ * Verifies Replicate token and that the configured model is reachable.
+ *
+ * @see https://replicate.com/docs
+ * @see docs/3rd-parties/replicate-ai.md
+ */
+export async function checkReplicateHealth(): Promise<void> {
+  const [owner, name] = MODEL.split("/")
+  await replicate.models.get(owner, name)
+}

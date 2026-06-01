@@ -20,7 +20,7 @@ One endpoint is **exempt** from this check:
 
 | Group | Endpoint |
 |---|---|
-| Health / monitoring | `GET /heartbeat` |
+| Health / monitoring | `GET /heartbeat`, `GET /healthcheck` |
 
 ---
 
@@ -35,6 +35,43 @@ Lightweight liveness probe. No authentication required.
 ```json
 { "success": true, "version": "<semver>" }
 ```
+
+---
+
+### `GET /healthcheck`
+
+Readiness probe: calls Finnhub, Replicate, and X with lightweight requests (no
+posting). No authentication required.
+
+**Response `200 OK`** — all dependencies reachable.
+
+```json
+{
+  "success": true,
+  "version": "<semver>",
+  "dependencies": {
+    "finnhub": { "ok": true },
+    "replicate": { "ok": true },
+    "x": { "ok": true }
+  }
+}
+```
+
+**Response `503 Service Unavailable`** — one or more dependencies failed.
+
+```json
+{
+  "success": false,
+  "version": "<semver>",
+  "dependencies": {
+    "finnhub": { "ok": true },
+    "replicate": { "ok": false, "error": "<message>" },
+    "x": { "ok": true }
+  }
+}
+```
+
+Failures are logged server-side with integration name and API detail when available.
 
 ---
 

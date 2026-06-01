@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express"
 import httpStatus from "http-status"
 import config from "../config"
 
-const UNAUTHENTICATED_PATHS = new Set(["/heartbeat"])
+const UNAUTHENTICATED_PATHS = new Set(["/heartbeat", "/healthcheck"])
 
 /**
- * Requires API key on all paths except `/heartbeat`.
+ * Requires API key on all paths except `/heartbeat` and `/healthcheck`.
  * Logs method and path for each request.
  */
 export function authMiddleware(req: Request, res: Response, next: NextFunction): void {

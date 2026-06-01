@@ -108,3 +108,18 @@ export async function getMarketHolidays(exchange: string = "US"): Promise<Finnhu
   })
   return data
 }
+
+const HEALTH_TIMEOUT_MS = 5_000
+
+/**
+ * Verifies Finnhub API key and connectivity (market-status probe).
+ *
+ * @see https://finnhub.io/docs/api
+ * @see docs/3rd-parties/finhub.md
+ */
+export async function checkFinnhubHealth(): Promise<void> {
+  await http.get("/stock/market-status", {
+    params: { exchange: "US" },
+    timeout: HEALTH_TIMEOUT_MS,
+  })
+}

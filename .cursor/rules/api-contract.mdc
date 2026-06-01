@@ -13,7 +13,7 @@ The canonical route list lives in `docs/API.md`. Do not add, rename, or remove r
 | Method | Path | Auth |
 |---|---|---|
 | GET | `/heartbeat` | None |
-| GET | `/callback` | None |
+| GET | `/healthcheck` | None |
 | POST | `/urabot/stocks` | API key |
 | POST | `/urabot/news` | API key |
 
