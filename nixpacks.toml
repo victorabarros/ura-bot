@@ -1,0 +1,15 @@
+# Railway / Nixpacks — matches package.json (npm, Node 20+, dist/index.js)
+providers = ["node"]
+
+[variables]
+HUSKY = "0"
+NIXPACKS_NODE_VERSION = "20"
+
+[phases.install]
+cmds = ["npm ci --ignore-scripts"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm start"
