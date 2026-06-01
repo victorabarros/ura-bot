@@ -42,7 +42,8 @@ Notes on format:
 ## 2. Company news
 
 **We ask for:** a ticker symbol and a date range (`from`, `to`).
-- Default range when unspecified: **the last day** (yesterday → today).
+- News posts try **1 day**, then **7 days**, then **30 days** lookback until Finnhub
+  returns at least one article (a 1-day window is often empty).
 - Dates are formatted `YYYY-MM-DD`.
 
 **We need back** a list of news items, each with:

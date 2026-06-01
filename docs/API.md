@@ -79,7 +79,8 @@ and broadcasts it to all configured social platforms.
 
 `tweet_id` is omitted when X posting did not succeed.
 
-**Response `204 No Content`** – no news articles were found.
+**Response `204 No Content`** – no news articles were found in the 1/7/30-day
+lookback windows.
 
 **Response `500 Internal Server Error`** – unexpected error during broadcast.
 
