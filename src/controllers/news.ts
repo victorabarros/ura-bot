@@ -67,7 +67,7 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
 
   let comment: string
   try {
-    comment = await generateNewsComment({ headline: news.headline, summary: news.summary })
+    comment = await generateNewsComment(news)
   } catch (err) {
     console.warn("[news] LLM failed, posting headline as fallback:", (err as Error).message)
     comment = news.headline
