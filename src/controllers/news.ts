@@ -3,11 +3,24 @@ import httpStatus from "http-status"
 import { isFinnhubRateLimited, searchNews, NewsItem } from "../services/finnhub"
 import { generateNewsComment } from "../services/replicate"
 import { STOCKS, buildNewsMessage, formatDateYMD } from "../domain/stocks"
-import { buildPostApiResponse, fanout } from "../fanout"
+import { buildPostApiResponse, fanout, fanoutHadSuccess } from "../fanout"
+import {
+  errorMessage,
+  logIntegrationError,
+  respondInternalError,
+  respondSocialPublishFailed,
+  respondUpstreamUnavailable,
+} from "../http/errors"
 import { getSocialTargets } from "./targets"
 
 /** 7d then 30d — skip 1d (usually empty). At most one call per ticker per window. */
 const NEWS_LOOKBACK_DAYS = [7, 30] as const
+
+type FindNewsOutcome =
+  | { status: "found"; news: NewsItem }
+  | { status: "empty" }
+  | { status: "rate_limited" }
+  | { status: "upstream_error" }
 
 function subtractDays(date: Date, days: number): Date {
   const d = new Date(date)
@@ -24,8 +37,10 @@ function shuffledStocks(): string[] {
   return symbols
 }
 
-async function findRecentNews(now: Date): Promise<NewsItem | undefined> {
+async function findRecentNews(now: Date): Promise<FindNewsOutcome> {
   const toDate = formatDateYMD(now)
+  let hadSuccessfulCall = false
+  let errorCount = 0
 
   for (const lookbackDays of NEWS_LOOKBACK_DAYS) {
     const fromDate = formatDateYMD(subtractDays(now, lookbackDays))
@@ -33,48 +48,75 @@ async function findRecentNews(now: Date): Promise<NewsItem | undefined> {
     for (const symbol of shuffledStocks()) {
       try {
         const items = await searchNews(symbol, fromDate, toDate)
+        hadSuccessfulCall = true
         if (items.length > 0) {
-          return items[Math.floor(Math.random() * items.length)]
+          return {
+            status: "found",
+            news: items[Math.floor(Math.random() * items.length)],
+          }
         }
       } catch (err) {
         if (isFinnhubRateLimited(err)) {
-          console.warn("[news] Finnhub rate limited; stopping further news lookups")
-          return undefined
+          logIntegrationError("news", "finnhub", err)
+          return { status: "rate_limited" }
         }
-        console.warn(`[news] Failed to fetch news for ${symbol}:`, (err as Error).message)
+        errorCount++
+        logIntegrationError("news", "finnhub", err)
       }
     }
 
     console.warn(`[news] No articles for any ticker (${fromDate}..${toDate}, ${lookbackDays}d window)`)
   }
 
-  return undefined
+  if (!hadSuccessfulCall && errorCount > 0) {
+    return { status: "upstream_error" }
+  }
+  return { status: "empty" }
 }
 
 /**
- * POST /urabot/news: picks recent uranium news, optional LLM comment, then posts.
- * Returns 204 when no article is found; 200 includes `tweet_id` when X succeeds.
+ * POST /urabot/news: picks recent uranium news, LLM comment, then posts.
+ * `204` when no articles; `503`/`502`/`500` on integration failures.
  */
 export async function postUraNews(_req: Request, res: Response): Promise<void> {
   const now = new Date()
-  const news = await findRecentNews(now)
 
-  if (!news) {
-    console.warn("[news] No articles found (or Finnhub rate limited)")
-    res.status(httpStatus.NO_CONTENT).json({})
-    return
-  }
-
-  let comment: string
   try {
-    comment = await generateNewsComment(news)
+    const outcome = await findRecentNews(now)
+
+    if (outcome.status === "rate_limited") {
+      respondUpstreamUnavailable(res, "finnhub", "Finnhub rate limit exceeded")
+      return
+    }
+    if (outcome.status === "upstream_error") {
+      respondUpstreamUnavailable(res, "finnhub", "Finnhub news API unavailable")
+      return
+    }
+    if (outcome.status === "empty") {
+      res.status(httpStatus.NO_CONTENT).send()
+      return
+    }
+
+    const { news } = outcome
+    let comment: string
+    try {
+      comment = await generateNewsComment(news)
+    } catch (err) {
+      logIntegrationError("news", "replicate", err)
+      respondUpstreamUnavailable(res, "replicate", "Replicate comment generation failed")
+      return
+    }
+
+    const message = buildNewsMessage(comment, news.url)
+    const posts = await fanout(message, getSocialTargets())
+    if (!fanoutHadSuccess(posts)) {
+      respondSocialPublishFailed(res, posts)
+      return
+    }
+
+    res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
   } catch (err) {
-    console.warn("[news] LLM failed, posting headline as fallback:", (err as Error).message)
-    comment = news.headline
+    logIntegrationError("news", "internal", err)
+    respondInternalError(res, "internal", errorMessage(err))
   }
-
-  const message = buildNewsMessage(comment, news.url)
-  const posts = await fanout(message, getSocialTargets())
-
-  res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
 }

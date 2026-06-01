@@ -23,6 +23,14 @@ function xTweetIds(results: FanoutResult[]): string[] {
     .map((r) => r.id!)
 }
 
+/** True if at least one platform published successfully. */
+export function fanoutHadSuccess(results: FanoutResult[] | FanoutResult[][]): boolean {
+  const flat = Array.isArray(results[0])
+    ? (results as FanoutResult[][]).flat()
+    : (results as FanoutResult[])
+  return flat.some((r) => r.success)
+}
+
 /**
  * Builds the success response payload with X tweet id(s) from fan-out.
  * One id uses `tweet_id`; multiple chunked posts use `tweet_ids`.

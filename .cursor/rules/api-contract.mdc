@@ -42,7 +42,12 @@ Controllers must **not** contain auth logic, persistence, or direct HTTP client 
 
 ## Response codes
 
-- `200` — success
-- `204` — no content found (news endpoint only)
+- `200` — success (partial social fan-out failure is still OK if one target posted)
+- `204` — news search OK, zero articles (news only)
 - `401` — missing or invalid API key
-- `500` — unexpected error during data fetch or broadcast
+- `502` — all social platforms failed to publish
+- `503` — upstream unavailable (Finnhub rate limit, Replicate failure, etc.)
+- `500` — no usable data or unexpected internal error
+
+See `.cursor/rules/controller-errors.mdc` and `src/http/errors.ts`. Do not hide
+integration errors as `204` or silent fallbacks.

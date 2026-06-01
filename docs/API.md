@@ -58,9 +58,17 @@ are returned as an array:
 { "created_at": "<ISO-8601 timestamp>", "tweet_ids": ["<id>", "..."] }
 ```
 
-`tweet_id` / `tweet_ids` are omitted when X posting did not succeed.
+`tweet_id` / `tweet_ids` are omitted when X posting did not succeed but another
+target succeeded. If **every** social target fails, the response is `502` (see below).
 
-**Response `500 Internal Server Error`** – no quotes could be retrieved.
+**Response `500 Internal Server Error`** – no quotes could be retrieved after partial
+upstream success.
+
+**Response `502 Bad Gateway`** – all configured social platforms failed to publish.
+
+**Response `503 Service Unavailable`** – Finnhub rate-limited or quote API unavailable.
+
+Error bodies: `{ "error": "<message>", "integration": "finnhub" | "social" }`.
 
 ---
 
@@ -79,10 +87,17 @@ and broadcasts it to all configured social platforms.
 
 `tweet_id` is omitted when X posting did not succeed.
 
-**Response `204 No Content`** – no news articles were found in the 7/30-day lookback
-windows, or Finnhub rate-limited the search.
+**Response `204 No Content`** – Finnhub returned successfully but no articles were
+found in the 7/30-day lookback windows.
 
-**Response `500 Internal Server Error`** – unexpected error during broadcast.
+**Response `502 Bad Gateway`** – all configured social platforms failed to publish.
+
+**Response `503 Service Unavailable`** – Finnhub rate-limited / unavailable, or
+Replicate comment generation failed.
+
+**Response `500 Internal Server Error`** – unexpected internal error.
+
+Error bodies: `{ "error": "<message>", "integration": "finnhub" | "replicate" | "social" | "internal" }`.
 
 ---
 

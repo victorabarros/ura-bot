@@ -92,5 +92,5 @@ humor, market tone) must survive any rewording.
 - Keep the persona in **one place** so the voice is easy to audit and adjust.
 - Output must be safe to post as-is (length-aware for the target platform, no links/
   hashtags); validate before posting.
-- Treat the LLM as optional enrichment — if it fails, the bot should still be able to
-  post the underlying news.
+- If comment generation fails, return **`503`** with `integration: "replicate"` — do not
+  post with a silent headline fallback.
