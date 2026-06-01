@@ -63,7 +63,10 @@ npm install
 # Type-check without emitting
 npm run typecheck      # or: make typecheck
 
-# Pre-commit runs `npm run validate` (typecheck) automatically
+# Lint
+npm run lint           # or: make lint
+
+# Pre-commit runs `npm run validate` (typecheck + eslint) automatically
 
 # Development server (hot-reload)
 npm run dev            # or: make dev

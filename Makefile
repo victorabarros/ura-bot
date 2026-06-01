@@ -4,7 +4,7 @@ PORT?=8082
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
 
-.PHONY: welcome install dev build start typecheck validate clean \
+.PHONY: welcome install dev build start typecheck lint validate clean \
         docker-build docker-run docker-dev docker-stop docker-logs docker-clean
 
 welcome:
@@ -35,6 +35,9 @@ start: build
 
 typecheck:
 	npm run typecheck
+
+lint:
+	npm run lint
 
 validate:
 	npm run validate
