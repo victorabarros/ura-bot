@@ -2,13 +2,7 @@ import Replicate from "replicate"
 import config from "../config"
 import { NewsItem } from "./finnhub"
 
-/**
- * Default after `meta/meta-llama-3.1-405b-instruct` was removed from Replicate.
- * Same prompt API as legacy; strong enough for short acid-humor posts.
- *
- * Optional upgrade: `openai/gpt-4o-mini` (set `REPLICATE_MODEL`) — cleaner output,
- * slightly higher cost; news context still comes from Finnhub JSON in the prompt.
- */
+/** Replicate model slug; override with `REPLICATE_MODEL` (see docs/3rd-parties/replicate-ai.md). */
 const MODEL = config.replicate.model
 
 /** Persona voice — verbatim from legacy `ReplicateAIService` (URABOT). */
