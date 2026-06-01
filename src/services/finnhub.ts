@@ -91,6 +91,11 @@ export async function searchNews(symbol: string, fromDate: string, toDate: strin
   return data ?? []
 }
 
+/** True when Finnhub rejected the request for rate limiting. */
+export function isFinnhubRateLimited(err: unknown): boolean {
+  return axios.isAxiosError(err) && err.response?.status === 429
+}
+
 /**
  * Returns exchange holiday calendar entries from Finnhub.
  *

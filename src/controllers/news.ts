@@ -1,15 +1,13 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import { searchNews, NewsItem } from "../services/finnhub"
+import { isFinnhubRateLimited, searchNews, NewsItem } from "../services/finnhub"
 import { generateNewsComment } from "../services/replicate"
 import { STOCKS, buildNewsMessage, formatDateYMD } from "../domain/stocks"
 import { buildPostApiResponse, fanout } from "../fanout"
 import { getSocialTargets } from "./targets"
 
-const MAX_ATTEMPTS_PER_WINDOW = STOCKS.length * 4
-
-/** Finnhub often has no items in a 1-day window; widen until articles appear. */
-const NEWS_LOOKBACK_DAYS = [1, 7, 30] as const
+/** 7d then 30d — skip 1d (usually empty). At most one call per ticker per window. */
+const NEWS_LOOKBACK_DAYS = [7, 30] as const
 
 function subtractDays(date: Date, days: number): Date {
   const d = new Date(date)
@@ -17,28 +15,37 @@ function subtractDays(date: Date, days: number): Date {
   return d
 }
 
+function shuffledStocks(): string[] {
+  const symbols = [...STOCKS]
+  for (let i = symbols.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[symbols[i], symbols[j]] = [symbols[j], symbols[i]]
+  }
+  return symbols
+}
+
 async function findRecentNews(now: Date): Promise<NewsItem | undefined> {
   const toDate = formatDateYMD(now)
 
   for (const lookbackDays of NEWS_LOOKBACK_DAYS) {
     const fromDate = formatDateYMD(subtractDays(now, lookbackDays))
-    let attempts = 0
 
-    while (attempts < MAX_ATTEMPTS_PER_WINDOW) {
-      const symbol = STOCKS[Math.floor(Math.random() * STOCKS.length)]
-      const items = await searchNews(symbol, fromDate, toDate).catch(err => {
+    for (const symbol of shuffledStocks()) {
+      try {
+        const items = await searchNews(symbol, fromDate, toDate)
+        if (items.length > 0) {
+          return items[Math.floor(Math.random() * items.length)]
+        }
+      } catch (err) {
+        if (isFinnhubRateLimited(err)) {
+          console.warn("[news] Finnhub rate limited; stopping further news lookups")
+          return undefined
+        }
         console.warn(`[news] Failed to fetch news for ${symbol}:`, (err as Error).message)
-        return []
-      })
-      if (items.length > 0) {
-        return items[Math.floor(Math.random() * items.length)]
       }
-      attempts++
     }
 
-    console.warn(
-      `[news] No articles after ${MAX_ATTEMPTS_PER_WINDOW} tries (${fromDate}..${toDate}, ${lookbackDays}d window)`
-    )
+    console.warn(`[news] No articles for any ticker (${fromDate}..${toDate}, ${lookbackDays}d window)`)
   }
 
   return undefined
@@ -53,7 +60,7 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
   const news = await findRecentNews(now)
 
   if (!news) {
-    console.warn("[news] No articles found after widening to 30-day lookback")
+    console.warn("[news] No articles found (or Finnhub rate limited)")
     res.status(httpStatus.NO_CONTENT).json({})
     return
   }

@@ -42,8 +42,9 @@ Notes on format:
 ## 2. Company news
 
 **We ask for:** a ticker symbol and a date range (`from`, `to`).
-- News posts try **1 day**, then **7 days**, then **30 days** lookback until Finnhub
-  returns at least one article (a 1-day window is often empty).
+- News posts try **7 days**, then **30 days** lookback. Each window queries **at most
+  one `/company-news` call per tracked ticker** (shuffled order), then stops on the
+  first hit. Further lookups stop immediately on HTTP 429.
 - Dates are formatted `YYYY-MM-DD`.
 
 **We need back** a list of news items, each with:
