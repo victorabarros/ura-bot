@@ -49,7 +49,7 @@ See `docs/3rd-parties/twitter-x-dot-com.md` for integration details.
 |---|---|---|
 | `REPLICATE_API_TOKEN` | **Yes** | API token from [replicate.com](https://replicate.com) |
 
-Model used: `meta/meta-llama-3.1-405b-instruct`
+| `REPLICATE_MODEL` | No | Replicate model slug (default: `meta/meta-llama-3-70b-instruct`). Legacy `meta/meta-llama-3.1-405b-instruct` is no longer available on Replicate. Optional: `openai/gpt-4o-mini`. |
 
 See `docs/3rd-parties/replicate-ai.md` for usage details.
 

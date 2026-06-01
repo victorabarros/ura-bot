@@ -27,6 +27,7 @@ const config = {
 
   replicate: {
     apiKey: env("REPLICATE_API_TOKEN"),
+    model: envOpt("REPLICATE_MODEL", "meta/meta-llama-3-70b-instruct"),
   },
 
 } as const
