@@ -19,10 +19,10 @@ const config = {
   },
 
   x: {
-    clientId: env("URA_BOT_X_CLIENT_ID"),
-    clientSecret: env("URA_BOT_X_CLIENT_SECRET"),
+    consumerKey: env("URA_BOT_X_CONSUMER_KEY"),
+    consumerSecret: env("URA_BOT_X_CONSUMER_KEY_SECRET"),
     accessToken: env("URA_BOT_X_ACCESS_TOKEN"),
-    refreshToken: env("URA_BOT_X_REFRESH_TOKEN"),
+    accessTokenSecret: env("URA_BOT_X_ACCESS_TOKEN_SECRET"),
   },
 
   nostr: {
@@ -37,12 +37,6 @@ const config = {
     apiKey: env("REPLICATE_API_TOKEN"),
   },
 
-  redis: {
-    host: env("REDIS_CLOUD_HOST"),
-    port: parseInt(env("REDIS_CLOUD_PORT"), 10),
-    username: env("REDIS_CLOUD_USERNAME"),
-    password: env("REDIS_CLOUD_PASSWORD"),
-  },
 } as const
 
 /**

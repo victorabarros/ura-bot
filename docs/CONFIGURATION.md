@@ -33,25 +33,17 @@ Two separate X integrations exist in the current codebase. They should be
 consolidated to a single OAuth 2.0 PKCE client (the `XSocial` one) in the
 rewrite.
 
-### Legacy Twitter client (OAuth 1.0a — to be removed)
+All four values are available directly on the **"Keys and Tokens"** tab of your app in
+[developer.x.com](https://developer.x.com). Tokens do not expire.
 
-| Variable | Required | Description |
+| Variable | Required | Where to find it |
 |---|---|---|
-| `URA_BOT_TWITTER_API_KEY` | **Yes** | App consumer key |
-| `URA_BOT_TWITTER_API_KEY_SECRET` | **Yes** | App consumer secret |
-| `URA_BOT_TWITTER_ACCESS_TOKEN` | **Yes** | Account access token |
-| `URA_BOT_TWITTER_ACCESS_TOKEN_SECRET` | **Yes** | Account access token secret |
+| `URA_BOT_X_CONSUMER_KEY` | **Yes** | "API Key" under "Consumer Keys" |
+| `URA_BOT_X_CONSUMER_KEY_SECRET` | **Yes** | "API Key Secret" under "Consumer Keys" |
+| `URA_BOT_X_ACCESS_TOKEN` | **Yes** | "Access Token" under "Authentication Tokens" (click Generate) |
+| `URA_BOT_X_ACCESS_TOKEN_SECRET` | **Yes** | "Access Token Secret" under "Authentication Tokens" |
 
-### XSocial client (OAuth 2.0 PKCE — keep this one)
-
-| Variable | Required | Description |
-|---|---|---|
-| `URA_BOT_X_CLIENT_ID` | **Yes** | OAuth 2.0 app client ID from developer.x.com |
-| `URA_BOT_X_CLIENT_SECRET` | **Yes** | OAuth 2.0 app client secret |
-| `URA_BOT_X_ACCESS_TOKEN` | **Yes** | Initial access token (refreshed automatically at runtime) |
-| `URA_BOT_X_REFRESH_TOKEN` | **Yes** | Refresh token used to obtain new access tokens |
-
-See `docs/3rd-parties/twitter-x-dot-com.md` for OAuth flow details.
+See `docs/3rd-parties/twitter-x-dot-com.md` for integration details.
 
 ---
 
@@ -88,18 +80,3 @@ See `docs/3rd-parties/replicate-ai.md` for usage details.
 
 ---
 
-## Redis (cache)
-
-Used to persist the X OAuth access token between requests so the token is not
-re-fetched on every post.
-
-| Variable | Required | Description |
-|---|---|---|
-| `REDIS_CLOUD_HOST` | **Yes** | Redis hostname |
-| `REDIS_CLOUD_PORT` | **Yes** | Redis port |
-| `REDIS_CLOUD_USERNAME` | **Yes** | Redis ACL username |
-| `REDIS_CLOUD_PASSWORD` | **Yes** | Redis ACL password |
-
-> **Note:** The current `CacheRepository` implementation is a stub (get always
-> returns `null`, set is a no-op). The rewrite must provide a real Redis
-> connection or drop the dependency.

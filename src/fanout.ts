@@ -24,7 +24,15 @@ export async function fanout(
         return { platform: name, success: true, id: res.id }
       })
       .catch((err: unknown) => {
-        const error = err instanceof Error ? err.message : String(err)
+        let error = err instanceof Error ? err.message : String(err)
+        // twitter-api-v2 attaches the API error body on err.data
+        if (err && typeof err === "object") {
+          const detail = ("data" in err ? err.data : null)
+            ?? ("response" in (err as { response?: { data?: unknown } })
+              ? (err as { response?: { data?: unknown } }).response?.data
+              : null)
+          if (detail) error += ` — ${JSON.stringify(detail)}`
+        }
         console.error(`[fanout] ${name} failed: ${error}`)
         return { platform: name, success: false, error }
       })

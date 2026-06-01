@@ -15,9 +15,9 @@
     "axios": "^1.7.9",
     "express": "^4.21.2",
     "http-status": "^1.7.4",
-    "ioredis": "^5.4.1",
     "moment-timezone": "^0.5.46",
     "replicate": "^1.0.1",
+    "twitter-api-v2": "^1.29.0",
     "websocket-polyfill": "^0.0.3"
   },
   "devDependencies": {

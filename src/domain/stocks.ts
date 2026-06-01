@@ -24,7 +24,7 @@ const TIME_FORMAT = { timeZone: MARKET_TZ, hour: "2-digit", minute: "2-digit", h
 
 /** One ticker line with price, day change %, and direction emoji. */
 export function formatQuoteLine(quote: Quote): string {
-  const ticker = `$${quote.symbol}`.padEnd(7)
+  const ticker = quote.symbol.padEnd(7)
   const delta = quote.openPrice > 0
     ? ((quote.price - quote.openPrice) / quote.openPrice) * 100
     : 0

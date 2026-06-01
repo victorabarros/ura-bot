@@ -5,9 +5,7 @@ YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
 
 .PHONY: welcome install dev build start typecheck clean \
-        docker-build docker-run docker-stop docker-logs docker-clean
-
-# ── Local (Node) ────────────────────────────────────────────────────────────
+        docker-build docker-run docker-dev docker-stop docker-logs docker-clean
 
 welcome:
 	@clear
@@ -20,6 +18,8 @@ welcome:
 	@echo "                        \/         \/                  " && sleep .02
 	@echo "${COLOR_OFF}"
 	@# http://patorjk.com/software/taag font Graffiti full
+
+# ── Local (Node) ────────────────────────────────────────────────────────────
 
 install:
 	npm install
@@ -50,6 +50,16 @@ docker-run: docker-build
 		--env-file .env \
 		-p $(PORT):$(PORT) \
 		$(APP_NAME):latest
+
+docker-dev:
+	docker build --target builder -t $(APP_NAME):dev .
+	docker run --rm -it \
+		--name $(APP_NAME)-dev \
+		--env-file .env \
+		-p $(PORT):$(PORT) \
+		-v $(PWD)/src:/app/src \
+		$(APP_NAME):dev \
+		npm run dev
 
 docker-stop:
 	docker stop $(APP_NAME) 2>/dev/null || true
