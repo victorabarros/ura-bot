@@ -25,14 +25,6 @@ const config = {
     accessTokenSecret: env("URA_BOT_X_ACCESS_TOKEN_SECRET"),
   },
 
-  nostr: {
-    privateKey: env("URA_BOT_NOSTR_SECRET_KEY"),
-    relayUrls: envOpt(
-      "NOSTR_RELAY_URLS",
-      "wss://nostr.bitcoiner.social,wss://nostr-pub.wellorder.net,wss://nostr.mom,wss://nos.lol,wss://relay.mostr.pub,wss://relay.damus.io"
-    ).split(","),
-  },
-
   replicate: {
     apiKey: env("REPLICATE_API_TOKEN"),
   },

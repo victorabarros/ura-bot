@@ -29,10 +29,6 @@ See `docs/3rd-parties/finhub.md` for endpoint details.
 
 ## X / Twitter (social platform)
 
-Two separate X integrations exist in the current codebase. They should be
-consolidated to a single OAuth 2.0 PKCE client (the `XSocial` one) in the
-rewrite.
-
 All four values are available directly on the **"Keys and Tokens"** tab of your app in
 [developer.x.com](https://developer.x.com). Tokens do not expire.
 
@@ -44,27 +40,6 @@ All four values are available directly on the **"Keys and Tokens"** tab of your 
 | `URA_BOT_X_ACCESS_TOKEN_SECRET` | **Yes** | "Access Token Secret" under "Authentication Tokens" |
 
 See `docs/3rd-parties/twitter-x-dot-com.md` for integration details.
-
----
-
-## Nostr (social platform)
-
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `URA_BOT_NOSTR_SECRET_KEY` | **Yes** | — | Hex-encoded Nostr private key for the bot account |
-| `NOSTR_RELAY_URLS` | No | See below | Comma-separated list of WebSocket relay URLs |
-
-Default relays:
-```
-wss://nostr.bitcoiner.social
-wss://nostr-pub.wellorder.net
-wss://nostr.mom
-wss://nos.lol
-wss://relay.mostr.pub
-wss://relay.damus.io
-```
-
-See `docs/3rd-parties/nostr.md` for protocol details.
 
 ---
 
