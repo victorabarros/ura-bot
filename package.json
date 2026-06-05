@@ -2,6 +2,7 @@
   "name": "ura-bot",
   "version": "2.0.0",
   "description": "A bot that posts uranium market stock quotes and news to X and Nostr.",
+  "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",

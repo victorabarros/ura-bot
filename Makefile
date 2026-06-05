@@ -77,7 +77,7 @@ docker-logs:
 docker-clean: docker-stop
 	docker rmi $(APP_NAME):latest 2>/dev/null || true
 
-# ── Devtools ─────────────────────────────────────────────────────────────────
+# ── Git ─────────────────────────────────────────────────────────────────
 
 commit-llm-generated:
 	@msg_file="$$(mktemp)"; \

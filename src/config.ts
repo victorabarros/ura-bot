@@ -5,9 +5,9 @@ function env(name: string): string {
 }
 
 const config = {
-  port: 8082,
+  port: process.env.PORT || 8082,
   apiKey: env("API_KEY"),
-  version: "2.0.0",
+  version: process.env.VERSION || "2.0.1",
 
   finnhub: {
     apiKey: env("FINNHUB_API_KEY"),
