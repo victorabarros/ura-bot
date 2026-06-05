@@ -97,7 +97,7 @@ commit-llm-generated:
 		printf '\n%s\n' 'git diff --cached:'; \
 		git diff --cached; \
 	} | ollama run "$(OLLAMA_MODEL)" > "$$msg_file"; \
-	printf '🦙 ollama generated' >> "$$msg_file"; \
+	printf '🦙 message generated with ollama' >> "$$msg_file"; \
 	printf '%s\n' 'Generated commit message:'; \
 	cat "$$msg_file"; \
 	printf '\n'; \
