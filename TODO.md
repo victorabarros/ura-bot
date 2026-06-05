@@ -49,6 +49,7 @@
 - "Please add ETF NUKZ" - https://x.com/lhthome/status/1882431883503714677
 - other stocks:
   - find another api alternatives that supports the stocks above
+  - https://x.com/UraniumStockBot/status/2013055122486542519?s=20
     - data supplier alternative https://alpaca.markets/
     - https://marketstack.com/
     - yahoo finance api https://ranaroussi.github.io/yfinance/
