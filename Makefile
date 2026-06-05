@@ -110,7 +110,7 @@ push p:
 	make commit-llm-generated
 	git push
 
-checkout:
+checkout c:
 	git stash
 	git checkout main
 	git pull
