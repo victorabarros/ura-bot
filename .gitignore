@@ -370,3 +370,4 @@ __pycache__/
 
 .DS_Store
 .pnpm-store/
+.prod.env
