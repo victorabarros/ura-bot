@@ -1,5 +1,6 @@
 APP_NAME=ura-bot
 PORT?=8082
+OLLAMA_MODEL?=qwen2.5:7b
 
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
