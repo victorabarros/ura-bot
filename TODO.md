@@ -55,6 +55,7 @@
     - https://github.com/gadicc/node-yahoo-finance2
     - https://fixer.io/
     - https://www.quantiq.live/
+    - https://massive.com/
   - $URM https://twitter.com/TheTSXDude/status/1631066976666763266?s=20
   - $NANO https://twitter.com/FayeKnoozIV/status/1806373643435282575
   - $SPUT https://x.com/derekrogden/status/1797668427936731459
