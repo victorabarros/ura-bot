@@ -109,3 +109,9 @@ push p:
 	git add .
 	make commit-llm-generated
 	git push
+
+checkout:
+	git stash
+	git checkout main
+	git pull
+	git stash pop
