@@ -1,6 +1,6 @@
 APP_NAME=ura-bot
 PORT?=8082
-OLLAMA_MODEL?=qwen2.5:7b
+
 
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
@@ -78,6 +78,8 @@ docker-clean: docker-stop
 	docker rmi $(APP_NAME):latest 2>/dev/null || true
 
 # ── Git ─────────────────────────────────────────────────────────────────
+
+OLLAMA_MODEL?=qwen2.5:7b
 
 commit-llm-generated:
 	@msg_file="$$(mktemp)"; \
