@@ -48,10 +48,15 @@ clean:
 
 # ── Docker ──────────────────────────────────────────────────────────────────
 
+DOCKER_TARGET?=
+DOCKER_TAG?=latest
 docker-build:
-	docker build -t $(APP_NAME):latest .
+	@docker build \
+		$(if $(DOCKER_TARGET),--target $(DOCKER_TARGET)) \
+		-t $(APP_NAME):$(DOCKER_TAG) .
 
-docker-run: docker-build
+docker-run:
+	@make docker-build
 	@make welcome
 	@docker run --rm \
 		--name $(APP_NAME) \
@@ -60,7 +65,7 @@ docker-run: docker-build
 		$(APP_NAME):latest
 
 docker-dev:
-	@docker build --target builder -t $(APP_NAME):dev .
+	@make docker-build DOCKER_TARGET=builder DOCKER_TAG=dev
 	@make welcome
 	@docker run --rm -it \
 		--name $(APP_NAME)-dev \
@@ -72,7 +77,7 @@ docker-dev:
 		npm run dev
 
 docker-test:
-	@docker build --target test -t $(APP_NAME):test .
+	@make docker-build DOCKER_TARGET=test DOCKER_TAG=test
 	@docker run --rm --name $(APP_NAME)-test $(APP_NAME):test
 
 # ── Git ─────────────────────────────────────────────────────────────────
