@@ -1,0 +1,19 @@
+meta {
+  name: post urabot latest post
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{urabotBaseUrl}}/urabot/latest-post
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: {{UrabotXToken}}
+}
+
+vars:pre-request {
+  UrabotXToken: McChickenPromo
+}
