@@ -1,0 +1,19 @@
+meta {
+  name: post urabot top trendings
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{urabotBaseUrl}}/urabot/top-trending
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: {{UrabotXToken}}
+}
+
+vars:pre-request {
+  UrabotXToken: McChickenPromo
+}

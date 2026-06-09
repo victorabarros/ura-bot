@@ -87,6 +87,11 @@ export function buildNewsMessage(comment: string, articleUrl: string): string {
   return [comment, "", "#Uranium☢️", articleUrl].join("\n")
 }
 
+/** Trending post body: LLM comment and uranium hashtag. */
+export function buildTrendingMessage(comment: string): string {
+  return [comment, "", "#Uranium☢️"].join("\n")
+}
+
 /** Formats a date as YYYY-MM-DD in US market timezone. */
 export function formatDateYMD(d: Date): string {
   return moment(d).tz(MARKET_TZ).format("YYYY-MM-DD")

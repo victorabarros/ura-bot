@@ -8,23 +8,15 @@
 
 - change API data source https://x.com/UraniumStockBot/status/2013055122486542519?s=20
 - use /internal/... path to internal routes and improve this rule https://github.com/victorabarros/ura-bot/blob/71d7cf7950786f53748a59da57042cb7501db8b1/src/midleware.ts#L11 of oauth
-- add script test to package.json
-  - fix tests and use script "test": "jest --coverage"
-  - after fixed, re-introdude to ./nixpacks.toml:
-    [phases.test]
-    cmds = ["yarn test"]
-    dependsOn = ["build"]
-
-- re-introduce husky to code
 - use redis cache to isFirstPostOfDay and evenningMessage https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L170
 
 ## code improvement
 
 - insert post details to DB
-- create react-native-web app w/ [uraniumstockbot.com](http://uraniumstockbot.com/) address [link](https://github.com/victorabarros/ura-bot/blob/c4393555f47b3a56d0c11b8a230151a893054413/README.md?plain=1#L130) | (https://account.squarespace.com/domains/managed/uraniumstockbot.com) and victor.barros.engineer/urabot ; same content of read plus footer from victor.barros.engineer
+- create webapp w/ [uraniumstockbot.com](http://uraniumstockbot.com/) address [link](https://github.com/victorabarros/ura-bot/blob/c4393555f47b3a56d0c11b8a230151a893054413/README.md?plain=1#L130) | (https://account.squarespace.com/domains/managed/uraniumstockbot.com) and victor.barros.engineer/urabot ; same content of read plus footer from victor.barros.engineer
   - use this link in the bio ; readme and more ...
   - try add widget w/ view from x/twitter and nostr
-- use Fatify instead of express - https://www.thoughtworks.com/radar/languages-and-frameworks/fastify
+- use Fastify instead of express - https://www.thoughtworks.com/radar/languages-and-frameworks/fastify
 
 ## product improvement
 

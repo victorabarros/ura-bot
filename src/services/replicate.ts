@@ -1,6 +1,7 @@
 import Replicate from "replicate"
 import config from "../config"
 import { NewsItem } from "./finnhub"
+import { TweetResult } from "./x"
 
 const MODEL = "meta/meta-llama-3-70b-instruct"
 
@@ -66,6 +67,25 @@ export async function generateNewsComment(news: NewsItem): Promise<string> {
   const prompt =
     "Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): " +
     JSON.stringify(news)
+
+  const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
+  return parseModelOutput(output)
+}
+
+/**
+ * Generates a short comment about trending X posts in the UraBot voice.
+ * The top tweets (by engagement) are passed as context.
+ *
+ * @see https://replicate.com/docs
+ * @see docs/3rd-parties/replicate-ai.md
+ */
+export async function generateTrendingComment(tweets: TweetResult[]): Promise<string> {
+  const sorted = [...tweets].sort(
+    (a, b) => b.likeCount + b.retweetCount - (a.likeCount + a.retweetCount),
+  )
+  const prompt =
+    "Write a post (up to 200 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): " +
+    JSON.stringify(sorted.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))
 
   const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
   return parseModelOutput(output)
