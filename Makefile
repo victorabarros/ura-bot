@@ -6,7 +6,7 @@ YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
 
 .PHONY: welcome install dev build start typecheck lint validate clean \
-        docker-build docker-run docker-dev docker-stop docker-logs docker-clean
+        docker-build docker-run docker-dev docker-stop docker-logs docker-clean docker-test
 
 welcome:
 	@clear
@@ -76,6 +76,10 @@ docker-logs:
 
 docker-clean: docker-stop
 	docker rmi $(APP_NAME):latest 2>/dev/null || true
+
+docker-test:
+	docker build --target test -t $(APP_NAME):test .
+	docker run --rm --name $(APP_NAME)-test $(APP_NAME):test
 
 # ── Git ─────────────────────────────────────────────────────────────────
 

@@ -4,12 +4,20 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --ignore-scripts
+RUN npm install --ignore-scripts
 
 COPY tsconfig.json ./
 COPY src/ ./src/
 
 RUN npm run build
+
+# --- Test stage ---
+FROM builder AS test
+
+COPY jest.config.ts tsconfig.test.json ./
+COPY tests/ ./tests/
+
+CMD ["npm", "test"]
 
 # --- Runtime stage ---
 FROM node:20-alpine AS runtime
