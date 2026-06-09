@@ -4,7 +4,6 @@ import { postUraStock } from "../../src/controllers/stocks"
 // Mock all external dependencies
 jest.mock("../../src/services/finnhub", () => ({
   getQuote: jest.fn(),
-  isFinnhubRateLimited: jest.fn(),
   getMarketHolidays: jest.fn(),
   checkFinnhubHealth: jest.fn(),
 }))
@@ -21,13 +20,12 @@ jest.mock("../../src/controllers/targets", () => ({
   getSocialTargets: jest.fn().mockReturnValue([]),
 }))
 
-import { getQuote, isFinnhubRateLimited } from "../../src/services/finnhub"
+import { getQuote } from "../../src/services/finnhub"
 import { isHoliday, getHolidayEntry } from "../../src/domain/holidays"
 import { fanoutAll, fanoutHadSuccess, buildPostApiResponse } from "../../src/fanout"
 import { Quote } from "../../src/services/finnhub"
 
 const mockGetQuote = getQuote as jest.MockedFunction<typeof getQuote>
-const mockIsFinnhubRateLimited = isFinnhubRateLimited as jest.MockedFunction<typeof isFinnhubRateLimited>
 const mockIsHoliday = isHoliday as jest.MockedFunction<typeof isHoliday>
 const mockGetHolidayEntry = getHolidayEntry as jest.MockedFunction<typeof getHolidayEntry>
 const mockFanoutAll = fanoutAll as jest.MockedFunction<typeof fanoutAll>
@@ -53,7 +51,6 @@ beforeEach(() => {
   mockFanoutAll.mockResolvedValue([[{ platform: "X", success: true, id: "tweet-1" }]])
   mockFanoutHadSuccess.mockReturnValue(true)
   mockBuildPostApiResponse.mockReturnValue({ created_at: new Date(), tweet_id: "tweet-1" })
-  mockIsFinnhubRateLimited.mockReturnValue(false)
 })
 
 describe("postUraStock", () => {
@@ -102,8 +99,8 @@ describe("postUraStock", () => {
     })
 
     it("returns 503 when all quotes are rate-limited", async () => {
-      mockGetQuote.mockRejectedValue(new Error("429"))
-      mockIsFinnhubRateLimited.mockReturnValue(true)
+      const rateLimitErr = Object.assign(new Error("429"), { isAxiosError: true, response: { status: 429 } })
+      mockGetQuote.mockRejectedValue(rateLimitErr)
 
       const { res, status } = makeMockRes()
       await postUraStock(req, res)
@@ -113,7 +110,6 @@ describe("postUraStock", () => {
 
     it("returns 503 when all quotes fail (non-rate-limit)", async () => {
       mockGetQuote.mockRejectedValue(new Error("network error"))
-      mockIsFinnhubRateLimited.mockReturnValue(false)
 
       const { res, status } = makeMockRes()
       await postUraStock(req, res)

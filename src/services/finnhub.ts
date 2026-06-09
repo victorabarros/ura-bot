@@ -50,8 +50,6 @@ type FinnhubMarketHolidayResponse = {
   timezone: string
 }
 
-const round2 = (n: number) => Math.round(n * 100) / 100
-
 /**
  * Fetches the latest quote for a symbol.
  * Throws when price data is missing or zero.
@@ -70,11 +68,11 @@ export async function getQuote(symbol: string): Promise<Quote> {
 
   return {
     symbol,
-    price: round2(data.c),
-    openPrice: round2(data.o),
-    highPrice: round2(data.h),
-    lowPrice: round2(data.l),
-    previousClosePrice: round2(data.pc),
+    price: Math.round(data.c * 100) / 100,
+    openPrice: Math.round(data.o * 100) / 100,
+    highPrice: Math.round(data.h * 100) / 100,
+    lowPrice: Math.round(data.l * 100) / 100,
+    previousClosePrice: Math.round(data.pc * 100) / 100,
   }
 }
 
@@ -89,11 +87,6 @@ export async function searchNews(symbol: string, fromDate: string, toDate: strin
     params: { symbol, from: fromDate, to: toDate },
   })
   return data ?? []
-}
-
-/** True when Finnhub rejected the request for rate limiting. */
-export function isFinnhubRateLimited(err: unknown): boolean {
-  return axios.isAxiosError(err) && err.response?.status === 429
 }
 
 /**
@@ -118,6 +111,7 @@ const HEALTH_TIMEOUT_MS = 5_000
  * @see docs/3rd-parties/finhub.md
  */
 export async function checkFinnhubHealth(): Promise<void> {
+  console.log("[health] checking Finnhub connectivity")
   await http.get("/stock/market-status", {
     params: { exchange: "US" },
     timeout: HEALTH_TIMEOUT_MS,

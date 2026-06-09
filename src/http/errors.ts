@@ -9,11 +9,6 @@ export type ApiErrorBody = {
   integration: string
 }
 
-/** Normalizes unknown thrown values to a log-safe message. */
-export function errorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : String(err)
-}
-
 /** Extracts a structured API detail payload from known error shapes. */
 function apiDetail(err: unknown): unknown | undefined {
   if (!err || typeof err !== "object") return undefined
@@ -26,7 +21,7 @@ function apiDetail(err: unknown): unknown | undefined {
 
 /** Logs an upstream integration failure with full API response detail when available. */
 export function logIntegrationError(route: string, integration: string, err: unknown): void {
-  const msg = errorMessage(err)
+  const msg = err instanceof Error ? err.message : String(err)
   const detail = apiDetail(err)
   const code = err && typeof err === "object" && "code" in err ? (err as { code?: unknown }).code : undefined
   const suffix = [
@@ -37,7 +32,6 @@ export function logIntegrationError(route: string, integration: string, err: unk
     .join(" — ")
   console.error(`[${route}] ${integration}: ${msg}${suffix ? ` — ${suffix}` : ""}`)
 }
-
 
 /** `502` when every configured social target failed to publish. */
 export function respondSocialPublishFailed(res: Response, results: FanoutResult[]): void {

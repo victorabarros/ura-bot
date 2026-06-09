@@ -17,12 +17,6 @@ export type PostApiResponse = {
 
 const X_PLATFORM = "X"
 
-function xTweetIds(results: FanoutResult[]): string[] {
-  return results
-    .filter((r) => r.platform === X_PLATFORM && r.success && r.id)
-    .map((r) => r.id!)
-}
-
 /** True if at least one platform published successfully. */
 export function fanoutHadSuccess(results: FanoutResult[] | FanoutResult[][]): boolean {
   const flat = Array.isArray(results[0])
@@ -40,8 +34,10 @@ export function buildPostApiResponse(
   results: FanoutResult[] | FanoutResult[][]
 ): PostApiResponse {
   const ids = Array.isArray(results[0])
-    ? (results as FanoutResult[][]).flatMap(xTweetIds)
-    : xTweetIds(results as FanoutResult[])
+    ? (results as FanoutResult[][]).flatMap((chunk) =>
+        chunk.filter((r) => r.platform === X_PLATFORM && r.success && r.id).map((r) => r.id!)
+      )
+    : (results as FanoutResult[]).filter((r) => r.platform === X_PLATFORM && r.success && r.id).map((r) => r.id!)
 
   const body: PostApiResponse = { created_at: createdAt }
   if (ids.length === 1) body.tweet_id = ids[0]

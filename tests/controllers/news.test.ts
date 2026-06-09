@@ -3,7 +3,6 @@ import { postUraNews } from "../../src/controllers/news"
 
 jest.mock("../../src/services/finnhub", () => ({
   searchNews: jest.fn(),
-  isFinnhubRateLimited: jest.fn(),
   getMarketHolidays: jest.fn(),
   checkFinnhubHealth: jest.fn(),
 }))
@@ -22,13 +21,12 @@ jest.mock("../../src/controllers/targets", () => ({
   getSocialTargets: jest.fn().mockReturnValue([]),
 }))
 
-import { searchNews, isFinnhubRateLimited } from "../../src/services/finnhub"
+import { searchNews } from "../../src/services/finnhub"
 import { generateNewsComment } from "../../src/services/replicate"
 import { fanout, fanoutHadSuccess, buildPostApiResponse } from "../../src/fanout"
 import { NewsItem } from "../../src/services/finnhub"
 
 const mockSearchNews = searchNews as jest.MockedFunction<typeof searchNews>
-const mockIsFinnhubRateLimited = isFinnhubRateLimited as jest.MockedFunction<typeof isFinnhubRateLimited>
 const mockGenerateNewsComment = generateNewsComment as jest.MockedFunction<typeof generateNewsComment>
 const mockFanout = fanout as jest.MockedFunction<typeof fanout>
 const mockFanoutHadSuccess = fanoutHadSuccess as jest.MockedFunction<typeof fanoutHadSuccess>
@@ -59,7 +57,6 @@ const req = {} as Request
 
 beforeEach(() => {
   jest.clearAllMocks()
-  mockIsFinnhubRateLimited.mockReturnValue(false)
   mockFanout.mockResolvedValue([{ platform: "X", success: true, id: "tweet-1" }])
   mockFanoutHadSuccess.mockReturnValue(true)
   mockBuildPostApiResponse.mockReturnValue({ created_at: new Date(), tweet_id: "tweet-1" })
@@ -79,9 +76,8 @@ describe("postUraNews", () => {
   })
 
   it("returns 503 when Finnhub is rate-limited", async () => {
-    const rateLimitErr = Object.assign(new Error("429"), { response: { status: 429 } })
+    const rateLimitErr = Object.assign(new Error("429"), { isAxiosError: true, response: { status: 429 } })
     mockSearchNews.mockRejectedValue(rateLimitErr)
-    mockIsFinnhubRateLimited.mockReturnValue(true)
 
     const { res, status } = makeMockRes()
     await postUraNews(req, res)
@@ -101,7 +97,6 @@ describe("postUraNews", () => {
 
   it("returns 503 when all Finnhub calls error (no successful call)", async () => {
     mockSearchNews.mockRejectedValue(new Error("network error"))
-    mockIsFinnhubRateLimited.mockReturnValue(false)
 
     const { res, status } = makeMockRes()
     await postUraNews(req, res)

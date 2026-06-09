@@ -1,8 +1,5 @@
 import { Response } from "express"
-import {
-  errorMessage,
-  respondSocialPublishFailed,
-} from "../../src/http/errors"
+import { respondSocialPublishFailed } from "../../src/http/errors"
 import { FanoutResult } from "../../src/fanout"
 
 function makeMockResponse() {
@@ -10,25 +7,6 @@ function makeMockResponse() {
   const status = jest.fn().mockReturnValue({ json })
   return { res: { status, json } as unknown as Response, status, json }
 }
-
-describe("errorMessage", () => {
-  it("returns the message from an Error instance", () => {
-    expect(errorMessage(new Error("boom"))).toBe("boom")
-  })
-
-  it("stringifies a non-Error value", () => {
-    expect(errorMessage("plain string")).toBe("plain string")
-  })
-
-  it("stringifies null", () => {
-    expect(errorMessage(null)).toBe("null")
-  })
-
-  it("stringifies a number", () => {
-    expect(errorMessage(42)).toBe("42")
-  })
-})
-
 
 describe("respondSocialPublishFailed", () => {
   it("sends 502 with a fixed error body", () => {

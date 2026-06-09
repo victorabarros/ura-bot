@@ -2,10 +2,8 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import { XService, TweetResult } from "../services/x"
 import { generateTrendingComment } from "../services/replicate"
-import { buildTrendingMessage } from "../domain/stocks"
 import {
   ApiErrorBody,
-  errorMessage,
   logIntegrationError,
 } from "../http/errors"
 
@@ -21,12 +19,6 @@ function isQuoteNotAllowed(err: unknown): boolean {
   if (!err || typeof err !== "object") return false
   const data = "data" in err ? (err as { data?: { detail?: string } }).data : undefined
   return typeof data?.detail === "string" && data.detail.startsWith(QUOTE_NOT_ALLOWED_DETAIL)
-}
-
-function byEngagementDesc(tweets: TweetResult[]): TweetResult[] {
-  return [...tweets].sort(
-    (a, b) => b.likeCount + b.retweetCount - (a.likeCount + a.retweetCount),
-  )
 }
 
 /**
@@ -81,7 +73,9 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
     }
 
     if (mentions.length > 0) {
-      const ranked = byEngagementDesc(mentions)
+      const ranked = [...mentions].sort(
+        (a, b) => b.likeCount + b.retweetCount - (a.likeCount + a.retweetCount),
+      )
 
       let comment: string
       try {
@@ -92,7 +86,7 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
         return
       }
 
-      const text = buildTrendingMessage(comment)
+      const text = [comment, "", "#Uranium☢️"].join("\n")
 
       try {
         const quoted = await tryQuoteTweet(text, ranked)
@@ -140,7 +134,7 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
       return
     }
 
-    const text = buildTrendingMessage(comment)
+    const text = [comment, "", "#Uranium☢️"].join("\n")
 
     let tweetId: string
     try {
@@ -156,6 +150,6 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
     res.status(httpStatus.OK).json({ created_at: now, tweet_id: tweetId })
   } catch (err) {
     logIntegrationError("top-trending", "internal", err)
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: errorMessage(err), integration: "internal" } satisfies ApiErrorBody)
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: err instanceof Error ? err.message : String(err), integration: "internal" } satisfies ApiErrorBody)
   }
 }

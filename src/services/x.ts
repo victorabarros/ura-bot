@@ -44,6 +44,7 @@ async function getBotUserId(): Promise<string> {
  * @see docs/3rd-parties/twitter-x-dot-com.md
  */
 export async function checkXHealth(): Promise<void> {
+  console.log("[health] checking X connectivity")
   await client.v2.me()
 }
 

@@ -53,14 +53,6 @@ async function getHolidays(): Promise<HolidayEntry[]> {
   }
 }
 
-function todayString(now: Date): string {
-  return moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
-}
-
-function currentTimeString(now: Date): string {
-  return moment(now).tz(MARKET_TZ).format("HH:mm")
-}
-
 /**
  * True when the NY date is a full holiday or inside an early-close window.
  * Loads calendar from Finnhub with a static fallback.
@@ -70,13 +62,13 @@ function currentTimeString(now: Date): string {
  */
 export async function isHoliday(now: Date): Promise<boolean> {
   const holidays = await getHolidays()
-  const today = todayString(now)
+  const today = moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
   const entry = holidays.find(h => h.atDate === today)
   if (!entry) return false
 
   if (entry.tradingHour === "") return true
 
-  const currentTime = currentTimeString(now)
+  const currentTime = moment(now).tz(MARKET_TZ).format("HH:mm")
   const [start, end] = entry.tradingHour.split("-")
   return currentTime >= start && currentTime <= end
 }
@@ -84,6 +76,6 @@ export async function isHoliday(now: Date): Promise<boolean> {
 /** Returns today's holiday entry in NY, if any. */
 export async function getHolidayEntry(now: Date): Promise<HolidayEntry | undefined> {
   const holidays = await getHolidays()
-  const today = todayString(now)
+  const today = moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
   return holidays.find(h => h.atDate === today)
 }

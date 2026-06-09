@@ -4,7 +4,7 @@ import config from "../config"
 import { checkFinnhubHealth } from "../services/finnhub"
 import { checkReplicateHealth } from "../services/replicate"
 import { checkXHealth } from "../services/x"
-import { errorMessage, logIntegrationError } from "../http/errors"
+import { logIntegrationError } from "../http/errors"
 
 /** Result of probing one upstream dependency. */
 export type DependencyStatus = { ok: true } | { ok: false; error: string }
@@ -25,7 +25,7 @@ async function probe(integration: string, check: () => Promise<void>): Promise<D
     return { ok: true }
   } catch (err) {
     logIntegrationError("healthcheck", integration, err)
-    return { ok: false, error: errorMessage(err) }
+    return { ok: false, error: err instanceof Error ? err.message : String(err) }
   }
 }
 

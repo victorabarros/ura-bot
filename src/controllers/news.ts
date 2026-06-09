@@ -1,16 +1,19 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import { isFinnhubRateLimited, searchNews, NewsItem } from "../services/finnhub"
+import axios from "axios"
+import moment from "moment-timezone"
+import { searchNews, NewsItem } from "../services/finnhub"
 import { generateNewsComment } from "../services/replicate"
-import { STOCKS, buildNewsMessage, formatDateYMD } from "../domain/stocks"
+import { STOCKS } from "../domain/stocks"
 import { buildPostApiResponse, fanout, fanoutHadSuccess } from "../fanout"
 import {
   ApiErrorBody,
-  errorMessage,
   logIntegrationError,
   respondSocialPublishFailed,
 } from "../http/errors"
 import { getSocialTargets } from "./targets"
+
+const MARKET_TZ = "America/New_York"
 
 /** 7d then 30d — skip 1d (usually empty). At most one call per ticker per window. */
 const NEWS_LOOKBACK_DAYS = [7, 30] as const
@@ -37,12 +40,12 @@ function shuffledStocks(): string[] {
 }
 
 async function findRecentNews(now: Date): Promise<FindNewsOutcome> {
-  const toDate = formatDateYMD(now)
+  const toDate = moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
   let hadSuccessfulCall = false
   let errorCount = 0
 
   for (const lookbackDays of NEWS_LOOKBACK_DAYS) {
-    const fromDate = formatDateYMD(subtractDays(now, lookbackDays))
+    const fromDate = moment(subtractDays(now, lookbackDays)).tz(MARKET_TZ).format("YYYY-MM-DD")
 
     for (const symbol of shuffledStocks()) {
       try {
@@ -55,7 +58,7 @@ async function findRecentNews(now: Date): Promise<FindNewsOutcome> {
           }
         }
       } catch (err) {
-        if (isFinnhubRateLimited(err)) {
+        if (axios.isAxiosError(err) && err.response?.status === 429) {
           logIntegrationError("news", "finnhub", err)
           return { status: "rate_limited" }
         }
@@ -106,7 +109,7 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
       return
     }
 
-    const message = buildNewsMessage(comment, news.url)
+    const message = [comment, "", "#Uranium☢️", news.url].join("\n")
     const posts = await fanout(message, getSocialTargets())
     if (!fanoutHadSuccess(posts)) {
       respondSocialPublishFailed(res, posts)
@@ -116,6 +119,6 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
     res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
   } catch (err) {
     logIntegrationError("news", "internal", err)
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: errorMessage(err), integration: "internal" } satisfies ApiErrorBody)
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: err instanceof Error ? err.message : String(err), integration: "internal" } satisfies ApiErrorBody)
   }
 }

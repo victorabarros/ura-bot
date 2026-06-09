@@ -3,8 +3,6 @@ import {
   buildSignature,
   buildStockMessages,
   buildHolidayMessage,
-  buildNewsMessage,
-  formatDateYMD,
   PostContext,
 } from "../../src/domain/stocks"
 import { Quote } from "../../src/services/finnhub"
@@ -141,23 +139,3 @@ describe("buildHolidayMessage", () => {
   })
 })
 
-describe("buildNewsMessage", () => {
-  it("joins comment, blank line, hashtag, and URL", () => {
-    const msg = buildNewsMessage("Great news!", "https://example.com/article")
-    expect(msg).toBe("Great news!\n\n#Uranium☢️\nhttps://example.com/article")
-  })
-})
-
-describe("formatDateYMD", () => {
-  it("formats a UTC date as YYYY-MM-DD in NY timezone", () => {
-    // 2024-03-15T04:00:00Z = 2024-03-15T00:00:00 ET
-    const result = formatDateYMD(new Date("2024-03-15T04:00:00Z"))
-    expect(result).toBe("2024-03-15")
-  })
-
-  it("adjusts for UTC midnight being previous day in NY (UTC-5 in winter)", () => {
-    // 2024-01-15T02:00:00Z = 2024-01-14T21:00:00 ET (still previous day)
-    const result = formatDateYMD(new Date("2024-01-15T02:00:00Z"))
-    expect(result).toBe("2024-01-14")
-  })
-})

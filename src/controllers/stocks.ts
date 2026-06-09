@@ -1,13 +1,13 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import { getQuote, isFinnhubRateLimited } from "../services/finnhub"
+import axios from "axios"
+import { getQuote } from "../services/finnhub"
 import { isHoliday, getHolidayEntry } from "../domain/holidays"
 import { getPostContext } from "../domain/context"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
 import { buildPostApiResponse, fanoutAll, fanoutHadSuccess } from "../fanout"
 import {
   ApiErrorBody,
-  errorMessage,
   logIntegrationError,
   respondSocialPublishFailed,
 } from "../http/errors"
@@ -50,7 +50,7 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
 
     if (quotes.length === 0) {
       const allRateLimited =
-        rejected.length > 0 && rejected.every((r) => isFinnhubRateLimited(r.reason))
+        rejected.length > 0 && rejected.every((r) => axios.isAxiosError(r.reason) && r.reason?.response?.status === 429)
       if (allRateLimited) {
         res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Finnhub rate limit exceeded", integration: "finnhub" } satisfies ApiErrorBody)
         return
@@ -74,6 +74,6 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
     res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
   } catch (err) {
     logIntegrationError("stocks", "internal", err)
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: errorMessage(err), integration: "internal" } satisfies ApiErrorBody)
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: err instanceof Error ? err.message : String(err), integration: "internal" } satisfies ApiErrorBody)
   }
 }
