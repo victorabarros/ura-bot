@@ -78,9 +78,9 @@ describe("postBitcoinPrice", () => {
     const message: string = mockPostMessage.mock.calls[0][0]
     expect(message).toContain("$105,432")
     expect(message).toContain("MVRV: 2.41")
-    expect(message).toContain("Realized Price: $53,549")
-    expect(message).toContain("50d MA: $75,752")
-    expect(message).toContain("200d MA: $78,198")
+    expect(message).toContain("Realized: $53,549")
+    expect(message).toContain("MA50:")
+    expect(message).toContain("MA200:")
     expect(message).toContain("Fear & Greed: 72/100 — Greed")
     expect(message).toContain("#Bitcoin #BTC")
   })

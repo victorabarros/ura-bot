@@ -81,22 +81,25 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
   const arrow = market.change24hPct >= 0 ? "📈" : "📉"
 
   const lines: string[] = [
-    `₿ Bitcoin — ${moment(now).format("MMM D, YYYY")}`,
+    `₿itcoin — ${moment(now).format("MMM D, YYYY")}`,
     "",
-    `${fmtPrice(market.priceUsd)} (${sign}${market.change24hPct.toFixed(2)}% 24h) ${arrow}`,
-    `Mkt Cap: ${fmtCompact(market.marketCapUsd)} | Vol: ${fmtCompact(market.volume24hUsd)}/24h`,
+    `${fmtPrice(market.priceUsd)}  ${sign}${market.change24hPct.toFixed(2)}% 24h ${arrow}`,
+    `Cap: ${fmtCompact(market.marketCapUsd)} · Vol: ${fmtCompact(market.volume24hUsd)}`,
   ]
 
   if (onchain) {
     lines.push("")
-    lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}`)
-    lines.push(`Realized Price: ${fmtPrice(onchain.realizedPriceUsd)}`)
-    lines.push(`50d Moving Average Price: ${fmtPrice(onchain.sma55dUsd)} ${market.priceUsd >= onchain.sma55dUsd ? "🟢" : "🔴"}`)
-    lines.push(`200d Moving Average Price: ${fmtPrice(onchain.sma200dUsd)} ${market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"}`)
+    lines.push("📐 On-Chain")
+    lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}  ·  Realized: ${fmtPrice(onchain.realizedPriceUsd)}`)
+    lines.push("")
+    lines.push("📊 Technicals")
+    lines.push(`MA50:  ${fmtPrice(onchain.sma55dUsd)} ${market.priceUsd >= onchain.sma55dUsd ? "🟢" : "🔴"}`)
+    lines.push(`MA200: ${fmtPrice(onchain.sma200dUsd)} ${market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"}`)
   }
 
   if (fearGreed) {
-    if (!onchain) lines.push("")
+    lines.push("")
+    lines.push("🧠 Sentiment")
     lines.push(`Fear & Greed: ${fearGreed.value}/100 — ${fearGreed.classification} ${fearGreedEmoji(fearGreed.value)}`)
   }
 
