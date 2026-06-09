@@ -30,7 +30,7 @@ export const postUraStock = async (_req: Request, res: Response): Promise<void> 
           generateHolidayImage(entry.eventName, now),
           entry.message
             ? Promise.resolve(undefined)
-            : generateComment(`Write a short post (up to 200 characters) wishing happy ${entry.eventName} ${now.getFullYear()} to uranium investors (don't use hashtag with uranium word)`),
+            : generateComment(`Write a short post (up to 150 characters) wishing happy ${entry.eventName} ${now.getFullYear()} to uranium investors (don't use hashtag with uranium word)`),
         ])
 
         const imageUrl = imgResult.status === "fulfilled"

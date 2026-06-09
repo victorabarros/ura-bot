@@ -74,7 +74,7 @@ export const postTopTrending = async (_req: Request, res: Response): Promise<voi
       let comment: string
       try {
         comment = await generateComment(
-          `Write a post (up to 200 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): ${JSON.stringify(ranked.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))}`
+          `Write a post (up to 150 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): ${JSON.stringify(ranked.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))}`
         )
       } catch (err) {
         logIntegrationError("top-trending", "replicate", err)
@@ -123,7 +123,7 @@ export const postTopTrending = async (_req: Request, res: Response): Promise<voi
     try {
       const posts = tweets.length > 0 ? tweets : mentions
       comment = await generateComment(
-        `Write a post (up to 200 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): ${JSON.stringify(posts.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))}`
+        `Write a post (up to 150 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): ${JSON.stringify(posts.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))}`
       )
     } catch (err) {
       logIntegrationError("top-trending", "replicate", err)
