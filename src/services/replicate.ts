@@ -42,14 +42,14 @@ export const generateComment = async (prompt: string): Promise<string> => {
 
   const input = MODEL.startsWith("openai/")
     ? {
-        system_prompt: SYSTEM_PROMPT,
-        prompt,
-        temperature: gen.temperature,
-        top_p: gen.top_p,
-        max_completion_tokens: gen.max_tokens,
-        presence_penalty: gen.presence_penalty,
-        frequency_penalty: gen.frequency_penalty,
-      }
+      system_prompt: SYSTEM_PROMPT,
+      prompt,
+      temperature: gen.temperature,
+      top_p: gen.top_p,
+      max_completion_tokens: gen.max_tokens,
+      presence_penalty: gen.presence_penalty,
+      frequency_penalty: gen.frequency_penalty,
+    }
     : { ...gen, prompt, system_prompt: SYSTEM_PROMPT }
 
   const output = await replicate.run(MODEL as `${string}/${string}`, { input })
@@ -74,7 +74,7 @@ export const generateComment = async (prompt: string): Promise<string> => {
  */
 export const generateImage = async (prompt: string): Promise<string> => {
   const output = await replicate.run(IMAGE_MODEL as `${string}/${string}`, {
-    input: { prompt, aspect_ratio: "1:1", output_format: "jpg", temperature: 1.0 },
+    input: { prompt, aspect_ratio: "1:1", output_format: "jpg", temperature: .7 },
   })
   const url = Array.isArray(output) ? String(output[0]) : String(output)
   if (!url) throw new Error("No image URL returned by image model")

@@ -110,17 +110,23 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
     /** 20% of the time, generate a satirical illustration to attach to the post. */
     let imageUrl: string | undefined
     if (Math.random() <= 0.2) {
-      // if (true) {
       try {
         imageUrl = await generateImage(
-          `Satirical and minimalist editorial cartoon inspired by this uranium market headline: "${news.headline}". Single focal point, clean composition, flat colors, no text or words in image, simple and bold illustration`
+          `Satirical editorial cartoon inspired by this uranium market headline: "${news.headline}". Bold colors, dramatic lighting, fun and irreverent tone, no text or words in image, high quality illustration. Also elegant and minimalistic.`
         )
       } catch (err) {
         console.warn("[news] Image generation failed, posting without image:", (err as Error).message)
       }
     }
 
-    const message = [news.headline, "", comment, "", "#Uranium☢️", news.url].join("\n")
+    const boldHeadline = [...news.headline].map(c => {
+      const n = c.codePointAt(0) ?? 0
+      if (n >= 65 && n <= 90) return String.fromCodePoint(n + 0x1D400 - 65)  // A–Z
+      if (n >= 97 && n <= 122) return String.fromCodePoint(n + 0x1D41A - 97) // a–z
+      if (n >= 48 && n <= 57) return String.fromCodePoint(n + 0x1D7CE - 48)  // 0–9
+      return c
+    }).join("")
+    const message = [boldHeadline, comment, "", "#Uranium☢️", news.url].join("\n")
     const posts = await fanout(message, SOCIAL_TARGETS, imageUrl)
     if (!fanoutHadSuccess(posts)) {
       respondSocialPublishFailed(res, posts)
