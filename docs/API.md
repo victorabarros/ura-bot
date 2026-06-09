@@ -163,38 +163,6 @@ Error bodies: `{ "error": "<message>", "integration": "finnhub" | "replicate" | 
 
 ---
 
-### `POST /urabot/top-trending`
-
-Searches recent uranium-related tweets on X, picks the highest-engagement one,
-generates an LLM reaction comment in the UraBot voice, and **quote-tweets** the
-original post with that comment.
-
-Uses the query `(uranium OR $UEC OR $CCJ OR $URA OR $URNM) -is:retweet lang:en`
-sorted by relevancy. Requires at minimum the **Basic** X API access tier.
-
-**Auth:** API key required.
-
-**Response `200 OK`**
-
-```json
-{
-  "created_at": "<ISO-8601 timestamp>",
-  "tweet_id": "<id of the new quote tweet>",
-  "quoted_tweet_id": "<id of the original tweet that was quoted>"
-}
-```
-
-**Response `204 No Content`** – X search returned no tweets.
-
-**Response `503 Service Unavailable`** – X tweet search failed, X quote tweet
-failed, or Replicate comment generation failed.
-
-**Response `500 Internal Server Error`** – unexpected internal error.
-
-Error bodies: `{ "error": "<message>", "integration": "x" | "replicate" | "internal" }`.
-
----
-
 ## X credentials
 
 UraBot is a headless server-side bot — there is no interactive OAuth flow.

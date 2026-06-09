@@ -3,7 +3,6 @@ import { heartbeat } from "./controllers/heartbeat"
 import { healthcheck } from "./controllers/healthcheck"
 import { postUraStock } from "./controllers/stocks"
 import { postUraNews } from "./controllers/news"
-import { postTopTrending } from "./controllers/top-trending"
 import { getLatestUraPost } from "./controllers/latestPost"
 
 const router = Router()
@@ -18,6 +17,5 @@ router.get("/urabot/latest-post", getLatestUraPost)
 // Uranium bot actions — require API key (enforced by authMiddleware)
 router.post("/urabot/stocks", postUraStock)
 router.post("/urabot/news", postUraNews)
-router.post("/urabot/top-trending", postTopTrending)
 
 export default router

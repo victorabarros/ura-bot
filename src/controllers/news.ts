@@ -99,7 +99,7 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
     let comment: string
     try {
       comment = await generateComment(
-        `Write a post (up to 150 characters) about the news (don't use hashtag with uranium word): ${JSON.stringify(news)}`
+        `Write a post (up to 120 characters) about the news (don't use hashtag with uranium word): ${JSON.stringify(news)}`
       )
     } catch (err) {
       logIntegrationError("news", "replicate", err)
@@ -109,7 +109,7 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
 
     /** 20% of the time, generate a satirical illustration to attach to the post. */
     let imageUrl: string | undefined
-    if (Math.random() < 0.2) {
+    if (Math.random() <= 0.2) {
       try {
         imageUrl = await generateImage(
           `Satirical editorial cartoon inspired by this uranium market headline: "${news.headline}". Bold colors, dramatic lighting, fun and irreverent tone, no text or words in image, high quality illustration`
@@ -119,7 +119,7 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
       }
     }
 
-    const message = [comment, "", "#Uranium☢️", news.url].join("\n")
+    const message = [news.headline, "", comment, "", "#Uranium☢️", news.url].join("\n")
     const posts = await fanout(message, SOCIAL_TARGETS, imageUrl)
     if (!fanoutHadSuccess(posts)) {
       respondSocialPublishFailed(res, posts)
