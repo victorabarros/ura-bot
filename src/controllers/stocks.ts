@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import axios from "axios"
 import { getQuote } from "../services/finnhub"
+import { generateHolidayImage } from "../services/replicate"
 import { isHoliday, getHolidayEntry } from "../domain/holidays"
 import { getPostContext } from "../domain/context"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
@@ -26,7 +27,11 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
     if (await isHoliday(now)) {
       const entry = await getHolidayEntry(now)
       if (entry) {
-        const message = buildHolidayMessage(entry.eventName, entry.message, now, ctx)
+        const imageUrl = await generateHolidayImage(entry.eventName).catch((err: unknown) => {
+          console.warn("[stocks] Holiday image generation failed:", err instanceof Error ? err.message : String(err))
+          return undefined
+        })
+        const message = buildHolidayMessage(entry.eventName, entry.message, now, ctx, imageUrl)
         const posts = await fanoutAll([message], getSocialTargets())
         const flat = posts.flat()
         if (!fanoutHadSuccess(posts)) {

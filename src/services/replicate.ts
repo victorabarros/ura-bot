@@ -4,6 +4,7 @@ import { NewsItem } from "./finnhub"
 import { TweetResult } from "./x"
 
 const MODEL = "meta/meta-llama-3-70b-instruct"
+const IMAGE_MODEL = "google/nano-banana-2"
 
 /** Persona voice — verbatim from legacy `ReplicateAIService` (URABOT). */
 const SYSTEM_PROMPT = `
@@ -86,6 +87,23 @@ export async function generateTrendingComment(tweets: TweetResult[]): Promise<st
 
   const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
   return parseModelOutput(output)
+}
+
+/**
+ * Generates a holiday-themed image using the Nano Banana 2 image model.
+ * Returns the URL of the generated image.
+ *
+ * @see https://replicate.com/google/nano-banana-2
+ * @see docs/3rd-parties/replicate-ai.md
+ */
+export async function generateHolidayImage(holidayName: string): Promise<string> {
+  const prompt = `Festive ${holidayName} celebration, nuclear energy and uranium market theme, dynamic digital art, vivid colors, high quality`
+  const output = await replicate.run(IMAGE_MODEL as `${string}/${string}`, {
+    input: { prompt, aspect_ratio: "1:1", output_format: "jpg" },
+  })
+  const url = Array.isArray(output) ? String(output[0]) : String(output)
+  if (!url) throw new Error(`No image returned for holiday: ${holidayName}`)
+  return url
 }
 
 /**

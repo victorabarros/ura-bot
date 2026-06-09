@@ -65,11 +65,12 @@ export function buildStockMessages(quotes: Quote[], now: Date, ctx: PostContext)
   return messages
 }
 
-/** Holiday post with optional custom copy and standard signature. */
-export function buildHolidayMessage(holidayName: string, customMessage: string | undefined, now: Date, ctx: PostContext): string {
+/** Holiday post with optional custom copy, optional image URL, and standard signature. */
+export function buildHolidayMessage(holidayName: string, customMessage: string | undefined, now: Date, ctx: PostContext, imageUrl?: string): string {
   const parts: string[] = []
   if (ctx.isMorning) parts.push("Good Morning, everyone!")
   parts.push(customMessage ?? `Today is ${holidayName}`)
+  if (imageUrl) parts.push(imageUrl)
   parts.push(buildSignature(now))
   return parts.filter(Boolean).join("\n\n")
 }

@@ -7,6 +7,12 @@ jest.mock("../../src/services/finnhub", () => ({
   getMarketHolidays: jest.fn(),
   checkFinnhubHealth: jest.fn(),
 }))
+jest.mock("../../src/services/replicate", () => ({
+  generateHolidayImage: jest.fn(),
+  generateNewsComment: jest.fn(),
+  generateTrendingComment: jest.fn(),
+  checkReplicateHealth: jest.fn(),
+}))
 jest.mock("../../src/domain/holidays", () => ({
   isHoliday: jest.fn(),
   getHolidayEntry: jest.fn(),
@@ -21,11 +27,13 @@ jest.mock("../../src/controllers/targets", () => ({
 }))
 
 import { getQuote } from "../../src/services/finnhub"
+import { generateHolidayImage } from "../../src/services/replicate"
 import { isHoliday, getHolidayEntry } from "../../src/domain/holidays"
 import { fanoutAll, fanoutHadSuccess, buildPostApiResponse } from "../../src/fanout"
 import { Quote } from "../../src/services/finnhub"
 
 const mockGetQuote = getQuote as jest.MockedFunction<typeof getQuote>
+const mockGenerateHolidayImage = generateHolidayImage as jest.MockedFunction<typeof generateHolidayImage>
 const mockIsHoliday = isHoliday as jest.MockedFunction<typeof isHoliday>
 const mockGetHolidayEntry = getHolidayEntry as jest.MockedFunction<typeof getHolidayEntry>
 const mockFanoutAll = fanoutAll as jest.MockedFunction<typeof fanoutAll>
@@ -48,6 +56,7 @@ const req = {} as Request
 beforeEach(() => {
   jest.clearAllMocks()
   mockIsHoliday.mockResolvedValue(false)
+  mockGenerateHolidayImage.mockResolvedValue("https://replicate.delivery/holiday.jpg")
   mockFanoutAll.mockResolvedValue([[{ platform: "X", success: true, id: "tweet-1" }]])
   mockFanoutHadSuccess.mockReturnValue(true)
   mockBuildPostApiResponse.mockReturnValue({ created_at: new Date(), tweet_id: "tweet-1" })
@@ -55,7 +64,7 @@ beforeEach(() => {
 
 describe("postUraStock", () => {
   describe("holiday branch", () => {
-    it("posts a holiday message and returns 200 when it is a holiday", async () => {
+    it("posts a holiday message with image URL and returns 200", async () => {
       mockIsHoliday.mockResolvedValue(true)
       mockGetHolidayEntry.mockResolvedValue({
         eventName: "Independence Day",
@@ -67,7 +76,27 @@ describe("postUraStock", () => {
       const { res, status } = makeMockRes()
       await postUraStock(req, res)
 
+      expect(mockGenerateHolidayImage).toHaveBeenCalledWith("Independence Day")
+      const [messages] = mockFanoutAll.mock.calls[0]
+      expect(messages[0]).toContain("https://replicate.delivery/holiday.jpg")
+      expect(status).toHaveBeenCalledWith(200)
+    })
+
+    it("still posts holiday message when image generation fails", async () => {
+      mockIsHoliday.mockResolvedValue(true)
+      mockGetHolidayEntry.mockResolvedValue({
+        eventName: "Labor Day",
+        atDate: "2026-09-07",
+        tradingHour: "",
+      })
+      mockGenerateHolidayImage.mockRejectedValue(new Error("Replicate timeout"))
+
+      const { res, status } = makeMockRes()
+      await postUraStock(req, res)
+
       expect(mockFanoutAll).toHaveBeenCalled()
+      const [messages] = mockFanoutAll.mock.calls[0]
+      expect(messages[0]).not.toContain("http")
       expect(status).toHaveBeenCalledWith(200)
     })
 
