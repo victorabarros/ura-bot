@@ -21,6 +21,7 @@ One endpoint is **exempt** from this check:
 | Group | Endpoint |
 |---|---|
 | Health / monitoring | `GET /heartbeat`, `GET /healthcheck` |
+| Public read | `GET /urabot/latest-post` |
 
 ---
 
@@ -72,6 +73,30 @@ posting). No authentication required.
 ```
 
 Failures are logged server-side with integration name and API detail when available.
+
+---
+
+### `GET /urabot/latest-post`
+
+Returns the bot's most recent original post from X (excludes retweets and replies).
+No authentication required.
+
+**Response `200 OK`**
+
+```json
+{
+  "id": "1234567890123456789",
+  "text": "CCJ     45.23 +1.25% 📈\n...\n#Uranium☢️",
+  "createdAt": "2026-06-08T22:05:00.000Z",
+  "url": "https://x.com/ura_bot/status/1234567890123456789"
+}
+```
+
+**Response `503 Service Unavailable`** — X API unreachable or no posts found.
+
+```json
+{ "error": "<message>", "integration": "x" }
+```
 
 ---
 

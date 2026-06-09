@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import httpStatus from "http-status"
 import config from "../config"
 
-const UNAUTHENTICATED_PATHS = new Set(["/heartbeat", "/healthcheck"])
+const UNAUTHENTICATED_PATHS = new Set(["/heartbeat", "/healthcheck", "/urabot/latest-post"])
 
 /**
  * Requires API key on all paths except `/heartbeat` and `/healthcheck`.

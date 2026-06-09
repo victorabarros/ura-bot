@@ -46,14 +46,46 @@ function mapTweet(tweet: {
   }
 }
 
-/** Lazily resolved user ID for the authenticated bot account. */
-let _botUserId: string | undefined
+/** Cached identity of the authenticated bot account. */
+let _botUser: { id: string; username: string } | undefined
+
+async function getBotUser(): Promise<{ id: string; username: string }> {
+  if (_botUser) return _botUser
+  const { data } = await client.v2.me()
+  _botUser = { id: data.id, username: data.username }
+  return _botUser
+}
 
 async function getBotUserId(): Promise<string> {
-  if (_botUserId) return _botUserId
-  const { data } = await client.v2.me()
-  _botUserId = data.id
-  return _botUserId
+  return (await getBotUser()).id
+}
+
+export type LatestPost = {
+  id: string
+  text: string
+  createdAt: string
+  url: string
+}
+
+/**
+ * Returns the most recent original post from the bot's own timeline.
+ * Excludes retweets and replies.
+ */
+export async function getLatestPost(): Promise<LatestPost> {
+  const { id, username } = await getBotUser()
+  const { data } = await client.v2.userTimeline(id, {
+    max_results: 5,
+    exclude: ["retweets", "replies"],
+    "tweet.fields": ["created_at"],
+  })
+  const tweet = data.data?.[0]
+  if (!tweet) throw new Error("No posts found on this account")
+  return {
+    id: tweet.id,
+    text: tweet.text,
+    createdAt: tweet.created_at ?? new Date().toISOString(),
+    url: `https://x.com/${username}/status/${tweet.id}`,
+  }
 }
 
 /**

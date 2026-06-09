@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UraBot ☢️</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #080808;
+      --surface:  #111111;
+      --border:   #1e1e1e;
+      --green:    #a3e635;
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+      --danger:   #f87171;
+      --radius:   12px;
+      --mono:     "Geist Mono", "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+      --sans:     "Inter", "Segoe UI", system-ui, sans-serif;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px 32px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* ── Hero ── */
+    .hero { text-align: center; }
+
+    .hero-icon {
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .hero p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .hero-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: var(--green);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid var(--green);
+      border-radius: 999px;
+      padding: 6px 16px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .hero-link:hover {
+      background: var(--green);
+      color: var(--bg);
+    }
+
+    /* ── Widget ── */
+    .widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .widget-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .widget-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .live-dot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--green);
+      font-weight: 500;
+    }
+    .live-dot::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    .live-dot.stale { color: var(--danger); }
+    .live-dot.stale::before { background: var(--danger); animation: none; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── Post card body ── */
+    .post-body { padding: 20px 18px; }
+
+    .post-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .author-info { display: flex; flex-direction: column; gap: 1px; }
+
+    .author-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .author-handle {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .post-text {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .post-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .post-time {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .view-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--green);
+      text-decoration: none;
+    }
+    .view-link:hover { text-decoration: underline; }
+
+    /* ── Loading / error states ── */
+    .state-message {
+      padding: 40px 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .error-text { color: var(--danger); }
+
+    /* ── Footer ── */
+    .page-footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    #last-updated { display: block; }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="hero">
+      <span class="hero-icon">☢️</span>
+      <h1>UraBot</h1>
+      <p>A bot that tracks and broadcasts uranium market quotes to X and beyond.</p>
+      <a class="hero-link" id="profile-link" href="https://x.com" target="_blank" rel="noopener">
+        Follow on X →
+      </a>
+    </header>
+
+    <section class="widget" id="widget">
+      <div class="widget-header">
+        <span class="widget-label">Latest Post</span>
+        <span class="live-dot" id="status-dot">Live</span>
+      </div>
+      <div class="state-message" id="loading">Loading…</div>
+    </section>
+
+    <footer class="page-footer">
+      <span id="last-updated"></span>
+      Refreshes every 5 minutes
+    </footer>
+
+  </div>
+
+  <script>
+    const ENDPOINT = "/urabot/latest-post"
+    const REFRESH_MS = 5 * 60 * 1000
+
+    const widget   = document.getElementById("widget")
+    const dot      = document.getElementById("status-dot")
+    const updated  = document.getElementById("last-updated")
+    const profLink = document.getElementById("profile-link")
+
+    let lastPost = null
+
+    function formatDate(iso) {
+      try {
+        return new Date(iso).toLocaleString("en-US", {
+          month: "short", day: "numeric", year: "numeric",
+          hour: "2-digit", minute: "2-digit",
+        })
+      } catch { return iso }
+    }
+
+    function renderPost(post) {
+      const handle = post.url.match(/x\.com\/([^/]+)\//)?.[1] ?? "ura_bot"
+
+      profLink.href = `https://x.com/${handle}`
+      profLink.textContent = `@${handle} on X →`
+
+      widget.innerHTML = `
+        <div class="widget-header">
+          <span class="widget-label">Latest Post</span>
+          <span class="live-dot" id="status-dot">Live</span>
+        </div>
+        <div class="post-body">
+          <div class="post-author">
+            <div class="avatar">☢️</div>
+            <div class="author-info">
+              <span class="author-name">UraBot</span>
+              <span class="author-handle">@${handle}</span>
+            </div>
+          </div>
+          <p class="post-text">${escHtml(post.text)}</p>
+        </div>
+        <div class="post-footer">
+          <span class="post-time">${formatDate(post.createdAt)}</span>
+          <a class="view-link" href="${escAttr(post.url)}" target="_blank" rel="noopener">
+            View on X →
+          </a>
+        </div>
+      `
+    }
+
+    function renderError(stale) {
+      dot.className = "live-dot stale"
+      dot.textContent = "Stale"
+      if (!stale) {
+        widget.innerHTML = `
+          <div class="widget-header">
+            <span class="widget-label">Latest Post</span>
+            <span class="live-dot stale">Stale</span>
+          </div>
+          <div class="state-message error-text">Could not reach the server. Retrying…</div>
+        `
+      }
+    }
+
+    function escHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+    }
+
+    function escAttr(str) {
+      return str.replace(/"/g, "&quot;")
+    }
+
+    async function refresh() {
+      try {
+        const res = await fetch(ENDPOINT)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const post = await res.json()
+        lastPost = post
+        renderPost(post)
+        dot.className = "live-dot"
+        dot.textContent = "Live"
+        updated.textContent = `Last updated: ${formatDate(new Date().toISOString())} · `
+      } catch {
+        renderError(!!lastPost)
+        updated.textContent = `Failed to refresh · `
+      }
+    }
+
+    refresh()
+    setInterval(refresh, REFRESH_MS)
+  </script>
+</body>
+</html>
