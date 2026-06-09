@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import { uraBotXService, TweetResult } from "../services/x"
 import { generateTrendingComment } from "../services/replicate"
+import { URANIUM_SEARCH_QUERY } from "../domain/stocks"
 import { ApiErrorBody, logIntegrationError } from "../http/errors"
 
 const xService = uraBotXService
@@ -107,7 +108,7 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
     // --- Step 2: fallback — trending search + plain post ---
     let tweets: TweetResult[] = []
     try {
-      tweets = await xService.searchTweets(10)
+      tweets = await xService.searchTweets(URANIUM_SEARCH_QUERY, 10)
     } catch (err) {
       logIntegrationError("top-trending", "x/search", err)
       res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "X tweet search failed", integration: "x" } satisfies ApiErrorBody)

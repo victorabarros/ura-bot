@@ -28,9 +28,6 @@ export type LatestPost = {
   url: string
 }
 
-/** Default uranium search query — high-signal tickers, no retweets, English only. */
-const URANIUM_QUERY = "(uranium OR $UEC OR $CCJ OR $URA OR $URNM) -is:retweet lang:en"
-
 const TWEET_FIELDS: ("created_at" | "public_metrics" | "author_id" | "reply_settings")[] = [
   "created_at", "public_metrics", "author_id", "reply_settings",
 ]
@@ -163,13 +160,13 @@ export class XService implements ISocialService {
   }
 
   /**
-   * Searches recent tweets about uranium, sorted by relevancy.
+   * Searches recent tweets matching `query`, sorted by relevancy.
    * Requires at minimum the Basic X API access tier.
    *
    * @see https://developer.x.com/en/docs/twitter-api/tweets/search/introduction
    */
-  async searchTweets(limit = 10): Promise<TweetResult[]> {
-    const { data } = await this.client.v2.search(URANIUM_QUERY, {
+  async searchTweets(query: string, limit = 10): Promise<TweetResult[]> {
+    const { data } = await this.client.v2.search(query, {
       max_results: Math.min(Math.max(limit, 10), 100),
       "tweet.fields": TWEET_FIELDS,
       sort_order: "relevancy",

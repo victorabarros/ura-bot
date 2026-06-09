@@ -1,5 +1,8 @@
 import { Quote } from "../services/finnhub"
 
+/** X search query for high-signal uranium posts — no retweets, English only. */
+export const URANIUM_SEARCH_QUERY = "(uranium OR $UEC OR $CCJ OR $URA OR $URNM) -is:retweet lang:en"
+
 /** Uranium-related tickers fetched for quotes and news sampling. */
 export const STOCKS = [
   "CCJ",   // Cameco — second-largest producer in the world
