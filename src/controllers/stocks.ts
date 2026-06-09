@@ -26,7 +26,7 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
 
     const entry = await getHolidayEntry(now)
     if (entry) {
-        const imageUrl = await generateHolidayImage(entry.eventName).catch((err: unknown) => {
+        const imageUrl = await generateHolidayImage(entry.eventName, now).catch((err: unknown) => {
           console.warn("[stocks] Holiday image generation failed:", err instanceof Error ? err.message : String(err))
           return undefined
         })

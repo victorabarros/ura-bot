@@ -55,7 +55,7 @@ async function getHolidays(): Promise<HolidayEntry[]> {
 
 /** Returns today's holiday entry in NY, if any. */
 export async function getHolidayEntry(now: Date): Promise<HolidayEntry | undefined> {
-  return FALLBACK_HOLIDAYS[0]
+  return FALLBACK_HOLIDAYS[7]
   const holidays = await getHolidays()
   const today = moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
   return holidays.find(h => h.atDate === today)

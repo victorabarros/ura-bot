@@ -96,8 +96,9 @@ export async function generateTrendingComment(tweets: TweetResult[]): Promise<st
  * @see https://replicate.com/google/nano-banana-2
  * @see docs/3rd-parties/replicate-ai.md
  */
-export async function generateHolidayImage(holidayName: string): Promise<string> {
-  const prompt = `Festive ${holidayName} celebration, nuclear energy and uranium market theme, dynamic digital art, vivid colors, high quality`
+export async function generateHolidayImage(holidayName: string, now: Date = new Date()): Promise<string> {
+  const year = now.getFullYear()
+  const prompt = `Festive ${holidayName} ${year} celebration, nuclear energy and uranium market theme, dynamic digital art, vivid colors, high quality`
   const output = await replicate.run(IMAGE_MODEL as `${string}/${string}`, {
     input: { prompt, aspect_ratio: "1:1", output_format: "jpg" },
   })
