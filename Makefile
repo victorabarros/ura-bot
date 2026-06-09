@@ -53,16 +53,16 @@ docker-build:
 
 docker-run: docker-build
 	@make welcome
-	docker run --rm \
+	@docker run --rm \
 		--name $(APP_NAME) \
 		--env-file .env \
 		-p $(PORT):$(PORT) \
 		$(APP_NAME):latest
 
 docker-dev:
-	docker build --target builder -t $(APP_NAME):dev .
+	@docker build --target builder -t $(APP_NAME):dev .
 	@make welcome
-	docker run --rm -it \
+	@docker run --rm -it \
 		--name $(APP_NAME)-dev \
 		--env-file .env \
 		-p $(PORT):$(PORT) \
@@ -72,8 +72,8 @@ docker-dev:
 		npm run dev
 
 docker-test:
-	docker build --target test -t $(APP_NAME):test .
-	docker run --rm --name $(APP_NAME)-test $(APP_NAME):test
+	@docker build --target test -t $(APP_NAME):test .
+	@docker run --rm --name $(APP_NAME)-test $(APP_NAME):test
 
 # ── Git ─────────────────────────────────────────────────────────────────
 
