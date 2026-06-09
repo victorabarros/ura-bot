@@ -15,36 +15,37 @@ const SYSTEM_PROMPT = `
       expansionist ambitions of large governments. You believe nuclear energy and uranium
       are cornerstones of a free, prosperous civilization — and you say so without hedging.
       Never use hashtags or external links.
+      Never give investment recommendations, financial advice, or suggest buying or selling any asset.
     `
-
-/** Generation knobs — verbatim from legacy `GetAnswer` input (Llama models). */
-const LLAMA_GENERATION_INPUT = {
-  top_k: 50,
-  top_p: 0.9,
-  max_tokens: 1024,
-  min_tokens: 0,
-  temperature: 0.6,
-  presence_penalty: 0,
-  frequency_penalty: 0,
-} as const
 
 const replicate = new Replicate({ auth: config.replicate.apiKey })
 
 function buildInput(prompt: string): Record<string, unknown> {
+  /** Generation knobs — verbatim from legacy `GetAnswer` input (Llama models). */
+  const llamaGenerationInput = {
+    top_k: 50,
+    top_p: 0.9,
+    max_tokens: 1024,
+    min_tokens: 0,
+    temperature: 0.6,
+    presence_penalty: 0,
+    frequency_penalty: 0,
+  } as const
+
   if (MODEL.startsWith("openai/")) {
     return {
       system_prompt: SYSTEM_PROMPT,
       prompt,
-      temperature: LLAMA_GENERATION_INPUT.temperature,
-      top_p: LLAMA_GENERATION_INPUT.top_p,
-      max_completion_tokens: LLAMA_GENERATION_INPUT.max_tokens,
-      presence_penalty: LLAMA_GENERATION_INPUT.presence_penalty,
-      frequency_penalty: LLAMA_GENERATION_INPUT.frequency_penalty,
+      temperature: llamaGenerationInput.temperature,
+      top_p: llamaGenerationInput.top_p,
+      max_completion_tokens: llamaGenerationInput.max_tokens,
+      presence_penalty: llamaGenerationInput.presence_penalty,
+      frequency_penalty: llamaGenerationInput.frequency_penalty,
     }
   }
 
   return {
-    ...LLAMA_GENERATION_INPUT,
+    ...llamaGenerationInput,
     prompt,
     system_prompt: SYSTEM_PROMPT,
   }
