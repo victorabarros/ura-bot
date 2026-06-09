@@ -110,9 +110,10 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
     /** 20% of the time, generate a satirical illustration to attach to the post. */
     let imageUrl: string | undefined
     if (Math.random() <= 0.2) {
+      // if (true) {
       try {
         imageUrl = await generateImage(
-          `Satirical editorial cartoon inspired by this uranium market headline: "${news.headline}". Bold colors, dramatic lighting, fun and irreverent tone, no text or words in image, high quality illustration`
+          `Satirical and minimalist editorial cartoon inspired by this uranium market headline: "${news.headline}". Single focal point, clean composition, flat colors, no text or words in image, simple and bold illustration`
         )
       } catch (err) {
         console.warn("[news] Image generation failed, posting without image:", (err as Error).message)

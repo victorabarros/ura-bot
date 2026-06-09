@@ -74,7 +74,7 @@ export const generateComment = async (prompt: string): Promise<string> => {
  */
 export const generateImage = async (prompt: string): Promise<string> => {
   const output = await replicate.run(IMAGE_MODEL as `${string}/${string}`, {
-    input: { prompt, aspect_ratio: "1:1", output_format: "jpg" },
+    input: { prompt, aspect_ratio: "1:1", output_format: "jpg", temperature: 1.0 },
   })
   const url = Array.isArray(output) ? String(output[0]) : String(output)
   if (!url) throw new Error("No image URL returned by image model")
