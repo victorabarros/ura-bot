@@ -52,6 +52,7 @@ docker-build:
 	docker build -t $(APP_NAME):latest .
 
 docker-run: docker-build
+	@make welcome
 	docker run --rm \
 		--name $(APP_NAME) \
 		--env-file .env \
@@ -60,6 +61,7 @@ docker-run: docker-build
 
 docker-dev:
 	docker build --target builder -t $(APP_NAME):dev .
+	@make welcome
 	docker run --rm -it \
 		--name $(APP_NAME)-dev \
 		--env-file .env \
