@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import { XService, TweetResult } from "../services/x"
+import { uraBotXService, TweetResult } from "../services/x"
 import { generateTrendingComment } from "../services/replicate"
 import { ApiErrorBody, logIntegrationError } from "../http/errors"
 
-const xService = new XService()
+const xService = uraBotXService
 
 /** Stop retrying after this many consecutive quote-not-allowed 403s. */
 const MAX_QUOTE_ATTEMPTS = 5
