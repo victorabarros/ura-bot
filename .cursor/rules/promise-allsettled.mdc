@@ -1,0 +1,19 @@
+---
+description: Enforce Promise.allSettled over Promise.all for parallel async operations
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Use `Promise.allSettled` instead of `Promise.all`
+
+Never use `Promise.all` for concurrent async operations. Always use `Promise.allSettled` so that one failure does not abort the others.
+
+```typescript
+// ❌ BAD — one rejection cancels all
+const [a, b] = await Promise.all([fetchA(), fetchB()])
+
+// ✅ GOOD — each settles independently
+const [ra, rb] = await Promise.allSettled([fetchA(), fetchB()])
+const a = ra.status === "fulfilled" ? ra.value : fallback
+const b = rb.status === "fulfilled" ? rb.value : fallback
+```

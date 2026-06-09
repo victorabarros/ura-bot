@@ -34,11 +34,14 @@ async function probe(integration: string, check: () => Promise<void>): Promise<D
  * `200` when all are healthy; `503` when any dependency fails.
  */
 export async function healthcheck(_req: Request, res: Response): Promise<void> {
-  const [finnhub, replicate, x] = await Promise.all([
+  const settled = await Promise.allSettled([
     probe("finnhub", checkFinnhubHealth),
     probe("replicate", checkReplicateHealth),
     probe("x", checkXHealth),
   ])
+  const [finnhub, replicate, x] = settled.map((r) =>
+    r.status === "fulfilled" ? r.value : { ok: false as const, error: String(r.reason) }
+  ) as [DependencyStatus, DependencyStatus, DependencyStatus]
 
   const dependencies = { finnhub, replicate, x }
   const success = finnhub.ok && replicate.ok && x.ok

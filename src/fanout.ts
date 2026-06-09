@@ -79,7 +79,9 @@ export async function fanout(
       })
   )
 
-  return Promise.all(tasks)
+  return (await Promise.allSettled(tasks)).map((r) =>
+    r.status === "fulfilled" ? r.value : { platform: "unknown", success: false, error: String(r.reason) }
+  )
 }
 
 /**
