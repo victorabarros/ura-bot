@@ -4,6 +4,7 @@ import { healthcheck } from "./controllers/healthcheck"
 import { postUraStock } from "./controllers/stocks"
 import { postUraNews } from "./controllers/news"
 import { getLatestUraPost } from "./controllers/latestPost"
+import { postBitcoinPrice } from "./controllers/bitcoinprice"
 
 const router = Router()
 
@@ -17,5 +18,8 @@ router.get("/urabot/latest-post", getLatestUraPost)
 // Uranium bot actions — require API key (enforced by authMiddleware)
 router.post("/urabot/stocks", postUraStock)
 router.post("/urabot/news", postUraNews)
+
+// BitcoinMetrx actions — require API key (enforced by authMiddleware)
+router.post("/bitcoinmetrx/price", postBitcoinPrice)
 
 export default router

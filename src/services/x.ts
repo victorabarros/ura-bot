@@ -177,3 +177,6 @@ export class XService implements ISocialService {
 /** Default UraBot X account — used by controllers that are not account-specific. */
 export const uraBotXService = new XService(config.x.urabot)
 
+/** BitcoinMetrx X account — used by the bitcoin price controller. */
+export const bitcoinmetrxXService = new XService(config.x.bitcoinmetrx)
+

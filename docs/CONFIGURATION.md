@@ -51,6 +51,23 @@ See `docs/3rd-parties/twitter-x-dot-com.md`.
 
 ---
 
+## BitcoinMetrx X / Twitter (social platform)
+
+Credentials for the `bitcoinmetrx` X account — used by `POST /bitcoinmetrx/price`.
+All four values are on the **"Keys and Tokens"** tab of the app in
+[developer.x.com](https://developer.x.com).
+
+| Variable | Required | Where to find it |
+|---|---|---|
+| `BITCOINMETRX_X_CONSUMER_KEY` | **Yes** | "API Key" under "Consumer Keys" |
+| `BITCOINMETRX_X_CONSUMER_KEY_SECRET` | **Yes** | "API Key Secret" under "Consumer Keys" |
+| `BITCOINMETRX_X_ACCESS_TOKEN` | **Yes** | "Access Token" under "Authentication Tokens" |
+| `BITCOINMETRX_X_ACCESS_TOKEN_SECRET` | **Yes** | "Access Token Secret" under "Authentication Tokens" |
+
+See `docs/3rd-parties/twitter-x-dot-com.md`.
+
+---
+
 ## Replicate AI (LLM)
 
 | Variable | Required | Description |

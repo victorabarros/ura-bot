@@ -10,6 +10,10 @@ const REQUIRED_VARS = [
   "URA_BOT_X_CONSUMER_KEY_SECRET",
   "URA_BOT_X_ACCESS_TOKEN",
   "URA_BOT_X_ACCESS_TOKEN_SECRET",
+  "BITCOINMETRX_X_CONSUMER_KEY",
+  "BITCOINMETRX_X_CONSUMER_KEY_SECRET",
+  "BITCOINMETRX_X_ACCESS_TOKEN",
+  "BITCOINMETRX_X_ACCESS_TOKEN_SECRET",
   "REPLICATE_API_TOKEN",
 ]
 
@@ -20,6 +24,10 @@ function setAllVars() {
   process.env.URA_BOT_X_CONSUMER_KEY_SECRET = "k-x-cks"
   process.env.URA_BOT_X_ACCESS_TOKEN = "k-x-at"
   process.env.URA_BOT_X_ACCESS_TOKEN_SECRET = "k-x-ats"
+  process.env.BITCOINMETRX_X_CONSUMER_KEY = "k-btc-ck"
+  process.env.BITCOINMETRX_X_CONSUMER_KEY_SECRET = "k-btc-cks"
+  process.env.BITCOINMETRX_X_ACCESS_TOKEN = "k-btc-at"
+  process.env.BITCOINMETRX_X_ACCESS_TOKEN_SECRET = "k-btc-ats"
   process.env.REPLICATE_API_TOKEN = "k-replicate"
 }
 
@@ -37,7 +45,8 @@ describe("config", () => {
     const cfg = require("../src/config").default
     expect(cfg.apiKey).toBe("k-api")
     expect(cfg.finnhub.apiKey).toBe("k-finnhub")
-    expect(cfg.x.consumerKey).toBe("k-x-ck")
+    expect(cfg.x.urabot.consumerKey).toBe("k-x-ck")
+    expect(cfg.x.bitcoinmetrx.consumerKey).toBe("k-btc-ck")
     expect(cfg.replicate.apiKey).toBe("k-replicate")
   })
 

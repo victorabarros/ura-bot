@@ -163,6 +163,40 @@ Error bodies: `{ "error": "<message>", "integration": "finnhub" | "replicate" | 
 
 ---
 
+### `POST /bitcoinmetrx/price`
+
+Fetches a live Bitcoin market snapshot from three public APIs (CoinGecko, Bitview,
+Alternative.me) and posts a formatted roundup via the `bitcoinmetrx` X account.
+
+**Auth:** API key required.
+
+**Response `200 OK`**
+
+```json
+{ "created_at": "<ISO-8601 timestamp>", "tweet_id": "<X post id>" }
+```
+
+**Response `503 Service Unavailable`** – CoinGecko price data unavailable (price is
+required; on-chain and Fear & Greed degrade gracefully) or X API failed.
+
+Error bodies: `{ "error": "<message>", "integration": "coingecko" | "x" }`.
+
+Sample post:
+```
+₿ Bitcoin — Jun 9, 2026
+
+$105,432 (+2.30% 24h) 📈
+Mkt Cap: $2.09T | Vol: $48.0B/24h
+
+MVRV: 2.41
+Realized Price: $53,549
+Fear & Greed: 72/100 — Greed
+
+#Bitcoin #BTC
+```
+
+---
+
 ## X credentials
 
 UraBot is a headless server-side bot — there is no interactive OAuth flow.
