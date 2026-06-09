@@ -1,7 +1,5 @@
 import Replicate from "replicate"
 import config from "../config"
-import { NewsItem } from "./finnhub"
-import { TweetResult } from "./x"
 
 const MODEL = "meta/meta-llama-3-70b-instruct"
 const IMAGE_MODEL = "google/nano-banana-2"
@@ -63,49 +61,13 @@ const parseModelOutput = (output: unknown): string => {
 }
 
 /**
- * Generates a short holiday greeting in the UraBot voice.
- * Used when no custom message is defined for a holiday.
+ * Generates a short post in the UraBot voice for the given prompt.
+ * Callers are responsible for building domain-specific prompts.
  *
  * @see https://replicate.com/docs
  * @see docs/3rd-parties/replicate-ai.md
  */
-export async function generateHolidayComment(holidayName: string, now: Date = new Date()): Promise<string> {
-  const year = now.getFullYear()
-  const prompt =
-    `Write a short post (up to 200 characters) wishing happy ${holidayName} ${year} to uranium investors (don't use hashtag with uranium word)`
-
-  const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
-  return parseModelOutput(output)
-}
-
-/**
- * Generates a short news comment in the UraBot voice.
- * Uses the legacy user prompt (full Finnhub news JSON).
- *
- * @see https://replicate.com/docs
- * @see docs/3rd-parties/replicate-ai.md
- */
-export async function generateNewsComment(news: NewsItem): Promise<string> {
-  const prompt =
-    "Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): " +
-    JSON.stringify(news)
-
-  const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
-  return parseModelOutput(output)
-}
-
-/**
- * Generates a short comment about trending X posts in the UraBot voice.
- * The top tweets (by engagement) are passed as context.
- *
- * @see https://replicate.com/docs
- * @see docs/3rd-parties/replicate-ai.md
- */
-export async function generateTrendingComment(tweets: TweetResult[]): Promise<string> {
-  const prompt =
-    "Write a post (up to 200 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): " +
-    JSON.stringify(tweets.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))
-
+export const generateComment = async (prompt: string): Promise<string> => {
   const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
   return parseModelOutput(output)
 }

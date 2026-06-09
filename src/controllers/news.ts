@@ -3,7 +3,7 @@ import httpStatus from "http-status"
 import axios from "axios"
 import moment from "moment-timezone"
 import { searchNews, NewsItem } from "../services/finnhub"
-import { generateNewsComment } from "../services/replicate"
+import { generateComment } from "../services/replicate"
 import { STOCKS } from "../domain/stocks"
 import { buildPostApiResponse, fanout, fanoutHadSuccess } from "../fanout"
 import {
@@ -102,7 +102,9 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
     const { news } = outcome
     let comment: string
     try {
-      comment = await generateNewsComment(news)
+      comment = await generateComment(
+        `Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): ${JSON.stringify(news)}`
+      )
     } catch (err) {
       logIntegrationError("news", "replicate", err)
       res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Replicate comment generation failed", integration: "replicate" } satisfies ApiErrorBody)

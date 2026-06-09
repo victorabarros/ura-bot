@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
 import { uraBotXService, TweetResult } from "../services/x"
-import { generateTrendingComment } from "../services/replicate"
+import { generateComment } from "../services/replicate"
 import { URANIUM_SEARCH_QUERY } from "../domain/stocks"
 import { ApiErrorBody, logIntegrationError } from "../http/errors"
 
@@ -76,7 +76,9 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
 
       let comment: string
       try {
-        comment = await generateTrendingComment(ranked)
+        comment = await generateComment(
+          `Write a post (up to 200 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): ${JSON.stringify(ranked.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))}`
+        )
       } catch (err) {
         logIntegrationError("top-trending", "replicate", err)
         res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Replicate comment generation failed", integration: "replicate" } satisfies ApiErrorBody)
@@ -122,7 +124,10 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
 
     let comment: string
     try {
-      comment = await generateTrendingComment(tweets.length > 0 ? tweets : mentions)
+      const posts = tweets.length > 0 ? tweets : mentions
+      comment = await generateComment(
+        `Write a post (up to 200 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): ${JSON.stringify(posts.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))}`
+      )
     } catch (err) {
       logIntegrationError("top-trending", "replicate", err)
       res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Replicate comment generation failed", integration: "replicate" } satisfies ApiErrorBody)

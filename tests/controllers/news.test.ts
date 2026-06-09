@@ -7,7 +7,7 @@ jest.mock("../../src/services/finnhub", () => ({
   checkFinnhubHealth: jest.fn(),
 }))
 jest.mock("../../src/services/replicate", () => ({
-  generateNewsComment: jest.fn(),
+  generateComment: jest.fn(),
   checkReplicateHealth: jest.fn(),
 }))
 jest.mock("../../src/fanout", () => ({
@@ -22,12 +22,12 @@ jest.mock("../../src/controllers/targets", () => ({
 }))
 
 import { searchNews } from "../../src/services/finnhub"
-import { generateNewsComment } from "../../src/services/replicate"
+import { generateComment } from "../../src/services/replicate"
 import { fanout, fanoutHadSuccess, buildPostApiResponse } from "../../src/fanout"
 import { NewsItem } from "../../src/services/finnhub"
 
 const mockSearchNews = searchNews as jest.MockedFunction<typeof searchNews>
-const mockGenerateNewsComment = generateNewsComment as jest.MockedFunction<typeof generateNewsComment>
+const mockGenerateComment = generateComment as jest.MockedFunction<typeof generateComment>
 const mockFanout = fanout as jest.MockedFunction<typeof fanout>
 const mockFanoutHadSuccess = fanoutHadSuccess as jest.MockedFunction<typeof fanoutHadSuccess>
 const mockBuildPostApiResponse = buildPostApiResponse as jest.MockedFunction<typeof buildPostApiResponse>
@@ -65,12 +65,12 @@ beforeEach(() => {
 describe("postUraNews", () => {
   it("returns 200 when news is found, comment generated, and post succeeds", async () => {
     mockSearchNews.mockResolvedValue([makeNewsItem()])
-    mockGenerateNewsComment.mockResolvedValue("Great uranium news!")
+    mockGenerateComment.mockResolvedValue("Great uranium news!")
 
     const { res, status } = makeMockRes()
     await postUraNews(req, res)
 
-    expect(mockGenerateNewsComment).toHaveBeenCalled()
+    expect(mockGenerateComment).toHaveBeenCalled()
     expect(mockFanout).toHaveBeenCalled()
     expect(status).toHaveBeenCalledWith(200)
   })
@@ -106,7 +106,7 @@ describe("postUraNews", () => {
 
   it("returns 503 when Replicate comment generation fails", async () => {
     mockSearchNews.mockResolvedValue([makeNewsItem()])
-    mockGenerateNewsComment.mockRejectedValue(new Error("model unavailable"))
+    mockGenerateComment.mockRejectedValue(new Error("model unavailable"))
 
     const { res, status } = makeMockRes()
     await postUraNews(req, res)
@@ -116,7 +116,7 @@ describe("postUraNews", () => {
 
   it("returns 502 when all social targets fail to post", async () => {
     mockSearchNews.mockResolvedValue([makeNewsItem()])
-    mockGenerateNewsComment.mockResolvedValue("comment")
+    mockGenerateComment.mockResolvedValue("comment")
     mockFanout.mockResolvedValue([{ platform: "X", success: false, error: "auth failed" }])
     mockFanoutHadSuccess.mockReturnValue(false)
 

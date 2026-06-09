@@ -7,7 +7,7 @@ jest.mock("../../src/services/finnhub", () => ({
 }))
 jest.mock("../../src/services/replicate", () => ({
   checkReplicateHealth: jest.fn(),
-  generateNewsComment: jest.fn(),
+  generateComment: jest.fn(),
 }))
 jest.mock("../../src/services/x", () => ({
   checkXHealth: jest.fn(),

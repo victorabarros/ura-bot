@@ -1,0 +1,31 @@
+---
+description: Service/client layer must not contain business rules or domain knowledge
+globs: src/services/**/*.ts
+alwaysApply: false
+---
+
+# No Business Rules in the Service Layer
+
+Service files (`src/services/`) are thin clients to external APIs. They must not contain:
+
+- Domain-specific prompts, queries, or data shaping
+- Knowledge of what a "uranium investor" is, or what to say to one
+- Hardcoded search terms, tickers, or product-specific language
+- Functions named after domain concepts (e.g. `generateNewsComment`, `searchUraniumTweets`)
+
+Instead, expose generic, parameterized methods and let the **controller or domain layer** supply the business logic.
+
+```typescript
+// ❌ BAD — service knows about "uranium" and encodes the prompt
+export async function generateNewsComment(news: NewsItem): Promise<string> {
+  const prompt = "Write a post about uranium news: " + JSON.stringify(news)
+  return run(prompt)
+}
+
+// ✅ GOOD — service is a pure pass-through; caller owns the prompt
+export const generateComment = async (prompt: string): Promise<string> => {
+  return run(prompt)
+}
+```
+
+The same rule applies to search queries, API filter parameters, and any other value that encodes product intent.
