@@ -18,12 +18,7 @@ const FALLBACK_HOLIDAYS: HolidayEntry[] = [
   { eventName: "Good Friday", atDate: "2026-04-03", tradingHour: "" },
   { eventName: "Memorial Day", atDate: "2026-05-25", tradingHour: "" },
   { eventName: "Juneteenth", atDate: "2026-06-19", tradingHour: "" },
-  {
-    eventName: "Independence Day",
-    atDate: "2026-07-04",
-    tradingHour: "",
-    message: "Today is Independence Day 🎇🎇🎇\nCelebrate with your family and friends\nAnd always remember FREEDOM IS NOT FREE!",
-  },
+  { eventName: "Independence Day", atDate: "2026-07-04", tradingHour: "", },
   { eventName: "Labor Day", atDate: "2026-09-07", tradingHour: "" },
   { eventName: "Thanksgiving Day", atDate: "2026-11-26", tradingHour: "" },
   { eventName: "Thanksgiving Day", atDate: "2026-11-27", tradingHour: "09:30-13:00" },

@@ -1,14 +1,14 @@
 import axios from "axios"
 import { TwitterApi } from "twitter-api-v2"
-import { ISocialService, PostMessageResponse } from "./ISocialService"
 import config from "../config"
+import { ISocialService, PostMessageResponse } from "./ISocialService"
 
-const client = new TwitterApi({
-  appKey: config.x.consumerKey,
-  appSecret: config.x.consumerSecret,
-  accessToken: config.x.accessToken,
-  accessSecret: config.x.accessTokenSecret,
-})
+export type XCredentials = {
+  consumerKey: string
+  consumerSecret: string
+  accessToken: string
+  accessTokenSecret: string
+}
 
 export type TweetResult = {
   id: string
@@ -19,6 +19,13 @@ export type TweetResult = {
   retweetCount: number
   /** X reply_settings field. "everyone" | "mentionedUsers" | "subscribers" */
   replySettings: string
+}
+
+export type LatestPost = {
+  id: string
+  text: string
+  createdAt: string
+  url: string
 }
 
 /** Default uranium search query — high-signal tickers, no retweets, English only. */
@@ -47,65 +54,63 @@ function mapTweet(tweet: {
   }
 }
 
-/** Cached identity of the authenticated bot account. */
-let _botUser: { id: string; username: string } | undefined
-
-async function getBotUser(): Promise<{ id: string; username: string }> {
-  if (_botUser) return _botUser
-  const { data } = await client.v2.me()
-  _botUser = { id: data.id, username: data.username }
-  return _botUser
-}
-
-async function getBotUserId(): Promise<string> {
-  return (await getBotUser()).id
-}
-
-export type LatestPost = {
-  id: string
-  text: string
-  createdAt: string
-  url: string
-}
-
-/**
- * Returns the most recent original post from the bot's own timeline.
- * Excludes retweets and replies.
- */
-export async function getLatestPost(): Promise<LatestPost> {
-  const { id, username } = await getBotUser()
-  const { data } = await client.v2.userTimeline(id, {
-    max_results: 5,
-    exclude: ["retweets", "replies"],
-    "tweet.fields": ["created_at"],
-  })
-  const tweet = data.data?.[0]
-  if (!tweet) throw new Error("No posts found on this account")
-  return {
-    id: tweet.id,
-    text: tweet.text,
-    createdAt: tweet.created_at ?? new Date().toISOString(),
-    url: `https://x.com/${username}/status/${tweet.id}`,
-  }
-}
-
-/**
- * Verifies X OAuth 1.0a credentials via the authenticated user lookup.
- *
- * @see https://docs.x.com/
- * @see docs/3rd-parties/twitter-x-dot-com.md
- */
-export async function checkXHealth(): Promise<void> {
-  console.log("[health] checking X connectivity")
-  await client.v2.me()
-}
-
 export class XService implements ISocialService {
+  private readonly client: TwitterApi
+  private _me: { id: string; username: string } | undefined
+
+  constructor(credentials: XCredentials) {
+    this.client = new TwitterApi({
+      appKey: credentials.consumerKey,
+      appSecret: credentials.consumerSecret,
+      accessToken: credentials.accessToken,
+      accessSecret: credentials.accessTokenSecret,
+    })
+  }
+
+  private async getMe(): Promise<{ id: string; username: string }> {
+    if (this._me) return this._me
+    const { data } = await this.client.v2.me()
+    this._me = { id: data.id, username: data.username }
+    return this._me
+  }
+
+  /**
+   * Returns the most recent original post from this account's timeline.
+   * Excludes retweets and replies.
+   */
+  async getLatestPost(): Promise<LatestPost> {
+    const { id, username } = await this.getMe()
+    const { data } = await this.client.v2.userTimeline(id, {
+      max_results: 5,
+      exclude: ["retweets", "replies"],
+      "tweet.fields": ["created_at"],
+    })
+    const tweet = data.data?.[0]
+    if (!tweet) throw new Error("No posts found on this account")
+    return {
+      id: tweet.id,
+      text: tweet.text,
+      createdAt: tweet.created_at ?? new Date().toISOString(),
+      url: `https://x.com/${username}/status/${tweet.id}`,
+    }
+  }
+
+  /**
+   * Verifies X OAuth 1.0a credentials via the authenticated user lookup.
+   *
+   * @see https://docs.x.com/
+   * @see docs/3rd-parties/twitter-x-dot-com.md
+   */
+  async checkHealth(): Promise<void> {
+    console.log("[health] checking X connectivity")
+    await this.client.v2.me()
+  }
+
   async postMessage(message: string): Promise<PostMessageResponse> {
     const text = message.trim()
     if (!text) throw new Error("X: message cannot be empty")
 
-    const { data } = await client.v2.tweet(text)
+    const { data } = await this.client.v2.tweet(text)
     return { id: data.id }
   }
 
@@ -123,8 +128,8 @@ export class XService implements ISocialService {
     const buffer = Buffer.from(response.data)
     const mimeType = (response.headers["content-type"] as string | undefined) ?? "image/jpeg"
 
-    const mediaId = await client.v1.uploadMedia(buffer, { mimeType })
-    const { data } = await client.v2.tweet({ text, media: { media_ids: [mediaId] } })
+    const mediaId = await this.client.v1.uploadMedia(buffer, { mimeType })
+    const { data } = await this.client.v2.tweet({ text, media: { media_ids: [mediaId] } })
     return { id: data.id }
   }
 
@@ -138,20 +143,18 @@ export class XService implements ISocialService {
     if (!trimmed) throw new Error("X: quote tweet text cannot be empty")
     if (!quoteTweetId) throw new Error("X: quoteTweetId is required")
 
-    const { data } = await client.v2.tweet({ text: trimmed, quote_tweet_id: quoteTweetId })
+    const { data } = await this.client.v2.tweet({ text: trimmed, quote_tweet_id: quoteTweetId })
     return { id: data.id }
   }
 
   /**
-   * Returns recent tweets that mention the bot account, sorted by engagement.
-   * The bot is always part of these conversations so quote tweeting them is
-   * permitted by the X API without restriction.
+   * Returns recent tweets that mention this account, sorted by engagement.
    *
    * @see https://developer.x.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-mentions
    */
   async getMentions(limit = 10): Promise<TweetResult[]> {
-    const userId = await getBotUserId()
-    const { data } = await client.v2.userMentionTimeline(userId, {
+    const { id } = await this.getMe()
+    const { data } = await this.client.v2.userMentionTimeline(id, {
       max_results: Math.min(Math.max(limit, 5), 100),
       "tweet.fields": TWEET_FIELDS,
     })
@@ -161,14 +164,12 @@ export class XService implements ISocialService {
 
   /**
    * Searches recent tweets about uranium, sorted by relevancy.
-   * Returns up to `limit` results with engagement metrics.
-   *
    * Requires at minimum the Basic X API access tier.
    *
    * @see https://developer.x.com/en/docs/twitter-api/tweets/search/introduction
    */
   async searchTweets(limit = 10): Promise<TweetResult[]> {
-    const { data } = await client.v2.search(URANIUM_QUERY, {
+    const { data } = await this.client.v2.search(URANIUM_QUERY, {
       max_results: Math.min(Math.max(limit, 10), 100),
       "tweet.fields": TWEET_FIELDS,
       sort_order: "relevancy",
@@ -177,3 +178,12 @@ export class XService implements ISocialService {
     return (data.data ?? []).map(mapTweet)
   }
 }
+
+/** Default UraBot X account — used by controllers that are not account-specific. */
+export const uraBotXService = new XService(config.x)
+
+/** @deprecated Use `uraBotXService.getLatestPost()` or inject an XService instance. */
+export const getLatestPost = () => uraBotXService.getLatestPost()
+
+/** @deprecated Use `uraBotXService.checkHealth()` or inject an XService instance. */
+export const checkXHealth = () => uraBotXService.checkHealth()
