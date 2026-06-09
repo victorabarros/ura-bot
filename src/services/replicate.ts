@@ -18,9 +18,16 @@ const SYSTEM_PROMPT = `
 
 const replicate = new Replicate({ auth: config.replicate.apiKey })
 
-const buildInput = (prompt: string): Record<string, unknown> => {
+/**
+ * Generates a short post in the UraBot voice for the given prompt.
+ * Callers are responsible for building domain-specific prompts.
+ *
+ * @see https://replicate.com/docs
+ * @see docs/3rd-parties/replicate-ai.md
+ */
+export const generateComment = async (prompt: string): Promise<string> => {
   /** Generation knobs — verbatim from legacy `GetAnswer` input (Llama models). */
-  const llamaGenerationInput = {
+  const gen = {
     top_k: 50,
     top_p: 0.9,
     max_tokens: 1024,
@@ -30,26 +37,20 @@ const buildInput = (prompt: string): Record<string, unknown> => {
     frequency_penalty: 0,
   } as const
 
-  if (MODEL.startsWith("openai/")) {
-    return {
-      system_prompt: SYSTEM_PROMPT,
-      prompt,
-      temperature: llamaGenerationInput.temperature,
-      top_p: llamaGenerationInput.top_p,
-      max_completion_tokens: llamaGenerationInput.max_tokens,
-      presence_penalty: llamaGenerationInput.presence_penalty,
-      frequency_penalty: llamaGenerationInput.frequency_penalty,
-    }
-  }
+  const input = MODEL.startsWith("openai/")
+    ? {
+        system_prompt: SYSTEM_PROMPT,
+        prompt,
+        temperature: gen.temperature,
+        top_p: gen.top_p,
+        max_completion_tokens: gen.max_tokens,
+        presence_penalty: gen.presence_penalty,
+        frequency_penalty: gen.frequency_penalty,
+      }
+    : { ...gen, prompt, system_prompt: SYSTEM_PROMPT }
 
-  return {
-    ...llamaGenerationInput,
-    prompt,
-    system_prompt: SYSTEM_PROMPT,
-  }
-}
+  const output = await replicate.run(MODEL as `${string}/${string}`, { input })
 
-const parseModelOutput = (output: unknown): string => {
   const raw = (Array.isArray(output) ? output.join("") : String(output ?? "")).trim()
   if (
     raw.length >= 2 &&
@@ -58,18 +59,6 @@ const parseModelOutput = (output: unknown): string => {
     return raw.slice(1, -1).trim()
   }
   return raw
-}
-
-/**
- * Generates a short post in the UraBot voice for the given prompt.
- * Callers are responsible for building domain-specific prompts.
- *
- * @see https://replicate.com/docs
- * @see docs/3rd-parties/replicate-ai.md
- */
-export const generateComment = async (prompt: string): Promise<string> => {
-  const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
-  return parseModelOutput(output)
 }
 
 /**

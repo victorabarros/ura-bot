@@ -1,0 +1,29 @@
+---
+description: Do not extract functions that are called in only one place
+globs: **/*.ts
+alwaysApply: false
+---
+
+# No Single-Use Function Extractions
+
+Do not extract a helper function whose only purpose is to be called once. It adds indirection without value. Inline the logic at the call site instead.
+
+```typescript
+// ❌ BAD — buildInput is called exactly once; the abstraction is pointless
+const buildInput = (prompt: string): Record<string, unknown> => {
+  return { prompt, system_prompt: SYSTEM_PROMPT }
+}
+
+export const generateComment = async (prompt: string): Promise<string> => {
+  const output = await model.run({ input: buildInput(prompt) })
+  return parse(output)
+}
+
+// ✅ GOOD — logic lives directly where it is used
+export const generateComment = async (prompt: string): Promise<string> => {
+  const output = await model.run({ input: { prompt, system_prompt: SYSTEM_PROMPT } })
+  // ... parse output
+}
+```
+
+A function is worth extracting only when it is called from **two or more** distinct call sites, or when it has a meaningful name that replaces a non-obvious comment.
