@@ -91,8 +91,8 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
     lines.push("")
     lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}`)
     lines.push(`Realized Price: ${fmtPrice(onchain.realizedPriceUsd)}`)
-    lines.push(`50d Moving Average: ${fmtPrice(onchain.sma55dUsd)}`)
-    lines.push(`200d Moving Average: ${fmtPrice(onchain.sma200dUsd)}`)
+    lines.push(`50d Moving Average Price: ${fmtPrice(onchain.sma55dUsd)} ${market.priceUsd >= onchain.sma55dUsd ? "🟢" : "🔴"}`)
+    lines.push(`200d Moving Average Price: ${fmtPrice(onchain.sma200dUsd)} ${market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"}`)
   }
 
   if (fearGreed) {
