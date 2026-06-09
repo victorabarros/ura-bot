@@ -38,23 +38,6 @@ export function logIntegrationError(route: string, integration: string, err: unk
   console.error(`[${route}] ${integration}: ${msg}${suffix ? ` — ${suffix}` : ""}`)
 }
 
-/** `503` when an upstream dependency is unavailable or rate-limited. */
-export function respondUpstreamUnavailable(
-  res: Response,
-  integration: string,
-  message: string
-): void {
-  res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: message, integration } satisfies ApiErrorBody)
-}
-
-/** `500` for unexpected internal failures or unrecoverable data fetch. */
-export function respondInternalError(
-  res: Response,
-  integration: string,
-  message: string
-): void {
-  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: message, integration } satisfies ApiErrorBody)
-}
 
 /** `502` when every configured social target failed to publish. */
 export function respondSocialPublishFailed(res: Response, results: FanoutResult[]): void {

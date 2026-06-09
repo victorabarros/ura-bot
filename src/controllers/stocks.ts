@@ -6,11 +6,10 @@ import { getPostContext } from "../domain/context"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
 import { buildPostApiResponse, fanoutAll, fanoutHadSuccess } from "../fanout"
 import {
+  ApiErrorBody,
   errorMessage,
   logIntegrationError,
-  respondInternalError,
   respondSocialPublishFailed,
-  respondUpstreamUnavailable,
 } from "../http/errors"
 import { getSocialTargets } from "./targets"
 
@@ -53,14 +52,14 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
       const allRateLimited =
         rejected.length > 0 && rejected.every((r) => isFinnhubRateLimited(r.reason))
       if (allRateLimited) {
-        respondUpstreamUnavailable(res, "finnhub", "Finnhub rate limit exceeded")
+        res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Finnhub rate limit exceeded", integration: "finnhub" } satisfies ApiErrorBody)
         return
       }
       if (rejected.length === STOCKS.length) {
-        respondUpstreamUnavailable(res, "finnhub", "Finnhub quote API unavailable")
+        res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Finnhub quote API unavailable", integration: "finnhub" } satisfies ApiErrorBody)
         return
       }
-      respondInternalError(res, "finnhub", "No quotes available")
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: "No quotes available", integration: "finnhub" } satisfies ApiErrorBody)
       return
     }
 
@@ -75,6 +74,6 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
     res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
   } catch (err) {
     logIntegrationError("stocks", "internal", err)
-    respondInternalError(res, "internal", errorMessage(err))
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: errorMessage(err), integration: "internal" } satisfies ApiErrorBody)
   }
 }

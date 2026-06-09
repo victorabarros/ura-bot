@@ -5,11 +5,10 @@ import { generateNewsComment } from "../services/replicate"
 import { STOCKS, buildNewsMessage, formatDateYMD } from "../domain/stocks"
 import { buildPostApiResponse, fanout, fanoutHadSuccess } from "../fanout"
 import {
+  ApiErrorBody,
   errorMessage,
   logIntegrationError,
-  respondInternalError,
   respondSocialPublishFailed,
-  respondUpstreamUnavailable,
 } from "../http/errors"
 import { getSocialTargets } from "./targets"
 
@@ -85,11 +84,11 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
     const outcome = await findRecentNews(now)
 
     if (outcome.status === "rate_limited") {
-      respondUpstreamUnavailable(res, "finnhub", "Finnhub rate limit exceeded")
+      res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Finnhub rate limit exceeded", integration: "finnhub" } satisfies ApiErrorBody)
       return
     }
     if (outcome.status === "upstream_error") {
-      respondUpstreamUnavailable(res, "finnhub", "Finnhub news API unavailable")
+      res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Finnhub news API unavailable", integration: "finnhub" } satisfies ApiErrorBody)
       return
     }
     if (outcome.status === "empty") {
@@ -103,7 +102,7 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
       comment = await generateNewsComment(news)
     } catch (err) {
       logIntegrationError("news", "replicate", err)
-      respondUpstreamUnavailable(res, "replicate", "Replicate comment generation failed")
+      res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Replicate comment generation failed", integration: "replicate" } satisfies ApiErrorBody)
       return
     }
 
@@ -117,6 +116,6 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
     res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
   } catch (err) {
     logIntegrationError("news", "internal", err)
-    respondInternalError(res, "internal", errorMessage(err))
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: errorMessage(err), integration: "internal" } satisfies ApiErrorBody)
   }
 }

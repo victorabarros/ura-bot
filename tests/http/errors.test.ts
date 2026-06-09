@@ -1,8 +1,6 @@
 import { Response } from "express"
 import {
   errorMessage,
-  respondUpstreamUnavailable,
-  respondInternalError,
   respondSocialPublishFailed,
 } from "../../src/http/errors"
 import { FanoutResult } from "../../src/fanout"
@@ -31,29 +29,6 @@ describe("errorMessage", () => {
   })
 })
 
-describe("respondUpstreamUnavailable", () => {
-  it("sends 503 with the correct body shape", () => {
-    const { res, status, json } = makeMockResponse()
-    respondUpstreamUnavailable(res, "finnhub", "rate limit exceeded")
-    expect(status).toHaveBeenCalledWith(503)
-    expect(json).toHaveBeenCalledWith({
-      error: "rate limit exceeded",
-      integration: "finnhub",
-    })
-  })
-})
-
-describe("respondInternalError", () => {
-  it("sends 500 with the correct body shape", () => {
-    const { res, status, json } = makeMockResponse()
-    respondInternalError(res, "internal", "unexpected failure")
-    expect(status).toHaveBeenCalledWith(500)
-    expect(json).toHaveBeenCalledWith({
-      error: "unexpected failure",
-      integration: "internal",
-    })
-  })
-})
 
 describe("respondSocialPublishFailed", () => {
   it("sends 502 with a fixed error body", () => {

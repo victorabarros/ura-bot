@@ -4,10 +4,9 @@ import { XService, TweetResult } from "../services/x"
 import { generateTrendingComment } from "../services/replicate"
 import { buildTrendingMessage } from "../domain/stocks"
 import {
+  ApiErrorBody,
   errorMessage,
   logIntegrationError,
-  respondInternalError,
-  respondUpstreamUnavailable,
 } from "../http/errors"
 
 const xService = new XService()
@@ -89,7 +88,7 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
         comment = await generateTrendingComment(ranked)
       } catch (err) {
         logIntegrationError("top-trending", "replicate", err)
-        respondUpstreamUnavailable(res, "replicate", "Replicate comment generation failed")
+        res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Replicate comment generation failed", integration: "replicate" } satisfies ApiErrorBody)
         return
       }
 
@@ -108,7 +107,7 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
         }
       } catch (err) {
         logIntegrationError("top-trending", "x", err)
-        respondUpstreamUnavailable(res, "x", "X quote tweet failed")
+        res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "X quote tweet failed", integration: "x" } satisfies ApiErrorBody)
         return
       }
 
@@ -121,7 +120,7 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
       tweets = await xService.searchTweets(10)
     } catch (err) {
       logIntegrationError("top-trending", "x/search", err)
-      respondUpstreamUnavailable(res, "x", "X tweet search failed")
+      res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "X tweet search failed", integration: "x" } satisfies ApiErrorBody)
       return
     }
 
@@ -137,8 +136,8 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
       comment = await generateTrendingComment(context)
     } catch (err) {
       logIntegrationError("top-trending", "replicate", err)
-      respondUpstreamUnavailable(res, "replicate", "Replicate comment generation failed")
-        return
+      res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Replicate comment generation failed", integration: "replicate" } satisfies ApiErrorBody)
+      return
     }
 
     const text = buildTrendingMessage(comment)
@@ -150,13 +149,13 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
       console.log(`[top-trending] plain post id=${tweetId}`)
     } catch (err) {
       logIntegrationError("top-trending", "x", err)
-      respondUpstreamUnavailable(res, "x", "X post failed")
+      res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "X post failed", integration: "x" } satisfies ApiErrorBody)
       return
     }
 
     res.status(httpStatus.OK).json({ created_at: now, tweet_id: tweetId })
   } catch (err) {
     logIntegrationError("top-trending", "internal", err)
-    respondInternalError(res, "internal", errorMessage(err))
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: errorMessage(err), integration: "internal" } satisfies ApiErrorBody)
   }
 }

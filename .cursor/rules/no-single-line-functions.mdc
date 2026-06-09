@@ -1,0 +1,21 @@
+---
+description: Forbid single-line function and method bodies
+globs: **/*.ts
+alwaysApply: false
+---
+
+# No single-line functions
+
+A function or method whose entire body is one statement adds indirection without value. Inline the call at the invocation site instead.
+
+```typescript
+// ❌ BAD — wrapper that just delegates
+export function respondUpstreamUnavailable(res: Response, integration: string, message: string): void {
+  res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: message, integration })
+}
+
+// ✅ GOOD — call the statement directly at the call site
+res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: message, integration } satisfies ApiErrorBody)
+```
+
+This applies to standalone functions, class methods, and arrow functions alike. If the abstraction is genuinely reusable and non-trivial, give it a multi-statement body (e.g. add a log line, derive a value).
