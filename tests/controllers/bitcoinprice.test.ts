@@ -7,7 +7,7 @@ jest.mock("../../src/services/coingecko", () => ({
 jest.mock("../../src/services/bitview", () => ({
   getBitcoinOnchainData: jest.fn(),
 }))
-jest.mock("../../src/services/feargreed", () => ({
+jest.mock("../../src/services/alternative", () => ({
   getFearGreedIndex: jest.fn(),
 }))
 jest.mock("../../src/services/x", () => ({
@@ -17,7 +17,7 @@ jest.mock("../../src/services/x", () => ({
 
 import { getBitcoinMarketData } from "../../src/services/coingecko"
 import { getBitcoinOnchainData } from "../../src/services/bitview"
-import { getFearGreedIndex } from "../../src/services/feargreed"
+import { getFearGreedIndex } from "../../src/services/alternative"
 import { bitcoinmetrxXService } from "../../src/services/x"
 
 const mockGetMarket = getBitcoinMarketData as jest.MockedFunction<typeof getBitcoinMarketData>
@@ -40,7 +40,7 @@ const defaultMarket = {
   volume24hUsd: 48_000_000_000,
 }
 
-const defaultOnchain = { mvrv: 2.41, realizedPriceUsd: 53_549 }
+const defaultOnchain = { mvrv: 2.41, realizedPriceUsd: 53_549, sma200dUsd: 78_198, sma55dUsd: 75_752 }
 const defaultFearGreed = { value: 72, classification: "Greed" }
 
 beforeEach(() => {
@@ -79,6 +79,8 @@ describe("postBitcoinPrice", () => {
     expect(message).toContain("$105,432")
     expect(message).toContain("MVRV: 2.41")
     expect(message).toContain("Realized Price: $53,549")
+    expect(message).toContain("50d SMA: $75,752")
+    expect(message).toContain("200d SMA: $78,198")
     expect(message).toContain("Fear & Greed: 72/100 — Greed")
     expect(message).toContain("#Bitcoin #BTC")
   })

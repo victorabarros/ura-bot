@@ -18,11 +18,19 @@ type FearGreedResponse = {
 }
 
 /**
+ * Lightweight liveness probe — fetches the latest Fear & Greed value (limit=1).
+ * Throws on non-200 or network error.
+ */
+export const checkAlternativeHealth = async (): Promise<void> => {
+  await http.get("/fng/", { params: { limit: 1 } })
+}
+
+/**
  * Fetches the latest Crypto Fear & Greed index from alternative.me.
  * No auth required.
  *
  * @see https://alternative.me/crypto/fear-and-greed-index/
- * @see docs/3rd-parties/feargreed.md
+ * @see docs/3rd-parties/alternative.md
  */
 export const getFearGreedIndex = async (): Promise<FearGreedData> => {
   const { data } = await http.get<FearGreedResponse>("/fng/", {

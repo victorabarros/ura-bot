@@ -5,7 +5,7 @@ jest.mock("axios", () => ({
   create: jest.fn(() => ({ get: mockGet })),
 }))
 
-import { getFearGreedIndex } from "../../src/services/feargreed"
+import { getFearGreedIndex } from "../../src/services/alternative"
 
 beforeEach(() => mockGet.mockReset())
 

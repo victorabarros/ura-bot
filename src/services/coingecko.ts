@@ -14,6 +14,14 @@ export type BitcoinMarketData = {
 }
 
 /**
+ * Lightweight liveness probe — hits the `/ping` endpoint (returns `{ gecko_says: "(V3) To the Moon!" }`).
+ * Throws on non-200 or network error.
+ */
+export const checkCoinGeckoHealth = async (): Promise<void> => {
+  await http.get("/ping")
+}
+
+/**
  * Fetches Bitcoin price, 24h change, market cap, and volume from CoinGecko.
  * Uses the keyless public endpoint — no API key required.
  *

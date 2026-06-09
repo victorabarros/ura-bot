@@ -3,7 +3,7 @@ import httpStatus from "http-status"
 import moment from "moment-timezone"
 import { getBitcoinMarketData } from "../services/coingecko"
 import { getBitcoinOnchainData } from "../services/bitview"
-import { getFearGreedIndex } from "../services/feargreed"
+import { getFearGreedIndex } from "../services/alternative"
 import { bitcoinmetrxXService } from "../services/x"
 import { logIntegrationError, ApiErrorBody } from "../http/errors"
 
@@ -14,6 +14,36 @@ const fmtCompact = (usd: number): string => {
   if (usd >= 1e12) return `$${(usd / 1e12).toFixed(2)}T`
   if (usd >= 1e9) return `$${(usd / 1e9).toFixed(1)}B`
   return `$${Math.round(usd).toLocaleString("en-US")}`
+}
+
+/**
+ * MVRV signal:
+ *   < 1    — historically deep value zone      🟢
+ *   1–2    — fair value                        🟡
+ *   2–3.5  — elevated, watch for distribution  🟠
+ *   > 3.5  — historically near cycle tops      🔴
+ */
+const mvrvEmoji = (mvrv: number): string => {
+  if (mvrv < 1) return "🟢"
+  if (mvrv < 2) return "🟡"
+  if (mvrv < 3.5) return "🟠"
+  return "🔴"
+}
+
+/**
+ * Fear & Greed signal:
+ *   0–24   — Extreme Fear  😱
+ *   25–44  — Fear          😰
+ *   45–55  — Neutral       😐
+ *   56–74  — Greed         😏
+ *   75–100 — Extreme Greed 🤑
+ */
+const fearGreedEmoji = (value: number): string => {
+  if (value <= 24) return "😱"
+  if (value <= 44) return "😰"
+  if (value <= 55) return "😐"
+  if (value <= 74) return "😏"
+  return "🤑"
 }
 
 /**
@@ -50,36 +80,6 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
   const sign = market.change24hPct >= 0 ? "+" : ""
   const arrow = market.change24hPct >= 0 ? "📈" : "📉"
 
-  /**
-   * MVRV signal:
-   *   < 1    — historically deep value zone      🟢
-   *   1–2    — fair value                        🟡
-   *   2–3.5  — elevated, watch for distribution  🟠
-   *   > 3.5  — historically near cycle tops      🔴
-   */
-  const mvrvEmoji = (mvrv: number): string => {
-    if (mvrv < 1) return "🟢"
-    if (mvrv < 2) return "🟡"
-    if (mvrv < 3.5) return "🟠"
-    return "🔴"
-  }
-
-  /**
-   * Fear & Greed signal:
-   *   0–24   — Extreme Fear  😱
-   *   25–44  — Fear          😰
-   *   45–55  — Neutral       😐
-   *   56–74  — Greed         😏
-   *   75–100 — Extreme Greed 🤑
-   */
-  const fearGreedEmoji = (value: number): string => {
-    if (value <= 24) return "😱"
-    if (value <= 44) return "😰"
-    if (value <= 55) return "😐"
-    if (value <= 74) return "😏"
-    return "🤑"
-  }
-
   const lines: string[] = [
     `₿ Bitcoin — ${moment(now).format("MMM D, YYYY")}`,
     "",
@@ -91,6 +91,8 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
     lines.push("")
     lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}`)
     lines.push(`Realized Price: ${fmtPrice(onchain.realizedPriceUsd)}`)
+    lines.push(`50d Moving Average: ${fmtPrice(onchain.sma55dUsd)}`)
+    lines.push(`200d Moving Average: ${fmtPrice(onchain.sma200dUsd)}`)
   }
 
   if (fearGreed) {

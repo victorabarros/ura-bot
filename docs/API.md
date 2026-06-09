@@ -41,7 +41,7 @@ Lightweight liveness probe. No authentication required.
 
 ### `GET /healthcheck`
 
-Readiness probe: calls Finnhub, Replicate, and X with lightweight requests (no
+Readiness probe: calls all upstream dependencies with lightweight requests (no
 posting). No authentication required.
 
 **Response `200 OK`** — all dependencies reachable.
@@ -51,9 +51,12 @@ posting). No authentication required.
   "success": true,
   "version": "<semver>",
   "dependencies": {
-    "finnhub": { "ok": true },
-    "replicate": { "ok": true },
-    "x": { "ok": true }
+    "finnhub":     { "ok": true },
+    "replicate":   { "ok": true },
+    "x":           { "ok": true },
+    "coingecko":   { "ok": true },
+    "bitview":     { "ok": true },
+    "alternative": { "ok": true }
   }
 }
 ```
@@ -65,9 +68,12 @@ posting). No authentication required.
   "success": false,
   "version": "<semver>",
   "dependencies": {
-    "finnhub": { "ok": true },
-    "replicate": { "ok": false, "error": "<message>" },
-    "x": { "ok": true }
+    "finnhub":     { "ok": true },
+    "replicate":   { "ok": false, "error": "<message>" },
+    "x":           { "ok": true },
+    "coingecko":   { "ok": true },
+    "bitview":     { "ok": true },
+    "alternative": { "ok": true }
   }
 }
 ```
