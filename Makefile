@@ -26,6 +26,7 @@ welcome:
 
 DOCKER_TARGET?=
 DOCKER_TAG?=latest
+
 build:
 	@if docker image inspect $(APP_NAME):$(DOCKER_TAG) > /dev/null 2>&1; then \
 		echo "Image $(APP_NAME):$(DOCKER_TAG) already exists, skipping build."; \

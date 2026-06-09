@@ -7,7 +7,7 @@ const env = (name: string): string => {
 const config = {
   port: process.env.PORT || 8082,
   apiKey: env("API_KEY"),
-  version: process.env.VERSION || "2.0.2",
+  version: process.env.VERSION || "2.1.0",
 
   finnhub: {
     apiKey: env("FINNHUB_API_KEY"),
