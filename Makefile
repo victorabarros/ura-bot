@@ -5,8 +5,10 @@ PORT?=8082
 YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
 
-.PHONY: welcome install dev build start typecheck lint validate clean \
-        docker-build docker-run docker-dev docker-test
+.PHONY: welcome \
+        docker-build docker-run docker-dev docker-test \
+        docker-purge-containers docker-purge-images \
+		commit-llm-generated push checkout
 
 welcome:
 	@clear
@@ -19,32 +21,6 @@ welcome:
 	@echo "                        \/         \/                  " && sleep .02
 	@echo "${COLOR_OFF}"
 	@# http://patorjk.com/software/taag font Graffiti full
-
-# ── Local (Node) ────────────────────────────────────────────────────────────
-
-install:
-	npm install
-
-dev: install
-	npm run dev
-
-build: install
-	npm run build
-
-start: build
-	npm run start
-
-typecheck:
-	npm run typecheck
-
-lint:
-	npm run lint
-
-validate:
-	npm run validate
-
-clean:
-	rm -rf dist node_modules
 
 # ── Docker ──────────────────────────────────────────────────────────────────
 
@@ -83,6 +59,24 @@ docker-dev:
 docker-test:
 	@make docker-build DOCKER_TARGET=test DOCKER_TAG=test
 	@docker run --rm --name $(APP_NAME)-test $(APP_NAME):test
+
+docker-purge-containers:
+	@containers=$$(docker ps -aq --filter "name=$(APP_NAME)"); \
+	if [ -n "$$containers" ]; then \
+		echo "Removing containers: $$containers"; \
+		docker rm -f $$containers; \
+	else \
+		echo "No containers found for $(APP_NAME)."; \
+	fi
+
+docker-purge-images:
+	@images=$$(docker images -q "$(APP_NAME)"); \
+	if [ -n "$$images" ]; then \
+		echo "Removing images: $$images"; \
+		docker rmi -f $$images; \
+	else \
+		echo "No images found for $(APP_NAME)."; \
+	fi
 
 # ── Git ─────────────────────────────────────────────────────────────────
 
