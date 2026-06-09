@@ -2,17 +2,14 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import { XService, TweetResult } from "../services/x"
 import { generateTrendingComment } from "../services/replicate"
-import {
-  ApiErrorBody,
-  logIntegrationError,
-} from "../http/errors"
+import { ApiErrorBody, logIntegrationError } from "../http/errors"
 
 const xService = new XService()
 
 /** Stop retrying after this many consecutive quote-not-allowed 403s. */
 const MAX_QUOTE_ATTEMPTS = 5
 
-/** X 403 detail for when the API prevents quoting a specific tweet. */
+/** X 403 detail returned when the API prevents quoting a specific tweet. */
 const QUOTE_NOT_ALLOWED_DETAIL = "Quoting this post is not allowed"
 
 function isQuoteNotAllowed(err: unknown): boolean {
@@ -30,10 +27,9 @@ async function tryQuoteTweet(
   text: string,
   candidates: TweetResult[],
 ): Promise<{ quoteTweetId: string; quotedTweetId: string } | null> {
-  const pool = candidates.slice(0, MAX_QUOTE_ATTEMPTS)
-  for (const tweet of pool) {
+  for (const tweet of candidates.slice(0, MAX_QUOTE_ATTEMPTS)) {
     console.log(
-      `[top-trending] attempting quote id=${tweet.id} reply_settings=${tweet.replySettings} likes=${tweet.likeCount} rt=${tweet.retweetCount}`,
+      `[top-trending] attempting quote id=${tweet.id} likes=${tweet.likeCount} rt=${tweet.retweetCount}`,
     )
     try {
       const result = await xService.quoteTweet(text, tweet.id)
@@ -51,8 +47,8 @@ async function tryQuoteTweet(
 
 /**
  * POST /urabot/top-trending:
- *   1. Fetch recent @mentions — the bot is always part of these conversations
- *      so the X API allows quoting them without restriction.
+ *   1. Fetch recent @mentions — the bot is part of these conversations so
+ *      the X API allows quoting them without restriction.
  *   2. If mentions exist → generate comment → quote the top-engagement mention.
  *   3. If no mentions → fetch top uranium tweets → generate comment → plain post.
  *
@@ -123,11 +119,9 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
       return
     }
 
-    const context = tweets.length > 0 ? tweets : mentions
-
     let comment: string
     try {
-      comment = await generateTrendingComment(context)
+      comment = await generateTrendingComment(tweets.length > 0 ? tweets : mentions)
     } catch (err) {
       logIntegrationError("top-trending", "replicate", err)
       res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "Replicate comment generation failed", integration: "replicate" } satisfies ApiErrorBody)
@@ -136,18 +130,14 @@ export async function postTopTrending(_req: Request, res: Response): Promise<voi
 
     const text = [comment, "", "#Uranium☢️"].join("\n")
 
-    let tweetId: string
     try {
-      const result = await xService.postMessage(text)
-      tweetId = result.id
-      console.log(`[top-trending] plain post id=${tweetId}`)
+      const { id } = await xService.postMessage(text)
+      console.log(`[top-trending] plain post id=${id}`)
+      res.status(httpStatus.OK).json({ created_at: now, tweet_id: id })
     } catch (err) {
       logIntegrationError("top-trending", "x", err)
       res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: "X post failed", integration: "x" } satisfies ApiErrorBody)
-      return
     }
-
-    res.status(httpStatus.OK).json({ created_at: now, tweet_id: tweetId })
   } catch (err) {
     logIntegrationError("top-trending", "internal", err)
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: err instanceof Error ? err.message : String(err), integration: "internal" } satisfies ApiErrorBody)

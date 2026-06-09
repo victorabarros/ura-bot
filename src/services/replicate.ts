@@ -80,12 +80,9 @@ export async function generateNewsComment(news: NewsItem): Promise<string> {
  * @see docs/3rd-parties/replicate-ai.md
  */
 export async function generateTrendingComment(tweets: TweetResult[]): Promise<string> {
-  const sorted = [...tweets].sort(
-    (a, b) => b.likeCount + b.retweetCount - (a.likeCount + a.retweetCount),
-  )
   const prompt =
     "Write a post (up to 200 characters) reacting to what uranium investors are talking about on X right now (don't use hashtag with uranium word): " +
-    JSON.stringify(sorted.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))
+    JSON.stringify(tweets.map(({ text, likeCount, retweetCount }) => ({ text, likeCount, retweetCount })))
 
   const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
   return parseModelOutput(output)

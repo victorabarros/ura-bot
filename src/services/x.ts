@@ -16,7 +16,7 @@ export type TweetResult = {
   createdAt: string
   likeCount: number
   retweetCount: number
-  /** X reply_settings field — proxy for account openness. "everyone" | "mentionedUsers" | "subscribers" */
+  /** X reply_settings field. "everyone" | "mentionedUsers" | "subscribers" */
   replySettings: string
 }
 
@@ -26,6 +26,25 @@ const URANIUM_QUERY = "(uranium OR $UEC OR $CCJ OR $URA OR $URNM) -is:retweet la
 const TWEET_FIELDS: ("created_at" | "public_metrics" | "author_id" | "reply_settings")[] = [
   "created_at", "public_metrics", "author_id", "reply_settings",
 ]
+
+function mapTweet(tweet: {
+  id: string
+  text: string
+  author_id?: string
+  created_at?: string
+  public_metrics?: { like_count?: number; retweet_count?: number }
+  reply_settings?: string
+}): TweetResult {
+  return {
+    id: tweet.id,
+    text: tweet.text,
+    authorId: tweet.author_id ?? "",
+    createdAt: tweet.created_at ?? "",
+    likeCount: tweet.public_metrics?.like_count ?? 0,
+    retweetCount: tweet.public_metrics?.retweet_count ?? 0,
+    replySettings: tweet.reply_settings ?? "everyone",
+  }
+}
 
 /** Lazily resolved user ID for the authenticated bot account. */
 let _botUserId: string | undefined
@@ -85,15 +104,7 @@ export class XService implements ISocialService {
       "tweet.fields": TWEET_FIELDS,
     })
 
-    return (data.data ?? []).map((tweet) => ({
-      id: tweet.id,
-      text: tweet.text,
-      authorId: tweet.author_id ?? "",
-      createdAt: tweet.created_at ?? "",
-      likeCount: tweet.public_metrics?.like_count ?? 0,
-      retweetCount: tweet.public_metrics?.retweet_count ?? 0,
-      replySettings: tweet.reply_settings ?? "everyone",
-    }))
+    return (data.data ?? []).map(mapTweet)
   }
 
   /**
@@ -111,14 +122,6 @@ export class XService implements ISocialService {
       sort_order: "relevancy",
     })
 
-    return (data.data ?? []).map((tweet) => ({
-      id: tweet.id,
-      text: tweet.text,
-      authorId: tweet.author_id ?? "",
-      createdAt: tweet.created_at ?? "",
-      likeCount: tweet.public_metrics?.like_count ?? 0,
-      retweetCount: tweet.public_metrics?.retweet_count ?? 0,
-      replySettings: tweet.reply_settings ?? "everyone",
-    }))
+    return (data.data ?? []).map(mapTweet)
   }
 }
