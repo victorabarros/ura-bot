@@ -14,10 +14,12 @@ const config = {
   },
 
   x: {
-    consumerKey: env("URA_BOT_X_CONSUMER_KEY"),
-    consumerSecret: env("URA_BOT_X_CONSUMER_KEY_SECRET"),
-    accessToken: env("URA_BOT_X_ACCESS_TOKEN"),
-    accessTokenSecret: env("URA_BOT_X_ACCESS_TOKEN_SECRET"),
+    urabot: {
+      consumerKey: env("URA_BOT_X_CONSUMER_KEY"),
+      consumerSecret: env("URA_BOT_X_CONSUMER_KEY_SECRET"),
+      accessToken: env("URA_BOT_X_ACCESS_TOKEN"),
+      accessTokenSecret: env("URA_BOT_X_ACCESS_TOKEN_SECRET"),
+    },
   },
 
   replicate: {

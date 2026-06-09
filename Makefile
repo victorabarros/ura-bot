@@ -45,7 +45,7 @@ run:
 		-p $(PORT):$(PORT) \
 		$(APP_NAME):latest
 
-dev:
+dev d:
 	@make build DOCKER_TARGET=builder DOCKER_TAG=dev
 	@make welcome
 	@docker run --rm -it \
@@ -57,7 +57,7 @@ dev:
 		$(APP_NAME):dev \
 		npm run dev
 
-test:
+test t:
 	@make build DOCKER_TARGET=test DOCKER_TAG=test
 	@docker run --rm --name $(APP_NAME)-test $(APP_NAME):test
 
