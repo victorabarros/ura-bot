@@ -1,4 +1,4 @@
-import { getPostContext } from "../../src/domain/context"
+import { getPostContext } from "../../src/domain/marketTime"
 
 describe("getPostContext", () => {
   function makeUTCDate(hour: number, minute: number, dayOfWeek: number): Date {

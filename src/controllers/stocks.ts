@@ -4,7 +4,7 @@ import axios from "axios"
 import { getQuote } from "../services/finnhub"
 import { generateHolidayComment, generateHolidayImage } from "../services/replicate"
 import { getHolidayEntry } from "../domain/holidays"
-import { getPostContext } from "../domain/context"
+import { getPostContext } from "../domain/marketTime"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
 import { buildPostApiResponse, fanoutAll, fanoutHadSuccess } from "../fanout"
 import {
