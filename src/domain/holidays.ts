@@ -12,23 +12,23 @@ export type HolidayEntry = {
 }
 
 const FALLBACK_HOLIDAYS: HolidayEntry[] = [
-  { eventName: "New Year's Day",                       atDate: "2026-01-01", tradingHour: "" },
-  { eventName: "Birthday of Martin Luther King, Jr.",  atDate: "2026-01-19", tradingHour: "" },
-  { eventName: "Washington's Birthday",                atDate: "2026-02-16", tradingHour: "" },
-  { eventName: "Good Friday",                          atDate: "2026-04-03", tradingHour: "" },
-  { eventName: "Memorial Day",                         atDate: "2026-05-25", tradingHour: "" },
-  { eventName: "Juneteenth",                           atDate: "2026-06-19", tradingHour: "" },
+  { eventName: "New Year's Day", atDate: "2026-01-01", tradingHour: "" },
+  { eventName: "Birthday of Martin Luther King, Jr.", atDate: "2026-01-19", tradingHour: "" },
+  { eventName: "Washington's Birthday", atDate: "2026-02-16", tradingHour: "" },
+  { eventName: "Good Friday", atDate: "2026-04-03", tradingHour: "" },
+  { eventName: "Memorial Day", atDate: "2026-05-25", tradingHour: "" },
+  { eventName: "Juneteenth", atDate: "2026-06-19", tradingHour: "" },
   {
     eventName: "Independence Day",
     atDate: "2026-07-04",
     tradingHour: "",
     message: "Today is Independence Day 🎇🎇🎇\nCelebrate with your family and friends\nAnd always remember FREEDOM IS NOT FREE!",
   },
-  { eventName: "Labor Day",         atDate: "2026-09-07", tradingHour: "" },
-  { eventName: "Thanksgiving Day",  atDate: "2026-11-26", tradingHour: "" },
-  { eventName: "Thanksgiving Day",  atDate: "2026-11-27", tradingHour: "09:30-13:00" },
-  { eventName: "Christmas Eve",     atDate: "2026-12-24", tradingHour: "09:30-13:00" },
-  { eventName: "Christmas Day",     atDate: "2026-12-25", tradingHour: "" },
+  { eventName: "Labor Day", atDate: "2026-09-07", tradingHour: "" },
+  { eventName: "Thanksgiving Day", atDate: "2026-11-26", tradingHour: "" },
+  { eventName: "Thanksgiving Day", atDate: "2026-11-27", tradingHour: "09:30-13:00" },
+  { eventName: "Christmas Eve", atDate: "2026-12-24", tradingHour: "09:30-13:00" },
+  { eventName: "Christmas Day", atDate: "2026-12-25", tradingHour: "" },
 ]
 
 let cachedHolidays: HolidayEntry[] | null = null
@@ -53,28 +53,9 @@ async function getHolidays(): Promise<HolidayEntry[]> {
   }
 }
 
-/**
- * True when the NY date is a full holiday or inside an early-close window.
- * Loads calendar from Finnhub with a static fallback.
- *
- * @see https://finnhub.io/docs/api
- * @see docs/3rd-parties/finhub.md
- */
-export async function isHoliday(now: Date): Promise<boolean> {
-  const holidays = await getHolidays()
-  const today = moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
-  const entry = holidays.find(h => h.atDate === today)
-  if (!entry) return false
-
-  if (entry.tradingHour === "") return true
-
-  const currentTime = moment(now).tz(MARKET_TZ).format("HH:mm")
-  const [start, end] = entry.tradingHour.split("-")
-  return currentTime >= start && currentTime <= end
-}
-
 /** Returns today's holiday entry in NY, if any. */
 export async function getHolidayEntry(now: Date): Promise<HolidayEntry | undefined> {
+  // return FALLBACK_HOLIDAYS[0]
   const holidays = await getHolidays()
   const today = moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
   return holidays.find(h => h.atDate === today)
