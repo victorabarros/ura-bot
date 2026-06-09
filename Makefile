@@ -82,7 +82,8 @@ docker-purge-images:
 
 OLLAMA_MODEL?=qwen2.5:7b
 
-commit-llm-generated:
+commit-llm-generated commit:
+	git add .
 	@msg_file="$$(mktemp)"; \
 	{ \
 		printf '%s\n\n' 'Write the final git commit message for the staged changes.'; \
@@ -109,7 +110,6 @@ commit-llm-generated:
 	git commit -m "$$commit_msg"
 
 push p:
-	git add .
 	make commit-llm-generated
 	git push
 
