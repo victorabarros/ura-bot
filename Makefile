@@ -51,9 +51,13 @@ clean:
 DOCKER_TARGET?=
 DOCKER_TAG?=latest
 docker-build:
-	@docker build \
-		$(if $(DOCKER_TARGET),--target $(DOCKER_TARGET)) \
-		-t $(APP_NAME):$(DOCKER_TAG) .
+	@if docker image inspect $(APP_NAME):$(DOCKER_TAG) > /dev/null 2>&1; then \
+		echo "Image $(APP_NAME):$(DOCKER_TAG) already exists, skipping build."; \
+	else \
+		docker build \
+			$(if $(DOCKER_TARGET),--target $(DOCKER_TARGET)) \
+			-t $(APP_NAME):$(DOCKER_TAG) .; \
+	fi
 
 docker-run:
 	@make docker-build
