@@ -3,7 +3,7 @@ import httpStatus from "http-status"
 import config from "../config"
 import { checkFinnhubHealth } from "../services/finnhub"
 import { checkReplicateHealth } from "../services/replicate"
-import { checkXHealth } from "../services/x"
+import { uraBotXService } from "../services/x"
 import { logIntegrationError } from "../http/errors"
 
 /** Result of probing one upstream dependency. */
@@ -37,7 +37,7 @@ export async function healthcheck(_req: Request, res: Response): Promise<void> {
   const settled = await Promise.allSettled([
     probe("finnhub", checkFinnhubHealth),
     probe("replicate", checkReplicateHealth),
-    probe("x", checkXHealth),
+    probe("x", () => uraBotXService.checkHealth()),
   ])
   const [finnhub, replicate, x] = settled.map((r) =>
     r.status === "fulfilled" ? r.value : { ok: false as const, error: String(r.reason) }
