@@ -3,7 +3,7 @@ import httpStatus from "http-status"
 import axios from "axios"
 import moment from "moment-timezone"
 import { searchNews, NewsItem } from "../services/finnhub"
-import { generateComment } from "../services/replicate"
+import { generateComment, generateImage } from "../services/replicate"
 import { STOCKS } from "../domain/stocks"
 import { buildPostApiResponse, fanout, fanoutHadSuccess } from "../fanout"
 import {
@@ -28,7 +28,7 @@ const shuffledStocks = (): string[] => {
   const symbols = [...STOCKS]
   for (let i = symbols.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[symbols[i], symbols[j]] = [symbols[j], symbols[i]]
+      ;[symbols[i], symbols[j]] = [symbols[j], symbols[i]]
   }
   return symbols
 }
@@ -99,7 +99,7 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
     let comment: string
     try {
       comment = await generateComment(
-        `Write a post (up to 200 characters) about the news (don't use hashtag with uranium word): ${JSON.stringify(news)}`
+        `Write a post (up to 150 characters) about the news (don't use hashtag with uranium word): ${JSON.stringify(news)}`
       )
     } catch (err) {
       logIntegrationError("news", "replicate", err)
@@ -107,8 +107,20 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
       return
     }
 
+    /** 20% of the time, generate a satirical illustration to attach to the post. */
+    let imageUrl: string | undefined
+    if (Math.random() < 0.2) {
+      try {
+        imageUrl = await generateImage(
+          `Satirical editorial cartoon inspired by this uranium market headline: "${news.headline}". Bold colors, dramatic lighting, fun and irreverent tone, no text or words in image, high quality illustration`
+        )
+      } catch (err) {
+        console.warn("[news] Image generation failed, posting without image:", (err as Error).message)
+      }
+    }
+
     const message = [comment, "", "#Uranium☢️", news.url].join("\n")
-    const posts = await fanout(message, SOCIAL_TARGETS)
+    const posts = await fanout(message, SOCIAL_TARGETS, imageUrl)
     if (!fanoutHadSuccess(posts)) {
       respondSocialPublishFailed(res, posts)
       return

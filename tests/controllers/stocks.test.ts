@@ -9,7 +9,7 @@ jest.mock("../../src/services/finnhub", () => ({
 }))
 jest.mock("../../src/services/replicate", () => ({
   generateComment: jest.fn(),
-  generateHolidayImage: jest.fn(),
+  generateImage: jest.fn(),
   checkReplicateHealth: jest.fn(),
 }))
 jest.mock("../../src/domain/holidays", () => ({
@@ -25,14 +25,14 @@ jest.mock("../../src/controllers/targets", () => ({
 }))
 
 import { getQuote } from "../../src/services/finnhub"
-import { generateComment, generateHolidayImage } from "../../src/services/replicate"
+import { generateComment, generateImage } from "../../src/services/replicate"
 import { getHolidayEntry } from "../../src/domain/holidays"
 import { fanoutAll, fanoutHadSuccess, buildPostApiResponse } from "../../src/fanout"
 import { Quote } from "../../src/services/finnhub"
 
 const mockGetQuote = getQuote as jest.MockedFunction<typeof getQuote>
 const mockGenerateComment = generateComment as jest.MockedFunction<typeof generateComment>
-const mockGenerateHolidayImage = generateHolidayImage as jest.MockedFunction<typeof generateHolidayImage>
+const mockGenerateImage = generateImage as jest.MockedFunction<typeof generateImage>
 const mockGetHolidayEntry = getHolidayEntry as jest.MockedFunction<typeof getHolidayEntry>
 const mockFanoutAll = fanoutAll as jest.MockedFunction<typeof fanoutAll>
 const mockFanoutHadSuccess = fanoutHadSuccess as jest.MockedFunction<typeof fanoutHadSuccess>

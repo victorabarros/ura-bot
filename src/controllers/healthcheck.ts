@@ -19,7 +19,7 @@ export type HealthcheckResponse = {
   }
 }
 
-async function probe(integration: string, check: () => Promise<void>): Promise<DependencyStatus> {
+const probe = async (integration: string, check: () => Promise<void>): Promise<DependencyStatus> => {
   try {
     await check()
     return { ok: true }
@@ -33,7 +33,7 @@ async function probe(integration: string, check: () => Promise<void>): Promise<D
  * GET /healthcheck: probes Finnhub, Replicate, and X in parallel.
  * `200` when all are healthy; `503` when any dependency fails.
  */
-export async function healthcheck(_req: Request, res: Response): Promise<void> {
+export const healthcheck = async (_req: Request, res: Response): Promise<void> => {
   const settled = await Promise.allSettled([
     probe("finnhub", checkFinnhubHealth),
     probe("replicate", checkReplicateHealth),

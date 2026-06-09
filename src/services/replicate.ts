@@ -62,22 +62,22 @@ export const generateComment = async (prompt: string): Promise<string> => {
 }
 
 /**
- * Generates a holiday-themed image using the Nano Banana 2 image model.
+ * Generates an image from the given prompt using the Nano Banana 2 model.
  * Returns the URL of the generated image.
+ * Callers are responsible for building domain-specific prompts.
  *
  * @see https://replicate.com/google/nano-banana-2
  * @see docs/3rd-parties/replicate-ai.md
  */
-export async function generateHolidayImage(holidayName: string, now: Date = new Date()): Promise<string> {
-  const year = now.getFullYear()
-  const prompt = `Festive ${holidayName} ${year} celebration, nuclear energy and uranium market theme, dynamic digital art, vivid colors, high quality`
+export const generateImage = async (prompt: string): Promise<string> => {
   const output = await replicate.run(IMAGE_MODEL as `${string}/${string}`, {
     input: { prompt, aspect_ratio: "1:1", output_format: "jpg" },
   })
   const url = Array.isArray(output) ? String(output[0]) : String(output)
-  if (!url) throw new Error(`No image returned for holiday: ${holidayName}`)
+  if (!url) throw new Error("No image URL returned by image model")
   return url
 }
+
 
 /**
  * Verifies Replicate token and that the configured model is reachable.
@@ -85,7 +85,7 @@ export async function generateHolidayImage(holidayName: string, now: Date = new 
  * @see https://replicate.com/docs
  * @see docs/3rd-parties/replicate-ai.md
  */
-export async function checkReplicateHealth(): Promise<void> {
+export const checkReplicateHealth = async (): Promise<void> => {
   const [owner, name] = MODEL.split("/")
   await replicate.models.get(owner, name)
 }

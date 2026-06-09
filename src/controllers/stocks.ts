@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import axios from "axios"
 import { getQuote } from "../services/finnhub"
-import { generateComment, generateHolidayImage } from "../services/replicate"
+import { generateComment, generateImage } from "../services/replicate"
 import { getHolidayEntry } from "../domain/holidays"
 import { getPostContext } from "../domain/marketTime"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
@@ -27,7 +27,7 @@ export const postUraStock = async (_req: Request, res: Response): Promise<void> 
     const entry = await getHolidayEntry(now)
     if (entry) {
         const [imgResult, commentResult] = await Promise.allSettled([
-          generateHolidayImage(entry.eventName, now),
+          generateImage(`Festive ${entry.eventName} ${now.getFullYear()} celebration, nuclear energy and uranium market theme, dynamic digital art, vivid colors, high quality`),
           entry.message
             ? Promise.resolve(undefined)
             : generateComment(`Write a short post (up to 150 characters) wishing happy ${entry.eventName} ${now.getFullYear()} to uranium investors (don't use hashtag with uranium word)`),
