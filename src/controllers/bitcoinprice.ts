@@ -81,8 +81,6 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
   const arrow = market.change24hPct >= 0 ? "📈" : "📉"
 
   const lines: string[] = [
-    `₿itcoin — ${moment(now).format("MMM D, YYYY")}`,
-    "",
     `${fmtPrice(market.priceUsd)}  ${sign}${market.change24hPct.toFixed(2)}% 24h ${arrow}`,
     `Cap: ${fmtCompact(market.marketCapUsd)} · Vol: ${fmtCompact(market.volume24hUsd)}`,
   ]
@@ -103,6 +101,7 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
     lines.push(`Fear & Greed: ${fearGreed.value}/100 — ${fearGreed.classification} ${fearGreedEmoji(fearGreed.value)}`)
   }
 
+  lines.push(`₿itcoin — ${moment(now).format("MMM D, YYYY")}`)
   lines.push("", "#Bitcoin #BTC")
 
   const message = lines.join("\n")
