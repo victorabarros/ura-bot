@@ -57,7 +57,7 @@ type FinnhubMarketHolidayResponse = {
  * @see https://finnhub.io/docs/api
  * @see docs/3rd-parties/finhub.md
  */
-export async function getQuote(symbol: string): Promise<Quote> {
+export const getQuote = async (symbol: string): Promise<Quote> => {
   const { data } = await http.get<FinnhubQuoteResponse>("/quote", {
     params: { symbol },
   })
@@ -82,7 +82,7 @@ export async function getQuote(symbol: string): Promise<Quote> {
  * @see https://finnhub.io/docs/api
  * @see docs/3rd-parties/finhub.md
  */
-export async function searchNews(symbol: string, fromDate: string, toDate: string): Promise<NewsItem[]> {
+export const searchNews = async (symbol: string, fromDate: string, toDate: string): Promise<NewsItem[]> => {
   const { data } = await http.get<NewsItem[]>("/company-news", {
     params: { symbol, from: fromDate, to: toDate },
   })
@@ -95,7 +95,7 @@ export async function searchNews(symbol: string, fromDate: string, toDate: strin
  * @see https://finnhub.io/docs/api
  * @see docs/3rd-parties/finhub.md
  */
-export async function getMarketHolidays(exchange: string = "US"): Promise<FinnhubMarketHolidayResponse> {
+export const getMarketHolidays = async (exchange: string = "US"): Promise<FinnhubMarketHolidayResponse> => {
   const { data } = await http.get<FinnhubMarketHolidayResponse>("/stock/market-holiday", {
     params: { exchange },
   })
@@ -110,7 +110,7 @@ const HEALTH_TIMEOUT_MS = 5_000
  * @see https://finnhub.io/docs/api
  * @see docs/3rd-parties/finhub.md
  */
-export async function checkFinnhubHealth(): Promise<void> {
+export const checkFinnhubHealth = async (): Promise<void> => {
   console.log("[health] checking Finnhub connectivity")
   await http.get("/stock/market-status", {
     params: { exchange: "US" },

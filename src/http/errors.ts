@@ -9,20 +9,16 @@ export type ApiErrorBody = {
   integration: string
 }
 
-/** Extracts a structured API detail payload from known error shapes. */
-function apiDetail(err: unknown): unknown | undefined {
-  if (!err || typeof err !== "object") return undefined
-  // twitter-api-v2 ApiResponseError
-  if ("data" in err && err.data !== undefined) return err.data
-  // Axios
-  if (axios.isAxiosError(err) && err.response?.data !== undefined) return err.response.data
-  return undefined
-}
-
 /** Logs an upstream integration failure with full API response detail when available. */
-export function logIntegrationError(route: string, integration: string, err: unknown): void {
+export const logIntegrationError = (route: string, integration: string, err: unknown): void => {
   const msg = err instanceof Error ? err.message : String(err)
-  const detail = apiDetail(err)
+
+  let detail: unknown | undefined
+  if (err && typeof err === "object") {
+    if ("data" in err && (err as { data?: unknown }).data !== undefined) detail = (err as { data?: unknown }).data
+    else if (axios.isAxiosError(err) && err.response?.data !== undefined) detail = err.response.data
+  }
+
   const code = err && typeof err === "object" && "code" in err ? (err as { code?: unknown }).code : undefined
   const suffix = [
     code !== undefined ? `code=${code}` : undefined,
@@ -34,7 +30,7 @@ export function logIntegrationError(route: string, integration: string, err: unk
 }
 
 /** `502` when every configured social target failed to publish. */
-export function respondSocialPublishFailed(res: Response, results: FanoutResult[]): void {
+export const respondSocialPublishFailed = (res: Response, results: FanoutResult[]): void => {
   const detail = results.map((r) => `${r.platform}: ${r.error ?? "unknown"}`).join("; ")
   console.error(`[fanout] All platforms failed: ${detail}`)
   res.status(httpStatus.BAD_GATEWAY).json({

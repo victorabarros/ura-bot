@@ -12,13 +12,13 @@ import {
   logIntegrationError,
   respondSocialPublishFailed,
 } from "../http/errors"
-import { getSocialTargets } from "./targets"
+import { SOCIAL_TARGETS } from "./targets"
 
 /**
  * POST /urabot/stocks: holiday message or uranium quote roundup.
  * `503`/`502`/`500` on integration failures; partial quote misses are OK.
  */
-export async function postUraStock(_req: Request, res: Response): Promise<void> {
+export const postUraStock = async (_req: Request, res: Response): Promise<void> => {
   const now = new Date()
 
   try {
@@ -42,7 +42,7 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
           : (console.warn("[stocks] Holiday comment generation failed:", commentResult.reason instanceof Error ? commentResult.reason.message : String(commentResult.reason)), undefined)
 
         const message = buildHolidayMessage(entry.eventName, entry.message ?? holidayMessage, now, ctx)
-        const posts = await fanoutAll([message], getSocialTargets(), imageUrl)
+        const posts = await fanoutAll([message], SOCIAL_TARGETS, imageUrl)
         const flat = posts.flat()
         if (!fanoutHadSuccess(posts)) {
           respondSocialPublishFailed(res, flat)
@@ -78,7 +78,7 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
     }
 
     const messages = buildStockMessages(quotes, now, ctx)
-    const posts = await fanoutAll(messages, getSocialTargets())
+    const posts = await fanoutAll(messages, SOCIAL_TARGETS)
     const flat = posts.flat()
     if (!fanoutHadSuccess(posts)) {
       respondSocialPublishFailed(res, flat)

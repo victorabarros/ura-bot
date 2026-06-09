@@ -25,7 +25,7 @@ const MARKET_TZ = "America/New_York"
 const TIME_FORMAT = { timeZone: MARKET_TZ, hour: "2-digit", minute: "2-digit", hour12: false } as const
 
 /** One ticker line with price, day change %, and direction emoji. */
-export function formatQuoteLine(quote: Quote): string {
+export const formatQuoteLine = (quote: Quote): string => {
   const ticker = quote.symbol.padEnd(7)
   const delta = quote.openPrice > 0
     ? ((quote.price - quote.openPrice) / quote.openPrice) * 100
@@ -36,7 +36,7 @@ export function formatQuoteLine(quote: Quote): string {
 }
 
 /** Market-local timestamp footer and uranium hashtag. */
-export function buildSignature(now: Date): string {
+export const buildSignature = (now: Date): string => {
   const time = now.toLocaleString("en-US", TIME_FORMAT)
   return `${time} ${MARKET_TZ}\n#Uranium☢️`
 }
@@ -45,7 +45,7 @@ export function buildSignature(now: Date): string {
  * Builds one or more stock roundup messages chunked by ticker count.
  * Adds morning/evening copy from post context on first/last chunk.
  */
-export function buildStockMessages(quotes: Quote[], now: Date, ctx: PostContext): string[] {
+export const buildStockMessages = (quotes: Quote[], now: Date, ctx: PostContext): string[] => {
   const messages: string[] = []
 
   for (let i = 0; i < quotes.length; i += MAX_STOCKS_PER_MESSAGE) {
@@ -69,7 +69,7 @@ export function buildStockMessages(quotes: Quote[], now: Date, ctx: PostContext)
 }
 
 /** Holiday post with optional custom copy and standard signature. */
-export function buildHolidayMessage(holidayName: string, customMessage: string | undefined, now: Date, ctx: PostContext): string {
+export const buildHolidayMessage = (holidayName: string, customMessage: string | undefined, now: Date, ctx: PostContext): string => {
   const parts: string[] = []
   if (ctx.isMorning) parts.push("Good Morning, everyone!")
   parts.push(customMessage ?? `Today is ${holidayName}`)

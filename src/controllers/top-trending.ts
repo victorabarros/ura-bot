@@ -13,21 +13,15 @@ const MAX_QUOTE_ATTEMPTS = 5
 /** X 403 detail returned when the API prevents quoting a specific tweet. */
 const QUOTE_NOT_ALLOWED_DETAIL = "Quoting this post is not allowed"
 
-function isQuoteNotAllowed(err: unknown): boolean {
-  if (!err || typeof err !== "object") return false
-  const data = "data" in err ? (err as { data?: { detail?: string } }).data : undefined
-  return typeof data?.detail === "string" && data.detail.startsWith(QUOTE_NOT_ALLOWED_DETAIL)
-}
-
 /**
  * Attempts to quote-tweet the first eligible candidate from the pool.
  * Returns { quoteTweetId, quotedTweetId } on success, null when every
  * candidate is rejected by X (quote-not-allowed 403). Throws on other errors.
  */
-async function tryQuoteTweet(
+const tryQuoteTweet = async (
   text: string,
   candidates: TweetResult[],
-): Promise<{ quoteTweetId: string; quotedTweetId: string } | null> {
+): Promise<{ quoteTweetId: string; quotedTweetId: string } | null> => {
   for (const tweet of candidates.slice(0, MAX_QUOTE_ATTEMPTS)) {
     console.log(
       `[top-trending] attempting quote id=${tweet.id} likes=${tweet.likeCount} rt=${tweet.retweetCount}`,
@@ -36,7 +30,10 @@ async function tryQuoteTweet(
       const result = await xService.quoteTweet(text, tweet.id)
       return { quoteTweetId: result.id, quotedTweetId: tweet.id }
     } catch (err) {
-      if (isQuoteNotAllowed(err)) {
+      const data = err && typeof err === "object" && "data" in err
+        ? (err as { data?: { detail?: string } }).data
+        : undefined
+      if (typeof data?.detail === "string" && data.detail.startsWith(QUOTE_NOT_ALLOWED_DETAIL)) {
         logIntegrationError("top-trending", "x/quote-not-allowed", err)
         continue
       }
@@ -55,7 +52,7 @@ async function tryQuoteTweet(
  *
  * `204` when no content source is available; `503`/`500` on failures.
  */
-export async function postTopTrending(_req: Request, res: Response): Promise<void> {
+export const postTopTrending = async (_req: Request, res: Response): Promise<void> => {
   const now = new Date()
 
   try {

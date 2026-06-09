@@ -18,7 +18,7 @@ jest.mock("../../src/fanout", () => ({
   fanoutAll: jest.fn(),
 }))
 jest.mock("../../src/controllers/targets", () => ({
-  getSocialTargets: jest.fn().mockReturnValue([]),
+  SOCIAL_TARGETS: [],
 }))
 
 import { searchNews } from "../../src/services/finnhub"

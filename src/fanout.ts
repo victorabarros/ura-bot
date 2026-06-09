@@ -18,7 +18,7 @@ export type PostApiResponse = {
 const X_PLATFORM = "X"
 
 /** True if at least one platform published successfully. */
-export function fanoutHadSuccess(results: FanoutResult[] | FanoutResult[][]): boolean {
+export const fanoutHadSuccess = (results: FanoutResult[] | FanoutResult[][]): boolean => {
   const flat = Array.isArray(results[0])
     ? (results as FanoutResult[][]).flat()
     : (results as FanoutResult[])
@@ -29,10 +29,10 @@ export function fanoutHadSuccess(results: FanoutResult[] | FanoutResult[][]): bo
  * Builds the success response payload with X tweet id(s) from fan-out.
  * One id uses `tweet_id`; multiple chunked posts use `tweet_ids`.
  */
-export function buildPostApiResponse(
+export const buildPostApiResponse = (
   createdAt: Date,
   results: FanoutResult[] | FanoutResult[][]
-): PostApiResponse {
+): PostApiResponse => {
   const ids = Array.isArray(results[0])
     ? (results as FanoutResult[][]).flatMap((chunk) =>
         chunk.filter((r) => r.platform === X_PLATFORM && r.success && r.id).map((r) => r.id!)
@@ -51,11 +51,11 @@ export function buildPostApiResponse(
  * image is uploaded and attached; otherwise falls back to plain `postMessage`.
  * Each target succeeds or fails independently.
  */
-export async function fanout(
+export const fanout = async (
   message: string,
   targets: { name: string; service: ISocialService }[],
   imageUrl?: string,
-): Promise<FanoutResult[]> {
+): Promise<FanoutResult[]> => {
   const tasks = targets.map(({ name, service }) => {
     const post = imageUrl && service.postWithImage
       ? service.postWithImage(message, imageUrl)
@@ -91,11 +91,11 @@ export async function fanout(
  * Used when stock roundups exceed one social post.
  * `imageUrl`, when provided, is attached only to the first message.
  */
-export async function fanoutAll(
+export const fanoutAll = async (
   messages: string[],
   targets: { name: string; service: ISocialService }[],
   imageUrl?: string,
-): Promise<FanoutResult[][]> {
+): Promise<FanoutResult[][]> => {
   const results: FanoutResult[][] = []
   for (let i = 0; i < messages.length; i++) {
     results.push(await fanout(messages[i], targets, i === 0 ? imageUrl : undefined))

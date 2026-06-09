@@ -30,7 +30,7 @@ let cachedHolidays: HolidayEntry[] | null = null
 let cacheExpiry = 0
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
 
-async function getHolidays(): Promise<HolidayEntry[]> {
+const getHolidays = async (): Promise<HolidayEntry[]> => {
   if (cachedHolidays && Date.now() < cacheExpiry) return cachedHolidays
 
   try {
@@ -49,7 +49,7 @@ async function getHolidays(): Promise<HolidayEntry[]> {
 }
 
 /** Returns today's holiday entry in NY, if any. */
-export async function getHolidayEntry(now: Date): Promise<HolidayEntry | undefined> {
+export const getHolidayEntry = async (now: Date): Promise<HolidayEntry | undefined> => {
   const holidays = await getHolidays()
   const today = moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
   return holidays.find(h => h.atDate === today)

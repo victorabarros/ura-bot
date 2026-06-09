@@ -11,7 +11,7 @@ import {
   logIntegrationError,
   respondSocialPublishFailed,
 } from "../http/errors"
-import { getSocialTargets } from "./targets"
+import { SOCIAL_TARGETS } from "./targets"
 
 const MARKET_TZ = "America/New_York"
 
@@ -24,13 +24,7 @@ type FindNewsOutcome =
   | { status: "rate_limited" }
   | { status: "upstream_error" }
 
-function subtractDays(date: Date, days: number): Date {
-  const d = new Date(date)
-  d.setDate(d.getDate() - days)
-  return d
-}
-
-function shuffledStocks(): string[] {
+const shuffledStocks = (): string[] => {
   const symbols = [...STOCKS]
   for (let i = symbols.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
@@ -39,13 +33,15 @@ function shuffledStocks(): string[] {
   return symbols
 }
 
-async function findRecentNews(now: Date): Promise<FindNewsOutcome> {
+const findRecentNews = async (now: Date): Promise<FindNewsOutcome> => {
   const toDate = moment(now).tz(MARKET_TZ).format("YYYY-MM-DD")
   let hadSuccessfulCall = false
   let errorCount = 0
 
   for (const lookbackDays of NEWS_LOOKBACK_DAYS) {
-    const fromDate = moment(subtractDays(now, lookbackDays)).tz(MARKET_TZ).format("YYYY-MM-DD")
+    const fromDateObj = new Date(now)
+    fromDateObj.setDate(fromDateObj.getDate() - lookbackDays)
+    const fromDate = moment(fromDateObj).tz(MARKET_TZ).format("YYYY-MM-DD")
 
     for (const symbol of shuffledStocks()) {
       try {
@@ -80,7 +76,7 @@ async function findRecentNews(now: Date): Promise<FindNewsOutcome> {
  * POST /urabot/news: picks recent uranium news, LLM comment, then posts.
  * `204` when no articles; `503`/`502`/`500` on integration failures.
  */
-export async function postUraNews(_req: Request, res: Response): Promise<void> {
+export const postUraNews = async (_req: Request, res: Response): Promise<void> => {
   const now = new Date()
 
   try {
@@ -112,7 +108,7 @@ export async function postUraNews(_req: Request, res: Response): Promise<void> {
     }
 
     const message = [comment, "", "#Uranium☢️", news.url].join("\n")
-    const posts = await fanout(message, getSocialTargets())
+    const posts = await fanout(message, SOCIAL_TARGETS)
     if (!fanoutHadSuccess(posts)) {
       respondSocialPublishFailed(res, posts)
       return

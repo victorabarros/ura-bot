@@ -21,7 +21,7 @@ jest.mock("../../src/fanout", () => ({
   buildPostApiResponse: jest.fn(),
 }))
 jest.mock("../../src/controllers/targets", () => ({
-  getSocialTargets: jest.fn().mockReturnValue([]),
+  SOCIAL_TARGETS: [],
 }))
 
 import { getQuote } from "../../src/services/finnhub"

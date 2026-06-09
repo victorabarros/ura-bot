@@ -19,7 +19,7 @@ export type PostContext = {
  * Derives morning/evening windows (UTC) and whether today is Friday in NY.
  * Uses a short minute window, not exact clock equality.
  */
-export function getPostContext(now: Date): PostContext {
+export const getPostContext = (now: Date): PostContext => {
   const m = moment(now).utc()
   const hour = m.hour()
   const minute = m.minute()

@@ -32,24 +32,22 @@ const TWEET_FIELDS: ("created_at" | "public_metrics" | "author_id" | "reply_sett
   "created_at", "public_metrics", "author_id", "reply_settings",
 ]
 
-function mapTweet(tweet: {
+const mapTweet = (tweet: {
   id: string
   text: string
   author_id?: string
   created_at?: string
   public_metrics?: { like_count?: number; retweet_count?: number }
   reply_settings?: string
-}): TweetResult {
-  return {
-    id: tweet.id,
-    text: tweet.text,
-    authorId: tweet.author_id ?? "",
-    createdAt: tweet.created_at ?? "",
-    likeCount: tweet.public_metrics?.like_count ?? 0,
-    retweetCount: tweet.public_metrics?.retweet_count ?? 0,
-    replySettings: tweet.reply_settings ?? "everyone",
-  }
-}
+}): TweetResult => ({
+  id: tweet.id,
+  text: tweet.text,
+  authorId: tweet.author_id ?? "",
+  createdAt: tweet.created_at ?? "",
+  likeCount: tweet.public_metrics?.like_count ?? 0,
+  retweetCount: tweet.public_metrics?.retweet_count ?? 0,
+  replySettings: tweet.reply_settings ?? "everyone",
+})
 
 export class XService implements ISocialService {
   private readonly client: TwitterApi

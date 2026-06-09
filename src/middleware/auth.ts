@@ -8,7 +8,7 @@ const UNAUTHENTICATED_PATHS = new Set(["/heartbeat", "/healthcheck", "/urabot/la
  * Requires API key on all paths except `/heartbeat` and `/healthcheck`.
  * Logs method and path for each request.
  */
-export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const { method, path } = req
   console.log(`${new Date().toISOString()} ${method} ${path}`)
 
