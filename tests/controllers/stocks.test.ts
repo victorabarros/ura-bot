@@ -55,7 +55,7 @@ beforeEach(() => {
   jest.clearAllMocks()
   mockGetHolidayEntry.mockResolvedValue(undefined)
   mockGenerateComment.mockResolvedValue("Wishing all uranium bulls a prosperous holiday!")
-  mockGenerateHolidayImage.mockResolvedValue("https://replicate.delivery/holiday.jpg")
+  mockGenerateImage.mockResolvedValue("https://replicate.delivery/holiday.jpg")
   mockFanoutAll.mockResolvedValue([[{ platform: "X", success: true, id: "tweet-1" }]])
   mockFanoutHadSuccess.mockReturnValue(true)
   mockBuildPostApiResponse.mockReturnValue({ created_at: new Date(), tweet_id: "tweet-1" })
@@ -102,7 +102,7 @@ describe("postUraStock", () => {
         atDate: "2026-09-07",
         tradingHour: "",
       })
-      mockGenerateHolidayImage.mockRejectedValue(new Error("timeout"))
+      mockGenerateImage.mockRejectedValue(new Error("timeout"))
       mockGenerateComment.mockRejectedValue(new Error("timeout"))
 
       const { res, status } = makeMockRes()
