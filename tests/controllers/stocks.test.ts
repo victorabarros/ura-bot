@@ -14,7 +14,6 @@ jest.mock("../../src/services/replicate", () => ({
   checkReplicateHealth: jest.fn(),
 }))
 jest.mock("../../src/domain/holidays", () => ({
-  isHoliday: jest.fn(),
   getHolidayEntry: jest.fn(),
 }))
 jest.mock("../../src/fanout", () => ({
@@ -28,13 +27,12 @@ jest.mock("../../src/controllers/targets", () => ({
 
 import { getQuote } from "../../src/services/finnhub"
 import { generateHolidayImage } from "../../src/services/replicate"
-import { isHoliday, getHolidayEntry } from "../../src/domain/holidays"
+import { getHolidayEntry } from "../../src/domain/holidays"
 import { fanoutAll, fanoutHadSuccess, buildPostApiResponse } from "../../src/fanout"
 import { Quote } from "../../src/services/finnhub"
 
 const mockGetQuote = getQuote as jest.MockedFunction<typeof getQuote>
 const mockGenerateHolidayImage = generateHolidayImage as jest.MockedFunction<typeof generateHolidayImage>
-const mockIsHoliday = isHoliday as jest.MockedFunction<typeof isHoliday>
 const mockGetHolidayEntry = getHolidayEntry as jest.MockedFunction<typeof getHolidayEntry>
 const mockFanoutAll = fanoutAll as jest.MockedFunction<typeof fanoutAll>
 const mockFanoutHadSuccess = fanoutHadSuccess as jest.MockedFunction<typeof fanoutHadSuccess>
@@ -55,7 +53,7 @@ const req = {} as Request
 
 beforeEach(() => {
   jest.clearAllMocks()
-  mockIsHoliday.mockResolvedValue(false)
+  mockGetHolidayEntry.mockResolvedValue(undefined)
   mockGenerateHolidayImage.mockResolvedValue("https://replicate.delivery/holiday.jpg")
   mockFanoutAll.mockResolvedValue([[{ platform: "X", success: true, id: "tweet-1" }]])
   mockFanoutHadSuccess.mockReturnValue(true)
