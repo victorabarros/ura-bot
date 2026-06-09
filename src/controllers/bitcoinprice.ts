@@ -50,6 +50,36 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
   const sign = market.change24hPct >= 0 ? "+" : ""
   const arrow = market.change24hPct >= 0 ? "📈" : "📉"
 
+  /**
+   * MVRV signal:
+   *   < 1    — historically deep value zone      🟢
+   *   1–2    — fair value                        🟡
+   *   2–3.5  — elevated, watch for distribution  🟠
+   *   > 3.5  — historically near cycle tops      🔴
+   */
+  const mvrvEmoji = (mvrv: number): string => {
+    if (mvrv < 1) return "🟢"
+    if (mvrv < 2) return "🟡"
+    if (mvrv < 3.5) return "🟠"
+    return "🔴"
+  }
+
+  /**
+   * Fear & Greed signal:
+   *   0–24   — Extreme Fear  😱
+   *   25–44  — Fear          😰
+   *   45–55  — Neutral       😐
+   *   56–74  — Greed         😏
+   *   75–100 — Extreme Greed 🤑
+   */
+  const fearGreedEmoji = (value: number): string => {
+    if (value <= 24) return "😱"
+    if (value <= 44) return "😰"
+    if (value <= 55) return "😐"
+    if (value <= 74) return "😏"
+    return "🤑"
+  }
+
   const lines: string[] = [
     `₿ Bitcoin — ${moment(now).format("MMM D, YYYY")}`,
     "",
@@ -59,13 +89,13 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
 
   if (onchain) {
     lines.push("")
-    lines.push(`MVRV: ${onchain.mvrv.toFixed(2)}`)
+    lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}`)
     lines.push(`Realized Price: ${fmtPrice(onchain.realizedPriceUsd)}`)
   }
 
   if (fearGreed) {
     if (!onchain) lines.push("")
-    lines.push(`Fear & Greed: ${fearGreed.value}/100 — ${fearGreed.classification}`)
+    lines.push(`Fear & Greed: ${fearGreed.value}/100 — ${fearGreed.classification} ${fearGreedEmoji(fearGreed.value)}`)
   }
 
   lines.push("", "#Bitcoin #BTC")
