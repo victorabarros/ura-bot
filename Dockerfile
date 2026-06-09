@@ -8,6 +8,7 @@ RUN npm install --ignore-scripts
 
 COPY tsconfig.json ./
 COPY src/ ./src/
+COPY public/ ./public/
 
 RUN npm run build
 
@@ -30,6 +31,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
 
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/public ./public
 
 EXPOSE 8082
 

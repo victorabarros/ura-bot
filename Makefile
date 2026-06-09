@@ -65,6 +65,7 @@ docker-dev:
 		--env-file .env \
 		-p $(PORT):$(PORT) \
 		-v $(PWD)/src:/app/src \
+		-v $(PWD)/public:/app/public \
 		$(APP_NAME):dev \
 		npm run dev
 
