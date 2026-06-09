@@ -20,7 +20,7 @@ const SYSTEM_PROMPT = `
 
 const replicate = new Replicate({ auth: config.replicate.apiKey })
 
-function buildInput(prompt: string): Record<string, unknown> {
+const buildInput = (prompt: string): Record<string, unknown> => {
   /** Generation knobs — verbatim from legacy `GetAnswer` input (Llama models). */
   const llamaGenerationInput = {
     top_k: 50,
@@ -51,7 +51,7 @@ function buildInput(prompt: string): Record<string, unknown> {
   }
 }
 
-function parseModelOutput(output: unknown): string {
+const parseModelOutput = (output: unknown): string => {
   const raw = (Array.isArray(output) ? output.join("") : String(output ?? "")).trim()
   if (
     raw.length >= 2 &&

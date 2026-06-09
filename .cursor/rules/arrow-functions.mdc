@@ -1,0 +1,23 @@
+---
+description: Prefer arrow functions over function declarations for module-level helpers
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Use Arrow Functions for Module-Level Helpers
+
+Prefer `const` arrow functions over `function` declarations for module-level helper functions.
+
+```typescript
+// ❌ BAD
+function buildInput(prompt: string): Record<string, unknown> {
+  return { prompt }
+}
+
+// ✅ GOOD
+const buildInput = (prompt: string): Record<string, unknown> => {
+  return { prompt }
+}
+```
+
+This does not apply to exported class methods or to functions that require hoisting.
