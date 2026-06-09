@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import httpStatus from "http-status"
 import axios from "axios"
 import { getQuote } from "../services/finnhub"
-import { generateHolidayImage } from "../services/replicate"
+import { generateHolidayComment, generateHolidayImage } from "../services/replicate"
 import { getHolidayEntry } from "../domain/holidays"
 import { getPostContext } from "../domain/context"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
@@ -26,11 +26,20 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
 
     const entry = await getHolidayEntry(now)
     if (entry) {
-        const imageUrl = await generateHolidayImage(entry.eventName, now).catch((err: unknown) => {
-          console.warn("[stocks] Holiday image generation failed:", err instanceof Error ? err.message : String(err))
-          return undefined
-        })
-        const message = buildHolidayMessage(entry.eventName, entry.message, now, ctx)
+        const [imgResult, commentResult] = await Promise.allSettled([
+          generateHolidayImage(entry.eventName, now),
+          entry.message ? Promise.resolve(undefined) : generateHolidayComment(entry.eventName, now),
+        ])
+
+        const imageUrl = imgResult.status === "fulfilled"
+          ? imgResult.value
+          : (console.warn("[stocks] Holiday image generation failed:", imgResult.reason instanceof Error ? imgResult.reason.message : String(imgResult.reason)), undefined)
+
+        const holidayMessage = commentResult.status === "fulfilled"
+          ? commentResult.value
+          : (console.warn("[stocks] Holiday comment generation failed:", commentResult.reason instanceof Error ? commentResult.reason.message : String(commentResult.reason)), undefined)
+
+        const message = buildHolidayMessage(entry.eventName, entry.message ?? holidayMessage, now, ctx)
         const posts = await fanoutAll([message], getSocialTargets(), imageUrl)
         const flat = posts.flat()
         if (!fanoutHadSuccess(posts)) {

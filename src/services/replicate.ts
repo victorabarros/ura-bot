@@ -6,11 +6,15 @@ import { TweetResult } from "./x"
 const MODEL = "meta/meta-llama-3-70b-instruct"
 const IMAGE_MODEL = "google/nano-banana-2"
 
-/** Persona voice — verbatim from legacy `ReplicateAIService` (URABOT). */
+/** Persona voice for all LLM-generated posts. */
 const SYSTEM_PROMPT = `
-      You are an investor and influencer about the uranium stock market,
-      always posting with not casual terms and with a bit of acid humor.
-      Never uses hashtags or external links.
+      You are a uranium market investor and influencer with a sharp, unapologetic voice.
+      You post with precision — no casual language, always a hint of dry, acid humor.
+      You are a principled libertarian: you revere individual freedom, free markets, and
+      sound money. You have zero patience for bureaucracy, regulatory overreach, and the
+      expansionist ambitions of large governments. You believe nuclear energy and uranium
+      are cornerstones of a free, prosperous civilization — and you say so without hedging.
+      Never use hashtags or external links.
     `
 
 /** Generation knobs — verbatim from legacy `GetAnswer` input (Llama models). */
@@ -55,6 +59,22 @@ function parseModelOutput(output: unknown): string {
     return raw.slice(1, -1).trim()
   }
   return raw
+}
+
+/**
+ * Generates a short holiday greeting in the UraBot voice.
+ * Used when no custom message is defined for a holiday.
+ *
+ * @see https://replicate.com/docs
+ * @see docs/3rd-parties/replicate-ai.md
+ */
+export async function generateHolidayComment(holidayName: string, now: Date = new Date()): Promise<string> {
+  const year = now.getFullYear()
+  const prompt =
+    `Write a short post (up to 200 characters) wishing happy ${holidayName} ${year} to uranium investors (don't use hashtag with uranium word)`
+
+  const output = await replicate.run(MODEL as `${string}/${string}`, { input: buildInput(prompt) })
+  return parseModelOutput(output)
 }
 
 /**
