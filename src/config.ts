@@ -20,6 +20,12 @@ const config = {
       accessToken: env("URA_BOT_X_ACCESS_TOKEN"),
       accessTokenSecret: env("URA_BOT_X_ACCESS_TOKEN_SECRET"),
     },
+    bitcoinmetrx: {
+      consumerKey: env("BITCOINMETRX_X_CONSUMER_KEY"),
+      consumerSecret: env("BITCOINMETRX_X_CONSUMER_KEY_SECRET"),
+      accessToken: env("BITCOINMETRX_X_ACCESS_TOKEN"),
+      accessTokenSecret: env("BITCOINMETRX_X_ACCESS_TOKEN_SECRET"),
+    },
   },
 
   replicate: {
