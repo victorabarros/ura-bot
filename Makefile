@@ -6,8 +6,8 @@ YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
 
 .PHONY: welcome \
-        docker-build docker-run docker-dev docker-test \
-        docker-purge-containers docker-purge-images \
+        build run dev test \
+        purge-containers purge-images \
 		commit-llm-generated push checkout
 
 welcome:
@@ -26,7 +26,7 @@ welcome:
 
 DOCKER_TARGET?=
 DOCKER_TAG?=latest
-docker-build:
+build:
 	@if docker image inspect $(APP_NAME):$(DOCKER_TAG) > /dev/null 2>&1; then \
 		echo "Image $(APP_NAME):$(DOCKER_TAG) already exists, skipping build."; \
 	else \
@@ -35,8 +35,8 @@ docker-build:
 			-t $(APP_NAME):$(DOCKER_TAG) .; \
 	fi
 
-docker-run:
-	@make docker-build
+run:
+	@make build
 	@make welcome
 	@docker run --rm \
 		--name $(APP_NAME) \
@@ -44,8 +44,8 @@ docker-run:
 		-p $(PORT):$(PORT) \
 		$(APP_NAME):latest
 
-docker-dev:
-	@make docker-build DOCKER_TARGET=builder DOCKER_TAG=dev
+dev:
+	@make build DOCKER_TARGET=builder DOCKER_TAG=dev
 	@make welcome
 	@docker run --rm -it \
 		--name $(APP_NAME)-dev \
@@ -56,11 +56,11 @@ docker-dev:
 		$(APP_NAME):dev \
 		npm run dev
 
-docker-test:
-	@make docker-build DOCKER_TARGET=test DOCKER_TAG=test
+test:
+	@make build DOCKER_TARGET=test DOCKER_TAG=test
 	@docker run --rm --name $(APP_NAME)-test $(APP_NAME):test
 
-docker-purge-containers:
+purge-containers:
 	@containers=$$(docker ps -aq --filter "name=$(APP_NAME)"); \
 	if [ -n "$$containers" ]; then \
 		echo "Removing containers: $$containers"; \
@@ -69,7 +69,7 @@ docker-purge-containers:
 		echo "No containers found for $(APP_NAME)."; \
 	fi
 
-docker-purge-images:
+purge-images:
 	@images=$$(docker images -q "$(APP_NAME)"); \
 	if [ -n "$$images" ]; then \
 		echo "Removing images: $$images"; \
