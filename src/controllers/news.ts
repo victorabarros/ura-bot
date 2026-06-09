@@ -5,7 +5,7 @@ import moment from "moment-timezone"
 import { searchNews, NewsItem } from "../services/finnhub"
 import { generateComment, generateImage } from "../services/replicate"
 import { STOCKS } from "../domain/stocks"
-import { buildPostApiResponse, fanout, fanoutHadSuccess } from "../fanout"
+import { buildPostApiResponse, fanout, fanoutHadSuccess } from "../domain/fanout"
 import {
   ApiErrorBody,
   logIntegrationError,

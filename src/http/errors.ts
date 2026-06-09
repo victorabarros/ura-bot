@@ -1,7 +1,7 @@
 import { Response } from "express"
 import httpStatus from "http-status"
 import axios from "axios"
-import { FanoutResult } from "../fanout"
+import { FanoutResult } from "../domain/fanout"
 
 /** Client-facing error body for failed action routes. */
 export type ApiErrorBody = {

@@ -6,7 +6,7 @@ import { generateComment, generateImage } from "../services/replicate"
 import { getHolidayEntry } from "../domain/holidays"
 import { getPostContext } from "../domain/marketTime"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
-import { buildPostApiResponse, fanoutAll, fanoutHadSuccess } from "../fanout"
+import { buildPostApiResponse, fanoutAll, fanoutHadSuccess } from "../domain/fanout"
 import {
   ApiErrorBody,
   logIntegrationError,
@@ -26,30 +26,30 @@ export const postUraStock = async (_req: Request, res: Response): Promise<void> 
 
     const entry = await getHolidayEntry(now)
     if (entry) {
-        const [imgResult, commentResult] = await Promise.allSettled([
-          generateImage(`Festive ${entry.eventName} ${now.getFullYear()} celebration, nuclear energy and uranium market theme, dynamic digital art, vivid colors, high quality`),
-          entry.message
-            ? Promise.resolve(undefined)
-            : generateComment(`Write a short post (up to 150 characters) wishing happy ${entry.eventName} ${now.getFullYear()} to uranium investors (don't use hashtag with uranium word)`),
-        ])
+      const [imgResult, commentResult] = await Promise.allSettled([
+        generateImage(`Festive ${entry.eventName} ${now.getFullYear()} celebration, nuclear energy and uranium market theme, dynamic digital art, vivid colors, high quality`),
+        entry.message
+          ? Promise.resolve(undefined)
+          : generateComment(`Write a short post (up to 150 characters) wishing happy ${entry.eventName} ${now.getFullYear()} to uranium investors (don't use hashtag with uranium word)`),
+      ])
 
-        const imageUrl = imgResult.status === "fulfilled"
-          ? imgResult.value
-          : (console.warn("[stocks] Holiday image generation failed:", imgResult.reason instanceof Error ? imgResult.reason.message : String(imgResult.reason)), undefined)
+      const imageUrl = imgResult.status === "fulfilled"
+        ? imgResult.value
+        : (console.warn("[stocks] Holiday image generation failed:", imgResult.reason instanceof Error ? imgResult.reason.message : String(imgResult.reason)), undefined)
 
-        const holidayMessage = commentResult.status === "fulfilled"
-          ? commentResult.value
-          : (console.warn("[stocks] Holiday comment generation failed:", commentResult.reason instanceof Error ? commentResult.reason.message : String(commentResult.reason)), undefined)
+      const holidayMessage = commentResult.status === "fulfilled"
+        ? commentResult.value
+        : (console.warn("[stocks] Holiday comment generation failed:", commentResult.reason instanceof Error ? commentResult.reason.message : String(commentResult.reason)), undefined)
 
-        const message = buildHolidayMessage(entry.eventName, entry.message ?? holidayMessage, now, ctx)
-        const posts = await fanoutAll([message], SOCIAL_TARGETS, imageUrl)
-        const flat = posts.flat()
-        if (!fanoutHadSuccess(posts)) {
-          respondSocialPublishFailed(res, flat)
-          return
-        }
-        res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
+      const message = buildHolidayMessage(entry.eventName, entry.message ?? holidayMessage, now, ctx)
+      const posts = await fanoutAll([message], SOCIAL_TARGETS, imageUrl)
+      const flat = posts.flat()
+      if (!fanoutHadSuccess(posts)) {
+        respondSocialPublishFailed(res, flat)
         return
+      }
+      res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
+      return
     }
 
     const quoteResults = await Promise.allSettled(STOCKS.map((symbol) => getQuote(symbol)))

@@ -1,4 +1,4 @@
-import { ISocialService, PostMessageResponse } from "./services/ISocialService"
+import { ISocialService, PostMessageResponse } from "../services/ISocialService"
 
 /** Per-platform outcome after attempting one post. */
 export type FanoutResult = {
@@ -35,8 +35,8 @@ export const buildPostApiResponse = (
 ): PostApiResponse => {
   const ids = Array.isArray(results[0])
     ? (results as FanoutResult[][]).flatMap((chunk) =>
-        chunk.filter((r) => r.platform === X_PLATFORM && r.success && r.id).map((r) => r.id!)
-      )
+      chunk.filter((r) => r.platform === X_PLATFORM && r.success && r.id).map((r) => r.id!)
+    )
     : (results as FanoutResult[]).filter((r) => r.platform === X_PLATFORM && r.success && r.id).map((r) => r.id!)
 
   const body: PostApiResponse = { created_at: createdAt }
