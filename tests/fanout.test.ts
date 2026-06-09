@@ -134,6 +134,26 @@ describe("fanout", () => {
     const results = await fanout("msg", targets)
     expect(results[0].error).toContain("403")
   })
+
+  it("calls postWithImage when imageUrl is provided and service supports it", async () => {
+    const postWithImage = jest.fn().mockResolvedValue({ id: "img-id" })
+    const service: ISocialService = {
+      postMessage: jest.fn(),
+      postWithImage,
+    }
+    const results = await fanout("hello", [{ name: "X", service }], "https://example.com/img.jpg")
+    expect(postWithImage).toHaveBeenCalledWith("hello", "https://example.com/img.jpg")
+    expect((service.postMessage as jest.Mock)).not.toHaveBeenCalled()
+    expect(results[0]).toMatchObject({ platform: "X", success: true, id: "img-id" })
+  })
+
+  it("falls back to postMessage when imageUrl is provided but service lacks postWithImage", async () => {
+    const postMessage = jest.fn().mockResolvedValue({ id: "text-id" })
+    const service: ISocialService = { postMessage }
+    const results = await fanout("hello", [{ name: "Nostr", service }], "https://example.com/img.jpg")
+    expect(postMessage).toHaveBeenCalledWith("hello")
+    expect(results[0]).toMatchObject({ platform: "Nostr", success: true, id: "text-id" })
+  })
 })
 
 // ── fanoutAll ─────────────────────────────────────────────────────────────────

@@ -47,15 +47,21 @@ export function buildPostApiResponse(
 
 /**
  * Posts one message to every target in parallel.
+ * When `imageUrl` is provided and the target implements `postWithImage`, the
+ * image is uploaded and attached; otherwise falls back to plain `postMessage`.
  * Each target succeeds or fails independently.
  */
 export async function fanout(
   message: string,
-  targets: { name: string; service: ISocialService }[]
+  targets: { name: string; service: ISocialService }[],
+  imageUrl?: string,
 ): Promise<FanoutResult[]> {
-  const tasks = targets.map(({ name, service }) =>
-    service
-      .postMessage(message)
+  const tasks = targets.map(({ name, service }) => {
+    const post = imageUrl && service.postWithImage
+      ? service.postWithImage(message, imageUrl)
+      : service.postMessage(message)
+
+    return post
       .then((res: PostMessageResponse) => {
         console.log(`[fanout] ${name} posted id=${res.id}`)
         return { platform: name, success: true, id: res.id }
@@ -73,7 +79,7 @@ export async function fanout(
         console.error(`[fanout] ${name} failed: ${error}`)
         return { platform: name, success: false, error }
       })
-  )
+  })
 
   return (await Promise.allSettled(tasks)).map((r) =>
     r.status === "fulfilled" ? r.value : { platform: "unknown", success: false, error: String(r.reason) }
@@ -83,14 +89,16 @@ export async function fanout(
 /**
  * Posts multiple messages sequentially, fanning out each one.
  * Used when stock roundups exceed one social post.
+ * `imageUrl`, when provided, is attached only to the first message.
  */
 export async function fanoutAll(
   messages: string[],
-  targets: { name: string; service: ISocialService }[]
+  targets: { name: string; service: ISocialService }[],
+  imageUrl?: string,
 ): Promise<FanoutResult[][]> {
   const results: FanoutResult[][] = []
-  for (const message of messages) {
-    results.push(await fanout(message, targets))
+  for (let i = 0; i < messages.length; i++) {
+    results.push(await fanout(messages[i], targets, i === 0 ? imageUrl : undefined))
   }
   return results
 }

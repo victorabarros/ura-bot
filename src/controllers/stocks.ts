@@ -30,8 +30,8 @@ export async function postUraStock(_req: Request, res: Response): Promise<void> 
           console.warn("[stocks] Holiday image generation failed:", err instanceof Error ? err.message : String(err))
           return undefined
         })
-        const message = buildHolidayMessage(entry.eventName, entry.message, now, ctx, imageUrl)
-        const posts = await fanoutAll([message], getSocialTargets())
+        const message = buildHolidayMessage(entry.eventName, entry.message, now, ctx)
+        const posts = await fanoutAll([message], getSocialTargets(), imageUrl)
         const flat = posts.flat()
         if (!fanoutHadSuccess(posts)) {
           respondSocialPublishFailed(res, flat)

@@ -62,8 +62,7 @@ beforeEach(() => {
 
 describe("postUraStock", () => {
   describe("holiday branch", () => {
-    it("posts a holiday message with image URL and returns 200", async () => {
-      mockIsHoliday.mockResolvedValue(true)
+    it("passes image URL as third arg to fanoutAll and returns 200", async () => {
       mockGetHolidayEntry.mockResolvedValue({
         eventName: "Independence Day",
         atDate: "2026-07-04",
@@ -75,13 +74,12 @@ describe("postUraStock", () => {
       await postUraStock(req, res)
 
       expect(mockGenerateHolidayImage).toHaveBeenCalledWith("Independence Day")
-      const [messages] = mockFanoutAll.mock.calls[0]
-      expect(messages[0]).toContain("https://replicate.delivery/holiday.jpg")
+      const [, , imageUrlArg] = mockFanoutAll.mock.calls[0]
+      expect(imageUrlArg).toBe("https://replicate.delivery/holiday.jpg")
       expect(status).toHaveBeenCalledWith(200)
     })
 
     it("still posts holiday message when image generation fails", async () => {
-      mockIsHoliday.mockResolvedValue(true)
       mockGetHolidayEntry.mockResolvedValue({
         eventName: "Labor Day",
         atDate: "2026-09-07",
@@ -93,8 +91,8 @@ describe("postUraStock", () => {
       await postUraStock(req, res)
 
       expect(mockFanoutAll).toHaveBeenCalled()
-      const [messages] = mockFanoutAll.mock.calls[0]
-      expect(messages[0]).not.toContain("http")
+      const [, , imageUrlArg] = mockFanoutAll.mock.calls[0]
+      expect(imageUrlArg).toBeUndefined()
       expect(status).toHaveBeenCalledWith(200)
     })
 

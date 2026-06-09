@@ -1,3 +1,4 @@
+import axios from "axios"
 import { TwitterApi } from "twitter-api-v2"
 import { ISocialService, PostMessageResponse } from "./ISocialService"
 import config from "../config"
@@ -105,6 +106,25 @@ export class XService implements ISocialService {
     if (!text) throw new Error("X: message cannot be empty")
 
     const { data } = await client.v2.tweet(text)
+    return { id: data.id }
+  }
+
+  /**
+   * Downloads the image from `imageUrl`, uploads it via the X v1 media API,
+   * then publishes the tweet with the attached media.
+   *
+   * @see https://developer.x.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload
+   */
+  async postWithImage(message: string, imageUrl: string): Promise<PostMessageResponse> {
+    const text = message.trim()
+    if (!text) throw new Error("X: message cannot be empty")
+
+    const response = await axios.get<ArrayBuffer>(imageUrl, { responseType: "arraybuffer" })
+    const buffer = Buffer.from(response.data)
+    const mimeType = (response.headers["content-type"] as string | undefined) ?? "image/jpeg"
+
+    const mediaId = await client.v1.uploadMedia(buffer, { mimeType })
+    const { data } = await client.v2.tweet({ text, media: { media_ids: [mediaId] } })
     return { id: data.id }
   }
 
