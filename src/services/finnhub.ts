@@ -111,7 +111,6 @@ const HEALTH_TIMEOUT_MS = 5_000
  * @see docs/3rd-parties/finhub.md
  */
 export const checkFinnhubHealth = async (): Promise<void> => {
-  console.log("[health] checking Finnhub connectivity")
   await http.get("/stock/market-status", {
     params: { exchange: "US" },
     timeout: HEALTH_TIMEOUT_MS,

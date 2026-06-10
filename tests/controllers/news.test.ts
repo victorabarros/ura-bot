@@ -11,7 +11,7 @@ jest.mock("../../src/services/replicate", () => ({
   generateImage: jest.fn(),
   checkReplicateHealth: jest.fn(),
 }))
-jest.mock("../../src/fanout", () => ({
+jest.mock("../../src/domain/fanout", () => ({
   fanout: jest.fn(),
   fanoutHadSuccess: jest.fn(),
   buildPostApiResponse: jest.fn(),
@@ -23,7 +23,7 @@ jest.mock("../../src/controllers/targets", () => ({
 
 import { searchNews } from "../../src/services/finnhub"
 import { generateComment, generateImage } from "../../src/services/replicate"
-import { fanout, fanoutHadSuccess, buildPostApiResponse } from "../../src/fanout"
+import { fanout, fanoutHadSuccess, buildPostApiResponse } from "../../src/domain/fanout"
 import { NewsItem } from "../../src/services/finnhub"
 
 const mockSearchNews = searchNews as jest.MockedFunction<typeof searchNews>

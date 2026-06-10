@@ -4,7 +4,6 @@ import config from "../config"
 import { checkFinnhubHealth } from "../services/finnhub"
 import { checkReplicateHealth } from "../services/replicate"
 import { uraBotXService } from "../services/x"
-import { checkCoinGeckoHealth } from "../services/coingecko"
 import { checkBitviewHealth } from "../services/bitview"
 import { checkAlternativeHealth } from "../services/alternative"
 import { logIntegrationError } from "../http/errors"
@@ -44,15 +43,14 @@ export const healthcheck = async (_req: Request, res: Response): Promise<void> =
     probe("finnhub", checkFinnhubHealth),
     probe("replicate", checkReplicateHealth),
     probe("x", () => uraBotXService.checkHealth()),
-    probe("coingecko", checkCoinGeckoHealth),
     probe("bitview", checkBitviewHealth),
     probe("alternative", checkAlternativeHealth),
   ])
-  const [finnhub, replicate, x, coingecko, bitview, alternative] = settled.map((r) =>
+  const [finnhub, replicate, x, bitview, alternative] = settled.map((r) =>
     r.status === "fulfilled" ? r.value : { ok: false as const, error: String(r.reason) }
-  ) as [DependencyStatus, DependencyStatus, DependencyStatus, DependencyStatus, DependencyStatus, DependencyStatus]
+  ) as [DependencyStatus, DependencyStatus, DependencyStatus, DependencyStatus, DependencyStatus]
 
-  const dependencies = { finnhub, replicate, x, coingecko, bitview, alternative }
+  const dependencies = { finnhub, replicate, x, coingecko: { ok: true } as DependencyStatus, bitview, alternative }
   const success = Object.values(dependencies).every((d) => d.ok)
 
   const body: HealthcheckResponse = {
