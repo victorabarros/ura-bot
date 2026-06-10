@@ -7,9 +7,6 @@ import { getFearGreedIndex } from "../services/alternative"
 import { bitcoinmetrxXService } from "../services/x"
 import { logIntegrationError, ApiErrorBody } from "../http/errors"
 
-const fmtPrice = (usd: number): string =>
-  `$${Math.round(usd).toLocaleString("en-US")}`
-
 const fmtCompact = (usd: number): string => {
   if (usd >= 1e12) return `$${(usd / 1e12).toFixed(2)}T`
   if (usd >= 1e9) return `$${(usd / 1e9).toFixed(1)}B`
@@ -81,18 +78,18 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
   const arrow = market.change24hPct >= 0 ? "📈" : "📉"
 
   const lines: string[] = [
-    `${fmtPrice(market.priceUsd)}  ${sign}${market.change24hPct.toFixed(2)}% 24h ${arrow}`,
+    `$${Math.round(market.priceUsd).toLocaleString("en-US")}  ${sign}${market.change24hPct.toFixed(2)}% 24h ${arrow}`,
     `Cap: ${fmtCompact(market.marketCapUsd)} · Vol: ${fmtCompact(market.volume24hUsd)}`,
   ]
 
   if (onchain) {
     lines.push("")
     lines.push("📐 On-Chain")
-    lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}  ·  Realized: ${fmtPrice(onchain.realizedPriceUsd)}`)
+    lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}  ·  Realized: $${Math.round(onchain.realizedPriceUsd).toLocaleString("en-US")}`)
     lines.push("")
     lines.push("📊 Technicals")
-    lines.push(`MA50:  ${fmtPrice(onchain.sma55dUsd)} ${market.priceUsd >= onchain.sma55dUsd ? "🟢" : "🔴"}`)
-    lines.push(`MA200: ${fmtPrice(onchain.sma200dUsd)} ${market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"}`)
+    lines.push(`MA50:  $${Math.round(onchain.sma55dUsd).toLocaleString("en-US")} ${market.priceUsd >= onchain.sma55dUsd ? "🟢" : "🔴"}`)
+    lines.push(`MA200: $${Math.round(onchain.sma200dUsd).toLocaleString("en-US")} ${market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"}`)
   }
 
   if (fearGreed) {

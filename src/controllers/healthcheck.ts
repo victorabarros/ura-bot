@@ -44,7 +44,7 @@ export const healthcheck = async (_req: Request, res: Response): Promise<void> =
     probe("finnhub", checkFinnhubHealth),
     probe("replicate", checkReplicateHealth),
     probe("x", () => uraBotXService.checkHealth()),
-    probe("coingecko", checkCoinGeckoHealth),
+    // probe("coingecko", checkCoinGeckoHealth), // To avoid rate limiting
     probe("bitview", checkBitviewHealth),
     probe("alternative", checkAlternativeHealth),
   ])

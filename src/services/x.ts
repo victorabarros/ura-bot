@@ -97,7 +97,6 @@ export class XService implements ISocialService {
    * @see docs/3rd-parties/twitter-x-dot-com.md
    */
   async checkHealth(): Promise<void> {
-    console.log("[health] checking X connectivity")
     await this.client.v2.me()
   }
 
