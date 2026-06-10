@@ -83,18 +83,24 @@ export const postBitcoinPrice = async (_req: Request, res: Response): Promise<vo
   ]
 
   if (onchain) {
-    lines.push("")
-    lines.push("📐 On-Chain")
-    lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}  ·  Realized: $${Math.round(onchain.realizedPriceUsd).toLocaleString("en-US")}`)
-    lines.push("")
-    lines.push("📊 Technicals")
-    lines.push(`MA50:  $${Math.round(onchain.sma55dUsd).toLocaleString("en-US")} ${market.priceUsd >= onchain.sma55dUsd ? "🟢" : "🔴"}`)
-    lines.push(`MA200: $${Math.round(onchain.sma200dUsd).toLocaleString("en-US")} ${market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"}`)
+    lines.push("", "📐 On-Chain")
+
+    const realizedPrice = `$${Math.round(onchain.realizedPriceUsd).toLocaleString("en-US")}`
+    lines.push(`MVRV: ${onchain.mvrv.toFixed(2)} ${mvrvEmoji(onchain.mvrv)}  ·  Realized: ${realizedPrice}`)
+
+    lines.push("", "📊 Technicals")
+
+    const ma50 = `$${Math.round(onchain.sma55dUsd).toLocaleString("en-US")}`
+    const ma50Signal = market.priceUsd >= onchain.sma55dUsd ? "🟢" : "🔴"
+    lines.push(`MA50:  ${ma50} ${ma50Signal}`)
+
+    const ma200 = `$${Math.round(onchain.sma200dUsd).toLocaleString("en-US")}`
+    const ma200Signal = market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"
+    lines.push(`MA200: ${ma200} ${ma200Signal}`)
   }
 
   if (fearGreed) {
-    lines.push("")
-    lines.push("🧠 Sentiment")
+    lines.push("", "🧠 Sentiment")
     lines.push(`Fear & Greed: ${fearGreed.value}/100 — ${fearGreed.classification} ${fearGreedEmoji(fearGreed.value)}`)
   }
 

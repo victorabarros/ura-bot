@@ -1,0 +1,21 @@
+---
+description: Extract complex expressions from template literals into named local variables
+globs: **/*.ts
+alwaysApply: false
+---
+
+# No Dense Template Literals
+
+When a template literal contains formatted values, ternary expressions, or chained method calls, extract each piece into a named local variable before the template. The template itself should read like plain text.
+
+```typescript
+// ❌ BAD — formatting, ternary, and chaining all crammed into one line
+lines.push(`MA200: $${Math.round(onchain.sma200dUsd).toLocaleString("en-US")} ${market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"}`)
+
+// ✅ GOOD — each concern named, template reads cleanly
+const ma200 = `$${Math.round(onchain.sma200dUsd).toLocaleString("en-US")}`
+const ma200Signal = market.priceUsd >= onchain.sma200dUsd ? "🟢" : "🔴"
+lines.push(`MA200: ${ma200} ${ma200Signal}`)
+```
+
+This applies to template literals in `push`, `join`, JSX, log statements, and anywhere else.
