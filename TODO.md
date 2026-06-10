@@ -66,3 +66,16 @@
 ## public
 
 - add star history like this https://github.com/afadil/wealthfolio/blob/f771dff685a2462aa7deb03cb69adf24e97bd780/README.md?plain=1#L160C35-L160C55
+
+<!-- 
+## follow with bitcoinMetrx
+
+https://x.com/coin_vigilante
+https://x.com/bitcoin_ranch
+https://x.com/SparrowWallet
+https://x.com/bitdov
+https://x.com/jpmayall
+https://x.com/RandPaul
+https://x.com/TB47134218
+
+-->
