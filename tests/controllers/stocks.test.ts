@@ -15,7 +15,7 @@ jest.mock("../../src/services/replicate", () => ({
 jest.mock("../../src/domain/holidays", () => ({
   getHolidayEntry: jest.fn(),
 }))
-jest.mock("../../src/fanout", () => ({
+jest.mock("../../src/domain/fanout", () => ({
   fanoutAll: jest.fn(),
   fanoutHadSuccess: jest.fn(),
   buildPostApiResponse: jest.fn(),
@@ -27,7 +27,7 @@ jest.mock("../../src/controllers/targets", () => ({
 import { getQuote } from "../../src/services/finnhub"
 import { generateComment, generateImage } from "../../src/services/replicate"
 import { getHolidayEntry } from "../../src/domain/holidays"
-import { fanoutAll, fanoutHadSuccess, buildPostApiResponse } from "../../src/fanout"
+import { fanoutAll, fanoutHadSuccess, buildPostApiResponse } from "../../src/domain/fanout"
 import { Quote } from "../../src/services/finnhub"
 
 const mockGetQuote = getQuote as jest.MockedFunction<typeof getQuote>

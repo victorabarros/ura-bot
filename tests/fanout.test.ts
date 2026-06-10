@@ -4,7 +4,7 @@ import {
   fanout,
   fanoutAll,
   FanoutResult,
-} from "../src/fanout"
+} from "../src/domain/fanout"
 import { ISocialService } from "../src/services/ISocialService"
 
 // ── fanoutHadSuccess ──────────────────────────────────────────────────────────

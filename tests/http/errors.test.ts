@@ -1,6 +1,6 @@
 import { Response } from "express"
 import { respondSocialPublishFailed } from "../../src/http/errors"
-import { FanoutResult } from "../../src/fanout"
+import { FanoutResult } from "../../src/domain/fanout"
 
 function makeMockResponse() {
   const json = jest.fn().mockReturnThis()
