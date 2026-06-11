@@ -4,7 +4,7 @@ import { healthcheck } from "./controllers/healthcheck"
 import { postUraStock } from "./controllers/stocks"
 import { postUraNews } from "./controllers/news"
 import { getLatestUraPost } from "./controllers/latestPost"
-import { receiveWebhook } from "./controllers/webhook"
+import { handleWebhookCrc, receiveWebhook } from "./controllers/webhook"
 import { postBitcoinPrice } from "./controllers/bitcoinprice"
 
 const router = Router()
@@ -20,7 +20,8 @@ router.get("/urabot/latest-post", getLatestUraPost)
 router.post("/urabot/stocks", postUraStock)
 router.post("/urabot/news", postUraNews)
 
-// Webhook — no auth (called by external services)
+// Webhook — no auth (called by X for CRC and event delivery)
+router.get("/urabot/webhook", handleWebhookCrc)
 router.post("/urabot/webhook", receiveWebhook)
 
 // BitcoinMetrx actions — require API key (enforced by authMiddleware)

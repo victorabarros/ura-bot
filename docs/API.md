@@ -170,18 +170,42 @@ Error bodies: `{ "error": "<message>", "integration": "finnhub" | "replicate" | 
 
 ---
 
+### `GET /urabot/webhook`
+
+X Challenge-Response Check (CRC) endpoint. Called by X on webhook registration,
+every 30 minutes, and on manual re-validation via `PUT /2/webhooks/{id}`.
+No authentication required (called by X, not the bot operator).
+
+**Query parameters**
+
+| Name | Required | Description |
+|---|---|---|
+| `crc_token` | Yes | Token provided by X to hash |
+
+**Response `200 OK`**
+
+```json
+{ "response_token": "sha256=<HMAC-SHA256(consumerSecret, crc_token) base64-encoded>" }
+```
+
+**Response `400 Bad Request`** — `crc_token` query parameter is missing.
+
+```json
+{ "error": "Missing crc_token" }
+```
+
+---
+
 ### `POST /urabot/webhook`
 
-Generic inbound webhook receiver. No authentication required. Always acknowledges
-with `200 OK` regardless of payload content. No processing rules are applied yet.
+Receives inbound X webhook event deliveries. No authentication required.
+Always acknowledges with `200 OK`. No processing rules are applied yet.
 
 **Response `200 OK`** — empty body.
 
 ---
 
 ### `POST /bitcoinmetrx/price`
-
-Fetches a live Bitcoin market snapshot from three public APIs (CoinGecko, Bitview,
 Alternative.me) and posts a formatted roundup via the `bitcoinmetrx` X account.
 
 **Auth:** API key required.
