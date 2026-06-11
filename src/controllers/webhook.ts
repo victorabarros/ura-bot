@@ -14,6 +14,7 @@ import config from "../config"
 export const handleWebhookCrc = (req: Request, res: Response): void => {
   const { crc_token } = req.query
   if (typeof crc_token !== "string") {
+    console.warn("[webhook] CRC request missing crc_token")
     res.status(httpStatus.BAD_REQUEST).json({ error: "Missing crc_token" })
     return
   }
@@ -21,10 +22,12 @@ export const handleWebhookCrc = (req: Request, res: Response): void => {
     .createHmac("sha256", config.x.urabot.consumerSecret)
     .update(crc_token)
     .digest("base64")
+  console.log("[webhook] CRC challenge responded successfully")
   res.status(httpStatus.OK).json({ response_token: `sha256=${hash}` })
 }
 
 /** Acknowledges inbound X webhook event deliveries with 200. No processing rules yet. */
-export const receiveWebhook = (_req: Request, res: Response): void => {
+export const receiveWebhook = (req: Request, res: Response): void => {
+  console.log("[webhook] Event received:", JSON.stringify(req.body ?? {}))
   res.status(httpStatus.OK).send()
 }
