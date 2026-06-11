@@ -4,7 +4,7 @@ import { generateComment } from "../services/replicate"
 import { uraBotXService } from "../services/x"
 import { ApiErrorBody, logIntegrationError } from "../http/errors"
 
-const MENTIONS_WINDOW_MS = 5 * 60 * 1000
+const MENTIONS_WINDOW_MS = 60 * 60 * 1000
 
 type RepliedItem = { mention_id: string; reply_id: string }
 type FailedItem = { mention_id: string; error: string }
