@@ -1,0 +1,19 @@
+meta {
+  name: webhook
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{urabotBaseUrl}}/urabot/webhook
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: {{UrabotXToken}}
+}
+
+vars:pre-request {
+  UrabotXToken: McChickenPromo
+}

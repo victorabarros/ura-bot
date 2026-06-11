@@ -22,6 +22,7 @@ One endpoint is **exempt** from this check:
 |---|---|
 | Health / monitoring | `GET /heartbeat`, `GET /healthcheck` |
 | Public read | `GET /urabot/latest-post` |
+| Webhook | `POST /urabot/webhook` |
 
 ---
 
@@ -166,6 +167,15 @@ Replicate comment generation failed.
 **Response `500 Internal Server Error`** – unexpected internal error.
 
 Error bodies: `{ "error": "<message>", "integration": "finnhub" | "replicate" | "social" | "internal" }`.
+
+---
+
+### `POST /urabot/webhook`
+
+Generic inbound webhook receiver. No authentication required. Always acknowledges
+with `200 OK` regardless of payload content. No processing rules are applied yet.
+
+**Response `200 OK`** — empty body.
 
 ---
 
