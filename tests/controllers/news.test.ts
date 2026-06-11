@@ -130,7 +130,7 @@ describe("postUraNews", () => {
     expect(status).toHaveBeenCalledWith(502)
   })
 
-  describe("20% image generation", () => {
+  describe("30% image generation", () => {
     it("generates an image and passes it to fanout when random roll is below 0.2", async () => {
       jest.spyOn(Math, "random").mockReturnValue(0.1)
       mockSearchNews.mockResolvedValue([makeNewsItem()])
@@ -146,8 +146,8 @@ describe("postUraNews", () => {
       expect(status).toHaveBeenCalledWith(200)
     })
 
-    it("skips image generation when random roll is 0.2 or above", async () => {
-      jest.spyOn(Math, "random").mockReturnValue(0.2)
+    it("skips image generation when random roll is 0.3 or above", async () => {
+      jest.spyOn(Math, "random").mockReturnValue(0.3)
       mockSearchNews.mockResolvedValue([makeNewsItem()])
       mockGenerateComment.mockResolvedValue("comment")
 

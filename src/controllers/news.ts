@@ -107,7 +107,7 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
       return
     }
 
-    /** 20% of the time, generate a satirical illustration to attach to the post. */
+    /** 30% of the time, generate a satirical illustration to attach to the post. */
     let imageUrl: string | undefined
     if (Math.random() < .3) {
       try {
