@@ -75,9 +75,18 @@ const findRecentNews = async (now: Date): Promise<FindNewsOutcome> => {
 /**
  * POST /urabot/news: picks recent uranium news, LLM comment, then posts.
  * `204` when no articles; `503`/`502`/`500` on integration failures.
+ * Body param `generateImage` (boolean, optional): when provided, overrides
+ * the default 30 % random chance of attaching a satirical illustration.
  */
-export const postUraNews = async (_req: Request, res: Response): Promise<void> => {
+export const postUraNews = async (req: Request, res: Response): Promise<void> => {
   const now = new Date()
+
+  const { generateImage: generateImageParam } = req.body ?? {}
+  if (generateImageParam !== undefined && typeof generateImageParam !== "boolean") {
+    res.status(httpStatus.BAD_REQUEST).json({ error: "`generateImage` must be a boolean", integration: "internal" } satisfies ApiErrorBody)
+    return
+  }
+  const shouldGenerateImage: boolean = generateImageParam ?? (Math.random() < 0.3)
 
   try {
     const outcome = await findRecentNews(now)
@@ -107,9 +116,9 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
       return
     }
 
-    /** 30% of the time, generate a satirical illustration to attach to the post. */
+    /** Generate a satirical illustration when explicitly requested or randomly (30 % chance). */
     let imageUrl: string | undefined
-    if (Math.random() < .3) {
+    if (shouldGenerateImage) {
       try {
         imageUrl = await generateImage(
           `Satirical editorial cartoon inspired by this uranium market headline: "${news.headline}". Bold colors, dramatic lighting, fun and irreverent tone, no text or words in image, high quality illustration. Also elegant and minimalistic.`

@@ -6,10 +6,16 @@ meta {
 
 post {
   url: {{urabotBaseUrl}}/urabot/news
-  body: none
+  body: json
   auth: none
 }
 
 headers {
   authorization: {{UrabotXToken}}
+}
+
+body:json {
+  {
+    "generateImage": true
+  }
 }
