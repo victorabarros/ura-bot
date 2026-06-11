@@ -1,17 +1,13 @@
 meta {
-  name: get user
+  name: connect stream
   type: http
-  seq: 1
+  seq: 9
 }
 
 get {
-  url: https://api.x.com/2/users/by/username/UraniumStockBot
+  url: https://api.x.com/2/tweets/search/stream
   body: none
   auth: bearer
-}
-
-headers {
-  Authorization: Bearer
 }
 
 auth:bearer {

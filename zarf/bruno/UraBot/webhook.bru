@@ -5,13 +5,15 @@ meta {
 }
 
 post {
-  url: {{urabotBaseUrl}}/urabot/webhook
-  body: none
+  url: https://3993-94-140-11-81.ngrok-free.app/urabot/webhook
+  body: json
   auth: none
 }
 
-headers {
-  authorization: {{UrabotXToken}}
+body:json {
+  {
+    "foo": "bar"
+  }
 }
 
 vars:pre-request {

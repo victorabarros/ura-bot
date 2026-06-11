@@ -1,17 +1,13 @@
 meta {
-  name: get post by id
+  name: list mentions
   type: http
-  seq: 3
+  seq: 10
 }
 
 get {
-  url: https://api.x.com/2/tweets/{{postId}}
+  url: https://api.x.com/2/users/{{userId}}/mentions
   body: none
   auth: bearer
-}
-
-headers {
-  Authorization: Bearer
 }
 
 auth:bearer {
@@ -19,7 +15,7 @@ auth:bearer {
 }
 
 vars:pre-request {
-  postId: 2065128084290855071
+  userId: 1457005919410311171
 }
 
 settings {
