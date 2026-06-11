@@ -5,6 +5,7 @@ import { postUraStock } from "./controllers/stocks"
 import { postUraNews } from "./controllers/news"
 import { getLatestUraPost } from "./controllers/latestPost"
 import { handleWebhookCrc, receiveWebhook } from "./controllers/webhook"
+import { replyToMentions } from "./controllers/replyMentions"
 import { postBitcoinPrice } from "./controllers/bitcoinprice"
 
 const router = Router()
@@ -19,6 +20,7 @@ router.get("/urabot/latest-post", getLatestUraPost)
 // Uranium bot actions — require API key (enforced by authMiddleware)
 router.post("/urabot/stocks", postUraStock)
 router.post("/urabot/news", postUraNews)
+router.post("/urabot/reply-mentions", replyToMentions)
 
 // Webhook — no auth (called by X for CRC and event delivery)
 router.get("/urabot/webhook", handleWebhookCrc)

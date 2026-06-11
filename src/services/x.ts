@@ -143,17 +143,36 @@ export class XService implements ISocialService {
 
   /**
    * Returns recent tweets that mention this account, sorted by engagement.
+   * Pass `startTime` to filter server-side to mentions after that timestamp.
    *
    * @see https://developer.x.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-mentions
    */
-  async getMentions(limit = 10): Promise<TweetResult[]> {
+  async getMentions(limit = 10, startTime?: Date): Promise<TweetResult[]> {
     const { id } = await this.getMe()
     const { data } = await this.client.v2.userMentionTimeline(id, {
       max_results: Math.min(Math.max(limit, 5), 100),
       "tweet.fields": TWEET_FIELDS,
+      ...(startTime && { start_time: startTime.toISOString() }),
     })
 
     return (data.data ?? []).map(mapTweet)
+  }
+
+  /**
+   * Posts a reply threaded under an existing tweet.
+   *
+   * @see https://developer.x.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/post-tweets
+   * @see docs/3rd-parties/twitter-x-dot-com.md
+   */
+  async replyToPost(text: string, inReplyToId: string): Promise<PostMessageResponse> {
+    const trimmed = text.trim()
+    if (!trimmed) throw new Error("X: reply text cannot be empty")
+    if (!inReplyToId) throw new Error("X: inReplyToId is required")
+    const { data } = await this.client.v2.tweet({
+      text: trimmed,
+      reply: { in_reply_to_tweet_id: inReplyToId },
+    })
+    return { id: data.id }
   }
 
   /**

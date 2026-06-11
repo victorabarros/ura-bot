@@ -1,0 +1,21 @@
+meta {
+  name: post urabot reply
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{urabotBaseUrl}}/urabot/reply-mentions
+  body: json
+  auth: none
+}
+
+headers {
+  authorization: {{UrabotXToken}}
+}
+
+body:json {
+  {
+    "generateImage": true
+  }
+}

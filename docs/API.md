@@ -141,6 +141,36 @@ Error bodies: `{ "error": "<message>", "integration": "finnhub" | "social" }`.
 
 ---
 
+### `POST /urabot/reply-mentions`
+
+Fetches X mentions directed at `@UraniumStockBot` from the last 5 minutes,
+generates an LLM reply for each via Replicate, and posts them as threaded replies.
+Fail-soft per mention — one failure does not stop the others.
+
+**Auth:** API key required.
+
+**Response `200 OK`**
+
+```json
+{
+  "replied": [{ "mention_id": "<id>", "reply_id": "<id>" }],
+  "failed":  [{ "mention_id": "<id>", "error": "<reason>" }]
+}
+```
+
+Both arrays may be empty or partial. A `200` with a non-empty `failed` array
+means some replies were posted successfully.
+
+**Response `204 No Content`** — no mentions in the last 5 minutes.
+
+**Response `503 Service Unavailable`** — X mentions API unavailable.
+
+```json
+{ "error": "X mentions API unavailable", "integration": "x" }
+```
+
+---
+
 ### `POST /urabot/news`
 
 Picks a recent uranium-related news item at random, generates an LLM comment,
