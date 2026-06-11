@@ -1,3 +1,4 @@
+# https://docs.x.com/x-api/posts/filtered-stream/introduction#connecting-to-the-stream
 import requests
 
 def stream_posts(bearer_token):

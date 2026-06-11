@@ -9,6 +9,7 @@ RUN npm install --ignore-scripts
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY public/ ./public/
+COPY zarf/ ./zarf/
 
 RUN npm run build
 
