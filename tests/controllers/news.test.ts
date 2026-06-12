@@ -56,14 +56,9 @@ const req = {} as Request
 
 beforeEach(() => {
   jest.clearAllMocks()
-  jest.spyOn(Math, "random").mockReturnValue(0.5) // above 20% threshold — no image by default
   mockFanout.mockResolvedValue([{ platform: "X", success: true, id: "tweet-1" }])
   mockFanoutHadSuccess.mockReturnValue(true)
   mockBuildPostApiResponse.mockReturnValue({ created_at: new Date(), tweet_id: "tweet-1" })
-})
-
-afterEach(() => {
-  jest.restoreAllMocks()
 })
 
 describe("postUraNews", () => {
@@ -130,48 +125,30 @@ describe("postUraNews", () => {
     expect(status).toHaveBeenCalledWith(502)
   })
 
-  describe("30% image generation", () => {
-    it("generates an image and passes it to fanout when random roll is below 0.2", async () => {
-      jest.spyOn(Math, "random").mockReturnValue(0.1)
-      mockSearchNews.mockResolvedValue([makeNewsItem()])
-      mockGenerateComment.mockResolvedValue("comment")
-      mockGenerateImage.mockResolvedValue("https://replicate.delivery/news.jpg")
+  it("always generates an image and passes it to fanout", async () => {
+    mockSearchNews.mockResolvedValue([makeNewsItem()])
+    mockGenerateComment.mockResolvedValue("comment")
+    mockGenerateImage.mockResolvedValue("https://replicate.delivery/news.jpg")
 
-      const { res, status } = makeMockRes()
-      await postUraNews(req, res)
+    const { res, status } = makeMockRes()
+    await postUraNews(req, res)
 
-      expect(mockGenerateImage).toHaveBeenCalledWith(expect.stringContaining("Uranium Demand Rises"))
-      const [, , imageUrlArg] = mockFanout.mock.calls[0]
-      expect(imageUrlArg).toBe("https://replicate.delivery/news.jpg")
-      expect(status).toHaveBeenCalledWith(200)
-    })
+    expect(mockGenerateImage).toHaveBeenCalledWith(expect.stringContaining("Uranium Demand Rises"))
+    const [, , imageUrlArg] = mockFanout.mock.calls[0]
+    expect(imageUrlArg).toBe("https://replicate.delivery/news.jpg")
+    expect(status).toHaveBeenCalledWith(200)
+  })
 
-    it("skips image generation when random roll is 0.3 or above", async () => {
-      jest.spyOn(Math, "random").mockReturnValue(0.3)
-      mockSearchNews.mockResolvedValue([makeNewsItem()])
-      mockGenerateComment.mockResolvedValue("comment")
+  it("still posts without image when image generation fails", async () => {
+    mockSearchNews.mockResolvedValue([makeNewsItem()])
+    mockGenerateComment.mockResolvedValue("comment")
+    mockGenerateImage.mockRejectedValue(new Error("model timeout"))
 
-      const { res, status } = makeMockRes()
-      await postUraNews(req, res)
+    const { res, status } = makeMockRes()
+    await postUraNews(req, res)
 
-      expect(mockGenerateImage).not.toHaveBeenCalled()
-      const [, , imageUrlArg] = mockFanout.mock.calls[0]
-      expect(imageUrlArg).toBeUndefined()
-      expect(status).toHaveBeenCalledWith(200)
-    })
-
-    it("still posts without image when image generation fails", async () => {
-      jest.spyOn(Math, "random").mockReturnValue(0.1)
-      mockSearchNews.mockResolvedValue([makeNewsItem()])
-      mockGenerateComment.mockResolvedValue("comment")
-      mockGenerateImage.mockRejectedValue(new Error("model timeout"))
-
-      const { res, status } = makeMockRes()
-      await postUraNews(req, res)
-
-      const [, , imageUrlArg] = mockFanout.mock.calls[0]
-      expect(imageUrlArg).toBeUndefined()
-      expect(status).toHaveBeenCalledWith(200)
-    })
+    const [, , imageUrlArg] = mockFanout.mock.calls[0]
+    expect(imageUrlArg).toBeUndefined()
+    expect(status).toHaveBeenCalledWith(200)
   })
 })
