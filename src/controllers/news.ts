@@ -110,7 +110,7 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
     let imageUrl: string | undefined
     try {
       imageUrl = await generateImage(
-        `Satirical editorial cartoon inspired by this uranium market headline: "${news.headline}". Bold colors, dramatic lighting, fun and irreverent tone, no text or words in image, high quality illustration. Also elegant and minimalistic.`
+        `Cinematic editorial illustration for a uranium market news story. Headline: "${news.headline}". Context: ${news.summary}. Company or ticker: ${news.related}. Visual style: dramatic chiaroscuro lighting, deep earth tones and electric blue-green glows, hyper-detailed foreground (uranium ore, reactor vessel, mine shaft, or trading floor — whichever fits the story), vast negative space behind. Photorealistic digital painting. Absolutely no text, letters, numbers, charts, graphs, or logos anywhere in the image.`
       )
     } catch (err) {
       console.warn("[news] Image generation failed, posting without image:", (err as Error).message)
