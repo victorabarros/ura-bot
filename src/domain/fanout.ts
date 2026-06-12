@@ -18,26 +18,17 @@ export type PostApiResponse = {
 const X_PLATFORM = "X"
 
 /** True if at least one platform published successfully. */
-export const fanoutHadSuccess = (results: FanoutResult[] | FanoutResult[][]): boolean => {
-  const flat = Array.isArray(results[0])
-    ? (results as FanoutResult[][]).flat()
-    : (results as FanoutResult[])
-  return flat.some((r) => r.success)
-}
+export const fanoutHadSuccess = (results: FanoutResult[]): boolean =>
+  results.some((r) => r.success)
 
 /**
  * Builds the success response payload with X tweet id(s) from fan-out.
  * One id uses `tweet_id`; multiple chunked posts use `tweet_ids`.
  */
-export const buildPostApiResponse = (
-  createdAt: Date,
-  results: FanoutResult[] | FanoutResult[][]
-): PostApiResponse => {
-  const ids = Array.isArray(results[0])
-    ? (results as FanoutResult[][]).flatMap((chunk) =>
-      chunk.filter((r) => r.platform === X_PLATFORM && r.success && r.id).map((r) => r.id!)
-    )
-    : (results as FanoutResult[]).filter((r) => r.platform === X_PLATFORM && r.success && r.id).map((r) => r.id!)
+export const buildPostApiResponse = (createdAt: Date, results: FanoutResult[]): PostApiResponse => {
+  const ids = results
+    .filter((r) => r.platform === X_PLATFORM && r.success && r.id)
+    .map((r) => r.id!)
 
   const body: PostApiResponse = { created_at: createdAt }
   if (ids.length === 1) body.tweet_id = ids[0]
@@ -87,7 +78,7 @@ export const fanout = async (
 }
 
 /**
- * Posts multiple messages sequentially, fanning out each one.
+ * Posts multiple messages in parallel, fanning out each one.
  * Used when stock roundups exceed one social post.
  * `imageUrl`, when provided, is attached only to the first message.
  */
@@ -95,10 +86,9 @@ export const fanoutAll = async (
   messages: string[],
   targets: { name: string; service: ISocialService }[],
   imageUrl?: string,
-): Promise<FanoutResult[][]> => {
-  const results: FanoutResult[][] = []
-  for (let i = 0; i < messages.length; i++) {
-    results.push(await fanout(messages[i], targets, i === 0 ? imageUrl : undefined))
-  }
-  return results
+): Promise<FanoutResult[]> => {
+  const settled = await Promise.allSettled(
+    messages.map((msg, i) => fanout(msg, targets, i === 0 ? imageUrl : undefined))
+  )
+  return settled.flatMap((r) => (r.status === "fulfilled" ? r.value : []))
 }

@@ -159,7 +159,7 @@ describe("fanout", () => {
 // ── fanoutAll ─────────────────────────────────────────────────────────────────
 
 describe("fanoutAll", () => {
-  it("posts messages sequentially and returns results per message", async () => {
+  it("posts messages in parallel and returns flat results", async () => {
     const calls: string[] = []
     const service: ISocialService = {
       postMessage: jest.fn().mockImplementation((msg: string) => {
@@ -173,9 +173,9 @@ describe("fanoutAll", () => {
     const results = await fanoutAll(messages, targets)
 
     expect(results).toHaveLength(3)
-    expect(calls).toEqual(["msg1", "msg2", "msg3"])
-    expect(results[0][0].id).toBe("id-msg1")
-    expect(results[2][0].id).toBe("id-msg3")
+    expect(calls.sort()).toEqual(["msg1", "msg2", "msg3"])
+    expect(results.find((r) => r.id === "id-msg1")).toMatchObject({ platform: "X", success: true })
+    expect(results.find((r) => r.id === "id-msg3")).toMatchObject({ platform: "X", success: true })
   })
 
   it("returns empty array for empty messages list", async () => {

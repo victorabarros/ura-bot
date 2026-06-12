@@ -43,9 +43,8 @@ export const postUraStock = async (_req: Request, res: Response): Promise<void> 
 
       const message = buildHolidayMessage(entry.eventName, entry.message ?? holidayMessage, now, ctx)
       const posts = await fanoutAll([message], SOCIAL_TARGETS, imageUrl)
-      const flat = posts.flat()
       if (!fanoutHadSuccess(posts)) {
-        respondSocialPublishFailed(res, flat)
+        respondSocialPublishFailed(res, posts)
         return
       }
       res.status(httpStatus.OK).json(buildPostApiResponse(now, posts))
@@ -79,9 +78,8 @@ export const postUraStock = async (_req: Request, res: Response): Promise<void> 
 
     const messages = buildStockMessages(quotes, now, ctx)
     const posts = await fanoutAll(messages, SOCIAL_TARGETS)
-    const flat = posts.flat()
     if (!fanoutHadSuccess(posts)) {
-      respondSocialPublishFailed(res, flat)
+      respondSocialPublishFailed(res, posts)
       return
     }
 
