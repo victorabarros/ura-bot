@@ -7,11 +7,17 @@ meta {
 post {
   url: {{urabotBaseUrl}}/urabot/news
   body: json
-  auth: none
+  auth: apikey
 }
 
 headers {
   authorization: {{UrabotXToken}}
+}
+
+auth:apikey {
+  key: authorization
+  value: McChickenPromo
+  placement: header
 }
 
 body:json {

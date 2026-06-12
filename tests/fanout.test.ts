@@ -31,21 +31,21 @@ describe("buildPostApiResponse", () => {
   })
 
   it("returns tweet_ids (plural) when multiple X posts succeeded (chunked)", () => {
-    const nested: FanoutResult[][] = [
-      [{ platform: "X", success: true, id: "t1" }],
-      [{ platform: "X", success: true, id: "t2" }],
+    const results: FanoutResult[] = [
+      { platform: "X", success: true, id: "t1" },
+      { platform: "X", success: true, id: "t2" },
     ]
-    const resp = buildPostApiResponse(now, nested)
+    const resp = buildPostApiResponse(now, results)
     expect(resp.tweet_ids).toEqual(["t1", "t2"])
     expect(resp.tweet_id).toBeUndefined()
   })
 
   it("excludes failed X posts from tweet_ids", () => {
-    const nested: FanoutResult[][] = [
-      [{ platform: "X", success: true, id: "t1" }],
-      [{ platform: "X", success: false, error: "fail" }],
+    const results: FanoutResult[] = [
+      { platform: "X", success: true, id: "t1" },
+      { platform: "X", success: false, error: "fail" },
     ]
-    const resp = buildPostApiResponse(now, nested)
+    const resp = buildPostApiResponse(now, results)
     expect(resp.tweet_id).toBe("t1")
     expect(resp.tweet_ids).toBeUndefined()
   })
