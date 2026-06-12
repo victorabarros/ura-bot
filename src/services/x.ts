@@ -128,20 +128,6 @@ export class XService implements ISocialService {
   }
 
   /**
-   * Posts a quote tweet (retweet with comment) on top of an existing tweet.
-   *
-   * @see https://developer.x.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/post-tweets
-   */
-  async quoteTweet(text: string, quoteTweetId: string): Promise<PostMessageResponse> {
-    const trimmed = text.trim()
-    if (!trimmed) throw new Error("X: quote tweet text cannot be empty")
-    if (!quoteTweetId) throw new Error("X: quoteTweetId is required")
-
-    const { data } = await this.client.v2.tweet({ text: trimmed, quote_tweet_id: quoteTweetId })
-    return { id: data.id }
-  }
-
-  /**
    * Returns recent tweets that mention this account, sorted by engagement.
    * Pass `startTime` to filter server-side to mentions after that timestamp.
    *
@@ -175,21 +161,6 @@ export class XService implements ISocialService {
     return { id: data.id }
   }
 
-  /**
-   * Searches recent tweets matching `query`, sorted by relevancy.
-   * Requires at minimum the Basic X API access tier.
-   *
-   * @see https://developer.x.com/en/docs/twitter-api/tweets/search/introduction
-   */
-  async searchTweets(query: string, limit = 10): Promise<TweetResult[]> {
-    const { data } = await this.client.v2.search(query, {
-      max_results: Math.min(Math.max(limit, 10), 100),
-      "tweet.fields": TWEET_FIELDS,
-      sort_order: "relevancy",
-    })
-
-    return (data.data ?? []).map(mapTweet)
-  }
 }
 
 /** Default UraBot X account — used by controllers that are not account-specific. */
