@@ -6,7 +6,7 @@ import { generateComment, generateImage } from "../services/replicate"
 import { getHolidayEntry } from "../domain/holidays"
 import { getPostContext } from "../domain/marketTime"
 import { STOCKS, buildStockMessages, buildHolidayMessage } from "../domain/stocks"
-import { buildPostApiResponse, fanoutAll, fanoutHadSuccess } from "../domain/fanout"
+import { buildPostApiResponse, fanoutAll } from "../domain/fanout"
 import {
   ApiErrorBody,
   logIntegrationError,
@@ -43,7 +43,7 @@ export const postUraStock = async (_req: Request, res: Response): Promise<void> 
 
       const message = buildHolidayMessage(entry.eventName, entry.message ?? holidayMessage, now, ctx)
       const posts = await fanoutAll([message], SOCIAL_TARGETS, imageUrl)
-      if (!fanoutHadSuccess(posts)) {
+      if (!posts.some((r) => r.success)) {
         respondSocialPublishFailed(res, posts)
         return
       }
@@ -78,7 +78,7 @@ export const postUraStock = async (_req: Request, res: Response): Promise<void> 
 
     const messages = buildStockMessages(quotes, now, ctx)
     const posts = await fanoutAll(messages, SOCIAL_TARGETS)
-    if (!fanoutHadSuccess(posts)) {
+    if (!posts.some((r) => r.success)) {
       respondSocialPublishFailed(res, posts)
       return
     }

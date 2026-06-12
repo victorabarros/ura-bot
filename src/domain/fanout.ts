@@ -17,9 +17,6 @@ export type PostApiResponse = {
 
 const X_PLATFORM = "X"
 
-/** True if at least one platform published successfully. */
-export const fanoutHadSuccess = (results: FanoutResult[]): boolean =>
-  results.some((r) => r.success)
 
 /**
  * Builds the success response payload with X tweet id(s) from fan-out.

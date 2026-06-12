@@ -1,46 +1,10 @@
 import {
-  fanoutHadSuccess,
   buildPostApiResponse,
   fanout,
   fanoutAll,
   FanoutResult,
 } from "../src/domain/fanout"
 import { ISocialService } from "../src/services/ISocialService"
-
-// ── fanoutHadSuccess ──────────────────────────────────────────────────────────
-
-describe("fanoutHadSuccess", () => {
-  it("returns false when all results failed", () => {
-    const results: FanoutResult[] = [
-      { platform: "X", success: false, error: "timeout" },
-    ]
-    expect(fanoutHadSuccess(results)).toBe(false)
-  })
-
-  it("returns true when at least one result succeeded", () => {
-    const results: FanoutResult[] = [
-      { platform: "X", success: true, id: "123" },
-      { platform: "Nostr", success: false, error: "error" },
-    ]
-    expect(fanoutHadSuccess(results)).toBe(true)
-  })
-
-  it("works with nested FanoutResult[][] (chunked posts)", () => {
-    const nested: FanoutResult[][] = [
-      [{ platform: "X", success: false, error: "e1" }],
-      [{ platform: "X", success: true, id: "abc" }],
-    ]
-    expect(fanoutHadSuccess(nested)).toBe(true)
-  })
-
-  it("returns false when all nested results failed", () => {
-    const nested: FanoutResult[][] = [
-      [{ platform: "X", success: false, error: "e1" }],
-      [{ platform: "X", success: false, error: "e2" }],
-    ]
-    expect(fanoutHadSuccess(nested)).toBe(false)
-  })
-})
 
 // ── buildPostApiResponse ──────────────────────────────────────────────────────
 

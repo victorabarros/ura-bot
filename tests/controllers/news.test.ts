@@ -13,7 +13,6 @@ jest.mock("../../src/services/replicate", () => ({
 }))
 jest.mock("../../src/domain/fanout", () => ({
   fanout: jest.fn(),
-  fanoutHadSuccess: jest.fn(),
   buildPostApiResponse: jest.fn(),
   fanoutAll: jest.fn(),
 }))
@@ -23,14 +22,13 @@ jest.mock("../../src/controllers/targets", () => ({
 
 import { searchNews } from "../../src/services/finnhub"
 import { generateComment, generateImage } from "../../src/services/replicate"
-import { fanout, fanoutHadSuccess, buildPostApiResponse } from "../../src/domain/fanout"
+import { fanout, buildPostApiResponse } from "../../src/domain/fanout"
 import { NewsItem } from "../../src/services/finnhub"
 
 const mockSearchNews = searchNews as jest.MockedFunction<typeof searchNews>
 const mockGenerateComment = generateComment as jest.MockedFunction<typeof generateComment>
 const mockGenerateImage = generateImage as jest.MockedFunction<typeof generateImage>
 const mockFanout = fanout as jest.MockedFunction<typeof fanout>
-const mockFanoutHadSuccess = fanoutHadSuccess as jest.MockedFunction<typeof fanoutHadSuccess>
 const mockBuildPostApiResponse = buildPostApiResponse as jest.MockedFunction<typeof buildPostApiResponse>
 
 const makeMockRes = () => {
@@ -57,7 +55,6 @@ const req = {} as Request
 beforeEach(() => {
   jest.clearAllMocks()
   mockFanout.mockResolvedValue([{ platform: "X", success: true, id: "tweet-1" }])
-  mockFanoutHadSuccess.mockReturnValue(true)
   mockBuildPostApiResponse.mockReturnValue({ created_at: new Date(), tweet_id: "tweet-1" })
 })
 
@@ -117,7 +114,6 @@ describe("postUraNews", () => {
     mockSearchNews.mockResolvedValue([makeNewsItem()])
     mockGenerateComment.mockResolvedValue("comment")
     mockFanout.mockResolvedValue([{ platform: "X", success: false, error: "auth failed" }])
-    mockFanoutHadSuccess.mockReturnValue(false)
 
     const { res, status } = makeMockRes()
     await postUraNews(req, res)

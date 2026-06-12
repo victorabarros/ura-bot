@@ -5,7 +5,7 @@ import moment from "moment-timezone"
 import { searchNews, NewsItem } from "../services/finnhub"
 import { generateComment, generateImage } from "../services/replicate"
 import { STOCKS } from "../domain/stocks"
-import { buildPostApiResponse, fanout, fanoutHadSuccess } from "../domain/fanout"
+import { buildPostApiResponse, fanout } from "../domain/fanout"
 import {
   ApiErrorBody,
   logIntegrationError,
@@ -125,7 +125,7 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
     }).join("")
     const message = [boldHeadline, comment, "", "#Uranium☢️"].join("\n")
     const posts = await fanout(message, SOCIAL_TARGETS, imageUrl)
-    if (!fanoutHadSuccess(posts)) {
+    if (!posts.some((r) => r.success)) {
       respondSocialPublishFailed(res, posts)
       return
     }

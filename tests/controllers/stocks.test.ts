@@ -17,7 +17,6 @@ jest.mock("../../src/domain/holidays", () => ({
 }))
 jest.mock("../../src/domain/fanout", () => ({
   fanoutAll: jest.fn(),
-  fanoutHadSuccess: jest.fn(),
   buildPostApiResponse: jest.fn(),
 }))
 jest.mock("../../src/controllers/targets", () => ({
@@ -27,7 +26,7 @@ jest.mock("../../src/controllers/targets", () => ({
 import { getQuote } from "../../src/services/finnhub"
 import { generateComment, generateImage } from "../../src/services/replicate"
 import { getHolidayEntry } from "../../src/domain/holidays"
-import { fanoutAll, fanoutHadSuccess, buildPostApiResponse } from "../../src/domain/fanout"
+import { fanoutAll, buildPostApiResponse } from "../../src/domain/fanout"
 import { Quote } from "../../src/services/finnhub"
 
 const mockGetQuote = getQuote as jest.MockedFunction<typeof getQuote>
@@ -35,7 +34,6 @@ const mockGenerateComment = generateComment as jest.MockedFunction<typeof genera
 const mockGenerateImage = generateImage as jest.MockedFunction<typeof generateImage>
 const mockGetHolidayEntry = getHolidayEntry as jest.MockedFunction<typeof getHolidayEntry>
 const mockFanoutAll = fanoutAll as jest.MockedFunction<typeof fanoutAll>
-const mockFanoutHadSuccess = fanoutHadSuccess as jest.MockedFunction<typeof fanoutHadSuccess>
 const mockBuildPostApiResponse = buildPostApiResponse as jest.MockedFunction<typeof buildPostApiResponse>
 
 function makeMockRes() {
@@ -56,8 +54,7 @@ beforeEach(() => {
   mockGetHolidayEntry.mockResolvedValue(undefined)
   mockGenerateComment.mockResolvedValue("Wishing all uranium bulls a prosperous holiday!")
   mockGenerateImage.mockResolvedValue("https://replicate.delivery/holiday.jpg")
-  mockFanoutAll.mockResolvedValue([[{ platform: "X", success: true, id: "tweet-1" }]])
-  mockFanoutHadSuccess.mockReturnValue(true)
+  mockFanoutAll.mockResolvedValue([{ platform: "X", success: true, id: "tweet-1" }])
   mockBuildPostApiResponse.mockReturnValue({ created_at: new Date(), tweet_id: "tweet-1" })
 })
 
@@ -120,8 +117,7 @@ describe("postUraStock", () => {
         atDate: "2026-09-07",
         tradingHour: "",
       })
-      mockFanoutHadSuccess.mockReturnValue(false)
-      mockFanoutAll.mockResolvedValue([[{ platform: "X", success: false, error: "fail" }]])
+      mockFanoutAll.mockResolvedValue([{ platform: "X", success: false, error: "fail" }])
 
       const { res, status } = makeMockRes()
       await postUraStock(req, res)
@@ -161,8 +157,7 @@ describe("postUraStock", () => {
 
     it("returns 502 when quotes succeed but all social targets fail", async () => {
       mockGetQuote.mockResolvedValue(makeQuote("CCJ"))
-      mockFanoutHadSuccess.mockReturnValue(false)
-      mockFanoutAll.mockResolvedValue([[{ platform: "X", success: false, error: "fail" }]])
+      mockFanoutAll.mockResolvedValue([{ platform: "X", success: false, error: "fail" }])
 
       const { res, status } = makeMockRes()
       await postUraStock(req, res)
