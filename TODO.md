@@ -20,6 +20,10 @@
 
 ## product improvement
 
+- run an OpenClaw server with credes for the urabot on X and let it improve engagement flows. Add a SOUL.md for persona details. ref https://youtu.be/YcU9rIpFCmA?t=1035
+  - usar para pesquisar ideias/pautas
+  - usar para responder seguidores
+  - usar para gerar alerta p meu whatsapp/telegram com as mensagens dos seguidores.
 - improve data source to have better news https://x.com/paulmitche24045/status/1943767794513772602
 <!-- - registrar nome no impo https://youtu.be/OAIjQSDdFcs?si=RbuI5VAX-_bstXkp also on US trademark department -->
 - replicate if !holidayDetail.message, use replicate to generate a holiday message. Maybe with a image. https://github.com/victorabarros/ura-bot/blob/71d7cf7950786f53748a59da57042cb7501db8b1/src/services/Holidays.ts#L220 > Use Replicate to create a message on holiday
