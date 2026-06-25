@@ -10,23 +10,32 @@ import { postBitcoinPrice } from "./controllers/bitcoinprice"
 
 const router = Router()
 
+const endpoints = [
 // Health — no auth
-router.get("/heartbeat", heartbeat)
-router.get("/healthcheck", healthcheck)
+{verb: 'get', path: "/heartbeat", fn: heartbeat} ,
+{verb: 'get', path: "/healthcheck", fn: healthcheck} ,
 
 // Public read — no auth
-router.get("/urabot/latest-post", getLatestUraPost)
+{verb: 'get', path: "/urabot/latest-post", fn: getLatestUraPost} ,
 
 // Uranium bot actions — require API key (enforced by authMiddleware)
-router.post("/urabot/stocks", postUraStock)
-router.post("/urabot/news", postUraNews)
-router.post("/urabot/reply-mentions", replyToMentions)
+{verb: 'post', path: "/urabot/stocks", fn: postUraStock} ,
+{verb: 'post', path: "/urabot/news", fn: postUraNews} ,
+{verb: 'post', path: "/urabot/reply-mentions", fn: replyToMentions} ,
 
 // Webhook — no auth (called by X for CRC and event delivery)
-router.get("/urabot/webhook", handleWebhookCrc)
-router.post("/urabot/webhook", receiveWebhook)
+{verb: 'get', path: "/urabot/webhook", fn: handleWebhookCrc} ,
+{verb: 'post', path: "/urabot/webhook", fn: receiveWebhook} ,
 
 // BitcoinMetrx actions — require API key (enforced by authMiddleware)
-router.post("/bitcoinmetrx/price", postBitcoinPrice)
+{verb: 'post', path: "/bitcoinmetrx/price", fn: postBitcoinPrice} ,
+]
+
+console.log("List of endpoints: ")
+
+endpoints.forEach(({verb, path, fn}) => {
+  console.log(verb,' '.repeat(4-verb.length), path)
+  router[verb](path, fn)
+})
 
 export default router

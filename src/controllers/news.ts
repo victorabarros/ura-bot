@@ -15,6 +15,15 @@ import { SOCIAL_TARGETS } from "./targets"
 
 const MARKET_TZ = "America/New_York"
 
+/** Rotated per post so the feed doesn't converge on one look. */
+const IMAGE_STYLES = [
+  "retro-futurist propaganda poster, bold flat shapes, screen-print texture, high contrast",
+  "surreal photorealistic render, extreme macro perspective, shallow depth of field",
+  "moody cinematic concept art, anamorphic lens flare, volumetric haze, monumental scale",
+  "award-winning documentary photograph, golden-hour light, telephoto compression",
+  "dark sci-fi matte painting, vast landscape, a tiny lone human silhouette for scale",
+] as const
+
 /** 7d then 30d — skip 1d (usually empty). At most one call per ticker per window. */
 const NEWS_LOOKBACK_DAYS = [7, 30] as const
 
@@ -109,8 +118,9 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
 
     let imageUrl: string | undefined
     try {
+      const style = IMAGE_STYLES[Math.floor(Math.random() * IMAGE_STYLES.length)]
       imageUrl = await generateImage(
-        `Cinematic editorial illustration for a uranium market news story. Headline: "${news.headline}". Context: ${news.summary}. Company or ticker: ${news.related}. Visual style: dramatic chiaroscuro lighting, deep earth tones and electric blue-green glows, hyper-detailed foreground (uranium ore, reactor vessel, mine shaft, or trading floor — whichever fits the story), vast negative space behind. Photorealistic digital painting. Absolutely no text, letters, numbers, charts, graphs, or logos anywhere in the image.`
+        `Scroll-stopping editorial hero image for a uranium market news story. Headline: "${news.headline}". Context: ${news.summary}. Company or ticker: ${news.related}. Invent ONE bold visual metaphor that captures what this specific story means — its tension, stakes, or irony — rather than illustrating the industry literally. Composition: a single dominant focal subject, unusual or extreme camera angle, strong silhouette that reads instantly even as a small phone thumbnail. Style: ${style}. Color: one electric accent (radioactive green, uranium-glass teal, or warning orange) against an otherwise restrained palette. Strictly avoid cliches: no miners with headlamps, no glowing crystal caves, no cooling towers, no generic mine tunnels. Absolutely no text, letters, numbers, charts, graphs, logos, or watermarks anywhere in the image.`
       )
     } catch (err) {
       console.warn("[news] Image generation failed, posting without image:", (err as Error).message)
