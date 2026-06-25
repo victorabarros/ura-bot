@@ -27,6 +27,12 @@ const IMAGE_STYLES = [
 /** 7d then 30d — skip 1d (usually empty). At most one call per ticker per window. */
 const NEWS_LOOKBACK_DAYS = [7, 30] as const
 
+/** Collapses whitespace, trims, and truncates with "..." at `max` chars. */
+const tidy = (text: string, max: number): string => {
+  const collapsed = text.replace(/\s+/g, " ").trim()
+  return collapsed.length <= max ? collapsed : collapsed.slice(0, max - 3).trimEnd() + "..."
+}
+
 type FindNewsOutcome =
   | { status: "found"; news: NewsItem }
   | { status: "empty" }
@@ -108,7 +114,7 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
     let comment: string
     try {
       comment = await generateComment(
-        `Write a post (up to 120 characters) about the news (don't use hashtag with uranium word): ${JSON.stringify(news)}`
+        `Write one concrete uranium-market takeaway in 100 characters or less. No hashtags, no links, no incomplete sentence. News: ${JSON.stringify(news)}`
       )
     } catch (err) {
       logIntegrationError("news", "replicate", err)
@@ -126,14 +132,9 @@ export const postUraNews = async (_req: Request, res: Response): Promise<void> =
       console.warn("[news] Image generation failed, posting without image:", (err as Error).message)
     }
 
-    const boldHeadline = [...news.headline].map(c => {
-      const n = c.codePointAt(0) ?? 0
-      if (n >= 65 && n <= 90) return String.fromCodePoint(n + 0x1D400 - 65)  // A–Z
-      if (n >= 97 && n <= 122) return String.fromCodePoint(n + 0x1D41A - 97) // a–z
-      if (n >= 48 && n <= 57) return String.fromCodePoint(n + 0x1D7CE - 48)  // 0–9
-      return c
-    }).join("")
-    const message = [boldHeadline, comment, "", "#Uranium☢️"].join("\n")
+    const headline = tidy(news.headline, 80)
+    const takeaway = tidy(comment, 100)
+    const message = [`Uranium watch: ${headline}`, "", takeaway, "", "#Uranium☢️"].join("\n")
     const posts = await fanout(message, SOCIAL_TARGETS, imageUrl)
     if (!posts.some((r) => r.success)) {
       respondSocialPublishFailed(res, posts)

@@ -4,14 +4,13 @@ import config from "../config"
 const MODEL = "meta/meta-llama-3-70b-instruct"
 const IMAGE_MODEL = "google/nano-banana-2"
 
-/** Persona voice for all LLM-generated posts. */
-const SYSTEM_PROMPT = `
-      You are a uranium market investor and influencer with a sharp, unapologetic voice.
-      You post with precision — no casual language, always a hint of dry, acid humor.
-      You are a principled libertarian: you revere individual freedom, free markets, and
-      sound money. You have zero patience for bureaucracy, regulatory overreach, and the
-      expansionist ambitions of large governments. You believe nuclear energy and uranium
-      are cornerstones of a free, prosperous civilization — and you say so without hedging.
+/** Base persona voice for all LLM-generated content. */
+const BASE_PERSONA = `
+      You are a uranium market analyst with a sharp, precise voice and dry wit.
+      You write with authority — no hedging, no filler, no clichés. One punchy observation per post.
+      You cover uranium and nuclear energy from every angle: supply/demand, geopolitics, capital markets,
+      energy policy, technology, and investor psychology. Rotate across these angles; never fixate on
+      one political frame.
       Never use hashtags or external links.
       Never give investment recommendations, financial advice, or suggest buying or selling any asset.
       Avoid any content that could constitute defamation, harassment, or legal liability — no personal
@@ -19,11 +18,22 @@ const SYSTEM_PROMPT = `
       market manipulation. Stay provocative in ideas, not in targets.
     `
 
+/** One angle is randomly injected per comment call so posts vary across themes. */
+const COMMENT_ANGLES = [
+  "Focus on supply/demand fundamentals — pounds, inventories, and contract timelines.",
+  "Frame it through geopolitics: which nations control the supply, and what that means for buyers.",
+  "Explore the energy-transition angle: what this means for utilities switching from gas or coal.",
+  "Look at the capital-markets side: investor sentiment, fund flows, or equity valuations.",
+  "Consider utility contracting cycles: how long-term deals shape the spot price outlook.",
+  "Examine market psychology: what the market is pricing in, and whether it makes sense.",
+  "Think about technology: reactor design, enrichment capacity, or the fuel cycle.",
+] as const
+
 const replicate = new Replicate({ auth: config.replicate.apiKey })
 
 /**
  * Generates a short post in the UraBot voice for the given prompt.
- * Callers are responsible for building domain-specific prompts.
+ * Injects a randomly chosen thematic angle so consecutive posts vary.
  *
  * @see https://replicate.com/docs
  * @see docs/3rd-parties/replicate-ai.md
@@ -40,9 +50,12 @@ export const generateComment = async (prompt: string): Promise<string> => {
     frequency_penalty: 0,
   } as const
 
+  const randAngle = COMMENT_ANGLES[Math.floor(Math.random() * COMMENT_ANGLES.length)]
+  const system_prompt = `${BASE_PERSONA.trimEnd()}\n      This post: ${randAngle}`
+
   const input = MODEL.startsWith("openai/")
     ? {
-      system_prompt: SYSTEM_PROMPT,
+      system_prompt,
       prompt,
       temperature: gen.temperature,
       top_p: gen.top_p,
@@ -50,7 +63,7 @@ export const generateComment = async (prompt: string): Promise<string> => {
       presence_penalty: gen.presence_penalty,
       frequency_penalty: gen.frequency_penalty,
     }
-    : { ...gen, prompt, system_prompt: SYSTEM_PROMPT }
+    : { ...gen, prompt, system_prompt }
 
   const output = await replicate.run(MODEL as `${string}/${string}`, { input })
 
@@ -74,7 +87,7 @@ export const generateComment = async (prompt: string): Promise<string> => {
  */
 export const generateImage = async (prompt: string): Promise<string> => {
   const output = await replicate.run(IMAGE_MODEL as `${string}/${string}`, {
-    input: { prompt, aspect_ratio: "16:9", output_format: "jpg", temperature: .7, system_prompt: SYSTEM_PROMPT, },
+    input: { prompt, aspect_ratio: "16:9", output_format: "jpg", temperature: .7, system_prompt: BASE_PERSONA, },
   })
   const url = Array.isArray(output) ? String(output[0]) : String(output)
   if (!url) throw new Error("No image URL returned by image model")
