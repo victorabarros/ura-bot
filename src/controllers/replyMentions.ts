@@ -37,6 +37,8 @@ export const replyToMentions = async (_req: Request, res: Response): Promise<voi
 
   const results = await Promise.allSettled(
     mentions.map(async (mention) => {
+      // TODO is necessary create a checker (propably using LLM) to check if this is a message that needs a reply, or only a like.
+      // Ex: https://x.com/UraniumStockBot/status/2069918572999303288?s=20 this reply wasn't necessary
       let reply: string
       try {
         reply = await generateComment(
