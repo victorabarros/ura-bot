@@ -1,3 +1,4 @@
+# PR validation runs the Docker test suite.
 name: CI
 
 on:
