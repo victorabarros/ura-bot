@@ -143,8 +143,12 @@ Error bodies: `{ "error": "<message>", "integration": "finnhub" | "social" }`.
 
 ### `POST /urabot/reply-mentions`
 
-Fetches X mentions directed at `@UraniumStockBot` from the last 5 minutes,
-generates an LLM reply for each via Replicate, and posts them as threaded replies.
+Fetches up to 100 X mentions directed at `@UraniumStockBot` from the last hour.
+A conservative LLM check selects only relevant questions or substantive comments
+where a response adds value. Low-value reactions, spam, bait, and uncertain decisions
+are skipped. Selected mentions get a separate friendly conversational reply,
+without the broadcast persona or random thematic angles. Empty, SKIP, or over-200-character
+output is not posted. Selection/generation failures never fall back to automatic replies.
 Fail-soft per mention — one failure does not stop the others.
 
 **Auth:** API key required.
@@ -154,14 +158,15 @@ Fail-soft per mention — one failure does not stop the others.
 ```json
 {
   "replied": [{ "mention_id": "<id>", "reply_id": "<id>" }],
-  "failed":  [{ "mention_id": "<id>", "error": "<reason>" }]
+  "failed":  [{ "mention_id": "<id>", "error": "<reason>" }],
+  "skipped": [{ "mention_id": "<id>", "reason": "not_worth_replying | no_valid_reply" }]
 }
 ```
 
-Both arrays may be empty or partial. A `200` with a non-empty `failed` array
-means some replies were posted successfully.
+All arrays may be empty or partial. A `200` indicates processing completed; inspect
+`replied`, `skipped`, and `failed` for per-mention outcomes. It does not guarantee a post.
 
-**Response `204 No Content`** — no mentions in the last 5 minutes.
+**Response `204 No Content`** — no mentions in the last hour.
 
 **Response `503 Service Unavailable`** — X mentions API unavailable.
 

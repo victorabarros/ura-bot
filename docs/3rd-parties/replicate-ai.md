@@ -94,3 +94,19 @@ humor, market tone) must survive any rewording.
   hashtags); validate before posting.
 - If comment generation fails, return **`503`** with `integration: "replicate"` — do not
   post with a silent headline fallback.
+
+### Mention replies
+
+Mention replies do not use the broadcast persona or randomly selected angles.
+`shouldReplyToMention` first requests an exact REPLY/SKIP decision, defaulting to
+skip for uncertain or malformed output. Relevant genuine questions and substantive
+points can qualify; bare tags, reactions, praise, thanks, spam, bait, unrelated
+comments, and buy/sell requests should not. Provider errors are reported, not bypassed.
+`generateMentionReply` then uses a dedicated friendly, plain-language prompt with
+no canned praise or forced market take. It can still return SKIP. Empty or longer
+than 200 Unicode-character replies are rejected before posting. Both calls use
+Llama 3 70B through Replicate, temperature 0.3, max_tokens 256; mention text is
+JSON-encoded as untrusted data. Scheduled news/stock commentary is unchanged.
+Only mention text is supplied; thread context and cross-request deduplication
+remain outside this change. Unit tests mock model responses; conversational quality
+and classification accuracy still require real-model evaluation.

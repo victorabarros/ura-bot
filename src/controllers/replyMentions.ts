@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
-import { generateComment } from "../services/replicate"
+import { generateMentionReply, shouldReplyToMention } from "../services/replicate"
 import { uraBotXService } from "../services/x"
 import { ApiErrorBody, logIntegrationError } from "../http/errors"
 
@@ -10,8 +10,8 @@ type RepliedItem = { mention_id: string; reply_id: string }
 type FailedItem = { mention_id: string; error: string }
 
 /**
- * POST /urabot/reply-mentions: fetches X mentions from the last 5 minutes,
- * generates an LLM reply for each via Replicate, and posts threaded replies.
+ * POST /urabot/reply-mentions: fetches X mentions from the last hour,
+ * selects worthwhile mentions and generates friendly replies via Replicate, and posts threaded replies.
  * Fail-soft per mention — one failure does not stop the others.
  * `204` when no recent mentions; `503` when X API is unavailable.
  */
@@ -34,16 +34,21 @@ export const replyToMentions = async (_req: Request, res: Response): Promise<voi
 
   const replied: RepliedItem[] = []
   const failed: FailedItem[] = []
+  const skipped: { mention_id: string; reason: string }[] = []
 
   const results = await Promise.allSettled(
     mentions.map(async (mention) => {
-      // TODO is necessary create a checker (propably using LLM) to check if this is a message that needs a reply, or only a like.
-      // Ex: https://x.com/UraniumStockBot/status/2069918572999303288?s=20 this reply wasn't necessary
-      let reply: string
+      let reply: string | null
       try {
-        reply = await generateComment(
-          `Reply in 200 characters or less to this X mention in the uranium market context: "${mention.text}"`
-        )
+        if (!await shouldReplyToMention(mention.text)) {
+          skipped.push({ mention_id: mention.id, reason: "not_worth_replying" })
+          return
+        }
+        reply = await generateMentionReply(mention.text)
+        if (!reply) {
+          skipped.push({ mention_id: mention.id, reason: "no_valid_reply" })
+          return
+        }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
         console.warn(`[reply-mentions] Replicate failed for mention ${mention.id}:`, message)
@@ -67,5 +72,5 @@ export const replyToMentions = async (_req: Request, res: Response): Promise<voi
     logIntegrationError("reply-mentions", "internal", (unexpectedError as PromiseRejectedResult).reason)
   }
 
-  res.status(httpStatus.OK).json({ replied, failed })
+  res.status(httpStatus.OK).json({ replied, skipped, failed })
 }
