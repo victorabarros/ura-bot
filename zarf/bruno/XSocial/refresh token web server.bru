@@ -15,13 +15,13 @@ headers {
 }
 
 auth:basic {
-  username: WDYyOExYSWZhVGthOGlpODJZSGw6MTpjaQ
-  password: mf5eNIRl1lQza5NdCFMlGGSAolahASBu77sv-mu9Gy4u7bD72b
+  username: {{X_CLIENT_ID}}
+  password: {{X_CLIENT_SECRET}}
 }
 
 body:form-urlencoded {
   grant_type: refresh_token
-  refresh_token: TnBkRHRTd3VudEs0bVVkTlhsYUItOGdqdzV3X1JFQ1YxanNFZTRYZm52WWNvOjE3NzkwNTUyMjQ5MTE6MToxOnJ0OjE
+  refresh_token: {{X_REFRESH_TOKEN}}
 }
 
 settings {

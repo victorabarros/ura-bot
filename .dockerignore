@@ -3,6 +3,8 @@ dist
 .env
 .env.*
 !.env.example
+*.env
+.envrc
 .git
 .gitignore
 .cursor

@@ -5,14 +5,17 @@ import config from "../config"
 const UNAUTHENTICATED_PATHS = new Set(["/heartbeat", "/healthcheck", "/urabot/latest-post", "/urabot/webhook"])
 
 /**
- * Requires API key on all paths except `/heartbeat` and `/healthcheck`.
- * Logs method and path for each request.
+ * Requires an API key except on health, public read, the X webhook, and `/.well-known`.
+ * Logs method and path. Secret-file probes never reach this middleware.
  */
 export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const { method, path } = req
   console.log(`${new Date().toISOString()} ${method} ${path}`)
 
-  if (UNAUTHENTICATED_PATHS.has(path)) {
+  const openPath = UNAUTHENTICATED_PATHS.has(path)
+    || path === "/.well-known"
+    || path.startsWith("/.well-known/")
+  if (openPath) {
     next()
     return
   }

@@ -6,7 +6,7 @@ YELLOW=$(shell printf '\033[0;1;33m')
 COLOR_OFF=$(shell printf '\033[0;1;0m')
 
 .PHONY: welcome \
-        build run dev test \
+        build run dev test docker-test \
         purge-containers purge-images \
 		commit-llm-generated push checkout
 
@@ -60,6 +60,9 @@ dev d:
 test t:
 	@make build DOCKER_TARGET=test DOCKER_TAG=test
 	@docker run --rm --name $(APP_NAME)-test $(APP_NAME):test
+
+docker-test:
+	@$(MAKE) test
 
 purge-containers:
 	@containers=$$(docker ps -aq --filter "name=$(APP_NAME)"); \

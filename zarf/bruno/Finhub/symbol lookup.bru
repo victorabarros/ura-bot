@@ -5,12 +5,12 @@ meta {
 }
 
 get {
-  url: https://finnhub.io/api/v1/quote?symbol=BINANCE:TBUSD&token=c66u80iad3icr57jne00
+  url: https://finnhub.io/api/v1/quote?symbol=BINANCE:TBUSD&token={{FINNHUB_API_KEY}}
   body: none
   auth: none
 }
 
 params:query {
   symbol: BINANCE:TBUSD
-  token: c66u80iad3icr57jne00
+  token: {{FINNHUB_API_KEY}}
 }

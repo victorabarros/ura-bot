@@ -16,13 +16,36 @@ Authorization: <API_KEY>
 
 If the key is missing or wrong the server returns `401 Unauthorized`.
 
-One endpoint is **exempt** from this check:
+Some endpoints are **exempt** from this check:
 
 | Group | Endpoint |
 |---|---|
 | Health / monitoring | `GET /heartbeat`, `GET /healthcheck` |
 | Public read | `GET /urabot/latest-post` |
-| Webhook | `POST /urabot/webhook` |
+| Webhook | `GET /urabot/webhook`, `POST /urabot/webhook` |
+| Discovery | `GET /.well-known/...` |
+
+Responses do not include an `X-Powered-By` header. Unexpected server errors
+return plain text `Internal Server Error` and are logged on the server only.
+
+---
+
+## Hidden-file probes
+
+Automated scanners request paths such as `/.env`, `/.git/config`, and
+`wp-config.php`. Those requests get `404 Not Found` with the plain-text body
+`Not Found` before authentication, static files, or route handlers run.
+They are not written to the log.
+
+The same response is used for:
+
+- dotfiles and dot-directories, except `/.well-known/...`
+- env, secret, credential, and private-key filenames
+- backup, swap, dump, and script extensions this service does not use
+  (`.bak`, `.swp`, `.sql`, `.php`, and similar)
+
+`/.well-known/...` is left open for certificate and discovery clients. If no
+file exists there, the response is also `404 Not Found`.
 
 ---
 
