@@ -40,6 +40,13 @@ describe("authMiddleware", () => {
       expect(next).toHaveBeenCalled()
       expect(status).not.toHaveBeenCalled()
     })
+
+    it("calls next() for /.well-known paths without checking the key", () => {
+      const { res, status } = makeMockRes()
+      authMiddleware(makeReq("/.well-known/acme-challenge/token"), res, next)
+      expect(next).toHaveBeenCalled()
+      expect(status).not.toHaveBeenCalled()
+    })
   })
 
   describe("authenticated paths", () => {

@@ -47,9 +47,12 @@ beyond token caching.
 ### HTTP layer
 
 - Parses and routes requests.
-- Runs the authentication middleware on every route except `/heartbeat` and
-  `/callback`.
+- Rejects secret-file and hidden-path probes (`.env`, `.git`, backups, swap
+  files) with a plain `404` before any other work. `/.well-known` is exempt.
+- Runs the authentication middleware on every other route except `/heartbeat`,
+  `/healthcheck`, `/urabot/latest-post`, `/urabot/webhook`, and `/.well-known`.
 - Does not contain business logic.
+- Does not send an `X-Powered-By` header.
 
 ### Controllers
 

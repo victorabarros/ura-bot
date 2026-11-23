@@ -12,7 +12,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://finnhub.io/api/v1/quote?symbol=URA&token=c66u80iad3icr57jne00",
+					"raw": "https://finnhub.io/api/v1/quote?symbol=URA&token={{FINNHUB_API_KEY}}",
 					"protocol": "https",
 					"host": [
 						"finnhub",
@@ -30,7 +30,7 @@
 						},
 						{
 							"key": "token",
-							"value": "c66u80iad3icr57jne00"
+							"value": "{{FINNHUB_API_KEY}}"
 						}
 					]
 				}
@@ -43,7 +43,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://finnhub.io/api/v1/company-news?symbol=AAPL&from=2023-04-01&to=2023-04-09&token=c66u80iad3icr57jne00",
+					"raw": "https://finnhub.io/api/v1/company-news?symbol=AAPL&from=2023-04-01&to=2023-04-09&token={{FINNHUB_API_KEY}}",
 					"protocol": "https",
 					"host": [
 						"finnhub",
@@ -69,7 +69,7 @@
 						},
 						{
 							"key": "token",
-							"value": "c66u80iad3icr57jne00"
+							"value": "{{FINNHUB_API_KEY}}"
 						}
 					]
 				}
@@ -82,7 +82,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://finnhub.io/api/v1/stock/market-holiday?exchange=US&token=c66u80iad3icr57jne00",
+					"raw": "https://finnhub.io/api/v1/stock/market-holiday?exchange=US&token={{FINNHUB_API_KEY}}",
 					"protocol": "https",
 					"host": [
 						"finnhub",
@@ -101,7 +101,7 @@
 						},
 						{
 							"key": "token",
-							"value": "c66u80iad3icr57jne00"
+							"value": "{{FINNHUB_API_KEY}}"
 						}
 					]
 				}
