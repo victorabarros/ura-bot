@@ -22,27 +22,26 @@ type BulkSeriesEntry = {
 }
 
 /**
- * Lightweight liveness probe — hits the `/health` endpoint.
- * Throws on non-200 or network error.
+ * Daily series the price post reads, newest point only.
+ * `day1` is the index name; BRK v0.13.0 removed the `day` alias.
  */
-export const checkBitviewHealth = async (): Promise<void> => {
-  await http.get("/health")
+const latestDailySeriesParams = {
+  index: "day1",
+  series: "mvrv,realized_price,price_sma_200d,price_sma_55d",
+  start: -1,
 }
 
 /**
- * Fetches MVRV ratio and realized price from bitview.space.
- * Uses the BRK bulk series endpoint — no auth required.
+ * Fetches the latest MVRV, realized price, and daily SMAs from bitview.space.
+ * No auth. `index=day1` — the old `day` alias returns HTTP 400 since BRK v0.13.0.
  *
  * @see https://bitview.space/api
+ * @see https://bitview.space/changes/
  * @see docs/3rd-parties/bitview.md
  */
 export const getBitcoinOnchainData = async (): Promise<BitcoinOnchainData> => {
   const { data } = await http.get<BulkSeriesEntry[]>("/api/series/bulk", {
-    params: {
-      index: "day",
-      series: "mvrv,realized_price,price_sma_200d,price_sma_55d",
-      start: -1,
-    },
+    params: latestDailySeriesParams,
   })
 
   const [mvrvEntry, realizedEntry, sma200dEntry, sma55dEntry] = data
@@ -57,4 +56,19 @@ export const getBitcoinOnchainData = async (): Promise<BitcoinOnchainData> => {
   }
 
   return { mvrv, realizedPriceUsd, sma200dUsd, sma55dUsd }
+}
+
+/**
+ * Readiness probe for the daily series query used by price posts.
+ * `/health` stays up when that query is rejected, so this does not call it.
+ *
+ * @see https://bitview.space/api
+ * @see docs/3rd-parties/bitview.md
+ */
+export const checkBitviewHealth = async (): Promise<void> => {
+  const data = await getBitcoinOnchainData()
+  const values = [data.mvrv, data.realizedPriceUsd, data.sma55dUsd, data.sma200dUsd]
+  if (values.some((value) => !Number.isFinite(value))) {
+    throw new Error("Bitview on-chain probe returned a non-numeric value")
+  }
 }
