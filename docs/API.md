@@ -66,7 +66,10 @@ Lightweight liveness probe. No authentication required.
 ### `GET /healthcheck`
 
 Readiness probe: calls all upstream dependencies with lightweight requests (no
-posting). No authentication required.
+posting). No authentication required. Bitview is probed with the same daily
+series query the price post uses (`index=day1`). Bitview's own `/health`
+endpoint stays up when that query is rejected, so the probe uses the series
+query instead.
 
 **Response `200 OK`** — all dependencies reachable.
 
