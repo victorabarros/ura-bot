@@ -1,5 +1,9 @@
 # fmt/validate on infra changes. Plan on same-repo PRs. Apply on main.
 # cron-job.org allows 100 API requests/day, so this does not run on app-only changes.
+# Terraform jobs run inside the pinned HashiCorp image. The GitHub-hosted runner
+# stays ubuntu-24.04. actions/checkout and actions/github-script need Node, which
+# that image does not have, so checkout uses the image's git client and the plan
+# comment is a separate runner job.
 name: Terraform
 
 on:
@@ -25,8 +29,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  fmt-validate:
-    name: fmt and validate
+  shellcheck:
+    name: shellcheck
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -40,18 +44,34 @@ jobs:
             koalaman/shellcheck:stable \
             zarf/infra/scripts/deploy-prod.sh
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_wrapper: false
+  fmt-validate:
+    name: fmt and validate
+    runs-on: ubuntu-24.04
+    container:
+      image: hashicorp/terraform:1.17.2@sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475
+      options: --entrypoint ""
+    steps:
+      - name: Checkout
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          git init -q .
+          git config --global --add safe.directory "$PWD"
+          auth=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 | tr -d '\n')
+          git -c http.extraheader="AUTHORIZATION: basic ${auth}" fetch --depth 1 --no-tags \
+            "https://github.com/${GITHUB_REPOSITORY}.git" "$GITHUB_REF"
+          git checkout --force FETCH_HEAD
 
       - name: Format check
         run: |
+          set -eu
           export TF_IN_AUTOMATION=1
           terraform -chdir=zarf/infra fmt -recursive -check -diff
 
       - name: Validate
         run: |
+          set -eu
           export TF_IN_AUTOMATION=1
           export TF_DATA_DIR=/tmp/tfdata
           terraform -chdir=zarf/infra init -backend=false -input=false
@@ -59,9 +79,16 @@ jobs:
 
   plan:
     name: plan
-    needs: fmt-validate
+    needs:
+      - fmt-validate
+      - shellcheck
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
+    container:
+      image: hashicorp/terraform:1.17.2@sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475
+      options: --entrypoint ""
+    outputs:
+      summary: ${{ steps.plan.outputs.summary }}
     env:
       CRON_JOB_API_KEY: ${{ secrets.CRON_JOB_API_KEY }}
       TF_VAR_bot_api_key: ${{ secrets.API_KEY }}
@@ -69,33 +96,56 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          git init -q .
+          git config --global --add safe.directory "$PWD"
+          auth=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 | tr -d '\n')
+          git -c http.extraheader="AUTHORIZATION: basic ${auth}" fetch --depth 1 --no-tags \
+            "https://github.com/${GITHUB_REPOSITORY}.git" "$GITHUB_REF"
+          git checkout --force FETCH_HEAD
 
       - name: Plan
         id: plan
         run: |
           set -eu
+          publish() {
+            {
+              echo "summary<<TF_PLAN_SUMMARY_END"
+              cat plan-summary.txt
+              echo "TF_PLAN_SUMMARY_END"
+            } >> "$GITHUB_OUTPUT"
+          }
           if [ -z "$CRON_JOB_API_KEY" ] || [ -z "$TF_VAR_bot_api_key" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-            echo "skipped=true" >> "$GITHUB_OUTPUT"
             printf '%s\n' "Plan skipped until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set." > plan-summary.txt
+            publish
             exit 0
           fi
-          echo "skipped=false" >> "$GITHUB_OUTPUT"
-          bash zarf/infra/scripts/deploy-prod.sh --plan-only
+          sh zarf/infra/scripts/deploy-prod.sh --plan-only
+          publish
 
+  plan-comment:
+    name: comment
+    needs: plan
+    if: github.event_name == 'pull_request' && needs.plan.result == 'success'
+    runs-on: ubuntu-24.04
+    steps:
       - name: Comment on the PR
         uses: actions/github-script@v7
+        env:
+          PLAN_SUMMARY: ${{ needs.plan.outputs.summary }}
         with:
           script: |
-            const fs = require("fs")
-            const summary = fs.readFileSync("plan-summary.txt", "utf8").trim()
+            const summary = process.env.PLAN_SUMMARY || ""
             const marker = "<!-- terraform-plan -->"
             const body = [
               marker,
               "#### Terraform plan",
               "",
               "```",
-              summary,
+              summary.trim(),
               "```",
               "",
               "The first apply creates these jobs already enabled. Disable the old console jobs by hand before the next scheduled minute.",
@@ -125,9 +175,14 @@ jobs:
 
   apply:
     name: apply
-    needs: fmt-validate
+    needs:
+      - fmt-validate
+      - shellcheck
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
+    container:
+      image: hashicorp/terraform:1.17.2@sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475
+      options: --entrypoint ""
     env:
       CRON_JOB_API_KEY: ${{ secrets.CRON_JOB_API_KEY }}
       TF_VAR_bot_api_key: ${{ secrets.API_KEY }}
@@ -135,7 +190,16 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          git init -q .
+          git config --global --add safe.directory "$PWD"
+          auth=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 | tr -d '\n')
+          git -c http.extraheader="AUTHORIZATION: basic ${auth}" fetch --depth 1 --no-tags \
+            "https://github.com/${GITHUB_REPOSITORY}.git" "$GITHUB_REF"
+          git checkout --force FETCH_HEAD
 
       - name: Plan and apply
         run: |
@@ -144,4 +208,4 @@ jobs:
             echo "::warning::Skipping apply until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set."
             exit 0
           fi
-          bash zarf/infra/scripts/deploy-prod.sh
+          sh zarf/infra/scripts/deploy-prod.sh
