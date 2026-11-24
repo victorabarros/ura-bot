@@ -1,8 +1,7 @@
-#!/bin/sh
-# CI only. GitHub Actions calls this script. Do not call it from Make.
-# See AGENTS.md.
+#!/usr/bin/env bash
+# CI only. GitHub Actions calls this script with bash. Do not call it from Make.
+# Ubuntu /bin/sh is dash and does not implement pipefail. See AGENTS.md.
 set -eu
-# shellcheck disable=SC3040
 set -o pipefail
 
 ROOT=$(CDPATH='' cd -- "$(dirname "$0")/../../.." && pwd)
@@ -13,6 +12,7 @@ SUMMARY="${ROOT}/plan-summary.txt"
 
 load_ci_env "${ROOT}"
 require_tf_secrets
+require_jq
 resolve_terraform
 
 cd "${INFRA}"
@@ -24,7 +24,7 @@ if [ ! -f tfplan ]; then
   exit 1
 fi
 
-"${TF}" show -json tfplan | awk -f "${ROOT}/zarf/infra/scripts/plan-actions.awk" > "${SUMMARY}"
+"${TF}" show -json tfplan | jq -r '.resource_changes[]? | "\(.address) \(.change.actions | join(","))"' > "${SUMMARY}"
 if [ ! -s "${SUMMARY}" ]; then
   printf '%s\n' "No changes." > "${SUMMARY}"
 fi

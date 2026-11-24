@@ -1,9 +1,7 @@
-#!/bin/sh
-# CI only. GitHub Actions calls this script. Do not call it from Make.
-# See AGENTS.md.
+#!/usr/bin/env bash
+# CI only. GitHub Actions calls this script with bash. Do not call it from Make.
+# Ubuntu /bin/sh is dash and does not implement pipefail. See AGENTS.md.
 set -eu
-# This image's ash implements pipefail. The version check depends on it.
-# shellcheck disable=SC3040
 set -o pipefail
 
 ROOT=$(CDPATH='' cd -- "$(dirname "$0")/../../.." && pwd)

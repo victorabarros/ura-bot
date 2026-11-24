@@ -1,7 +1,7 @@
 #!/bin/sh
 # Sourced by the CI scripts in this directory. Do not call this from Make.
 # Make is the laptop path and runs Terraform in Docker. See AGENTS.md.
-# Terraform is already on PATH in the pinned job image. This file does not download it.
+# Terraform 1.17.2 is already on PATH. The workflow installs it. This file does not download it.
 
 TF_VERSION=1.17.2
 TF=""
@@ -18,6 +18,13 @@ load_ci_env() {
   export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY:-${R2_SECRET_ACCESS_KEY:-}}"
   export TF_VAR_bot_api_key="${TF_VAR_bot_api_key:-${API_KEY:-}}"
   export TF_IN_AUTOMATION=1
+}
+
+require_jq() {
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "jq is required." >&2
+    exit 1
+  fi
 }
 
 require_tf_secrets() {
