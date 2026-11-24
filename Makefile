@@ -96,7 +96,7 @@ purge-images:
 # Official image, pinned. Mount only zarf/infra. Credentials come from the
 # environment or a gitignored .env. They are not written into the image.
 
-TF_IMAGE := hashicorp/terraform:1.17.2
+TF_IMAGE := hashicorp/terraform:1.17.2@sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475
 TF_PLATFORM := linux/amd64
 # cron-job.org allows 1 create per second and 5 per minute. One at a time.
 TF_PARALLELISM ?= 1
