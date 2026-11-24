@@ -389,4 +389,5 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 zarf/infra/tfplan
+plan-summary.txt
 zarf/infra/inventory.json

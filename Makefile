@@ -9,6 +9,7 @@ COLOR_OFF=$(shell printf '\033[0;1;0m')
         build run dev test docker-test lint typecheck \
         purge-containers purge-images \
         tf-init tf-fmt tf-validate tf-plan tf-plan-summary tf-apply tf-import \
+        shellcheck \
 		commit-llm-generated push checkout
 
 welcome:
@@ -132,6 +133,15 @@ tf-init:
 	@$(load_tf_env); \
 	$(require_r2); \
 	$(TF_DOCKER) init -input=false -reconfigure
+
+SHELLCHECK_IMAGE ?= koalaman/shellcheck:stable
+
+shellcheck:
+	docker run --rm \
+		-v $(CURDIR):/mnt \
+		-w /mnt \
+		$(SHELLCHECK_IMAGE) \
+		zarf/infra/scripts/deploy-prod.sh
 
 tf-fmt:
 	@$(TF_DOCKER) fmt -recursive $(if $(CHECK),-check -diff,)
