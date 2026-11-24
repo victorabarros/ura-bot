@@ -1,3 +1,4 @@
+# CI uses zarf/infra/scripts. Do not call Make. See AGENTS.md.
 # fmt/validate on infra changes. Plan on same-repo PRs. Apply on main.
 # cron-job.org allows 100 API requests/day, so this does not run on app-only changes.
 # Terraform jobs run inside the pinned HashiCorp image. The GitHub-hosted runner
@@ -11,13 +12,11 @@ on:
     paths:
       - "zarf/infra/**"
       - ".github/workflows/terraform.yml"
-      - "Makefile"
   push:
     branches: [main]
     paths:
       - "zarf/infra/**"
       - ".github/workflows/terraform.yml"
-      - "Makefile"
   workflow_dispatch:
 
 concurrency:
@@ -26,7 +25,6 @@ concurrency:
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
   shellcheck:
@@ -42,7 +40,10 @@ jobs:
             -v "${GITHUB_WORKSPACE}:/mnt" \
             -w /mnt \
             koalaman/shellcheck:stable \
-            zarf/infra/scripts/deploy-prod.sh
+            zarf/infra/scripts/common.sh \
+            zarf/infra/scripts/fmt-validate.sh \
+            zarf/infra/scripts/plan.sh \
+            zarf/infra/scripts/apply.sh
 
   fmt-validate:
     name: fmt and validate
@@ -63,19 +64,8 @@ jobs:
             "https://github.com/${GITHUB_REPOSITORY}.git" "$GITHUB_REF"
           git checkout --force FETCH_HEAD
 
-      - name: Format check
-        run: |
-          set -eu
-          export TF_IN_AUTOMATION=1
-          terraform -chdir=zarf/infra fmt -recursive -check -diff
-
-      - name: Validate
-        run: |
-          set -eu
-          export TF_IN_AUTOMATION=1
-          export TF_DATA_DIR=/tmp/tfdata
-          terraform -chdir=zarf/infra init -backend=false -input=false
-          terraform -chdir=zarf/infra validate
+      - name: Format and validate
+        run: sh zarf/infra/scripts/fmt-validate.sh
 
   plan:
     name: plan
@@ -111,26 +101,21 @@ jobs:
         id: plan
         run: |
           set -eu
-          publish() {
-            {
-              echo "summary<<TF_PLAN_SUMMARY_END"
-              cat plan-summary.txt
-              echo "TF_PLAN_SUMMARY_END"
-            } >> "$GITHUB_OUTPUT"
-          }
-          if [ -z "$CRON_JOB_API_KEY" ] || [ -z "$TF_VAR_bot_api_key" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-            printf '%s\n' "Plan skipped until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set." > plan-summary.txt
-            publish
-            exit 0
-          fi
-          sh zarf/infra/scripts/deploy-prod.sh --plan-only
-          publish
+          sh zarf/infra/scripts/plan.sh
+          {
+            echo "summary<<TF_PLAN_SUMMARY_END"
+            cat plan-summary.txt
+            echo "TF_PLAN_SUMMARY_END"
+          } >> "$GITHUB_OUTPUT"
 
   plan-comment:
     name: comment
     needs: plan
     if: github.event_name == 'pull_request' && needs.plan.result == 'success'
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Comment on the PR
         uses: actions/github-script@v7
@@ -148,7 +133,6 @@ jobs:
               summary.trim(),
               "```",
               "",
-              "The first apply creates these jobs already enabled. Disable the old console jobs by hand before the next scheduled minute.",
               "Addresses and actions only. Header values are not included.",
             ].join("\n")
             const { data: comments } = await github.rest.issues.listComments({
@@ -202,10 +186,4 @@ jobs:
           git checkout --force FETCH_HEAD
 
       - name: Plan and apply
-        run: |
-          set -eu
-          if [ -z "$CRON_JOB_API_KEY" ] || [ -z "$TF_VAR_bot_api_key" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-            echo "::warning::Skipping apply until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set."
-            exit 0
-          fi
-          sh zarf/infra/scripts/deploy-prod.sh
+        run: sh zarf/infra/scripts/apply.sh

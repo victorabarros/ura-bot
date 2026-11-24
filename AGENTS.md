@@ -82,6 +82,10 @@ npm run start          # or: make start
 
 All main local commands (run, test, lint, terraform, etc.) must be exposed as Makefile targets that run inside Docker; never require installing tools on the host. When you add a new tool or workflow, add its Makefile target too.
 
+Make targets are for the engineer machine. They run inside Docker so Terraform and the app toolchain are not installed on the host.
+
+CI does not call Make. GitHub Actions run shell scripts. Terraform CI is `zarf/infra/scripts/` inside the pinned `hashicorp/terraform:1.17.2` image. Do not point a workflow at a Make target, and do not have a Make target call a CI script, to collapse the two.
+
 | Task | Target |
 |---|---|
 | Run the app | `make run` |
@@ -98,12 +102,13 @@ Application code is `src/`. Operational files are `zarf/`:
 
 | Path | What it is |
 |---|---|
-| `zarf/infra/` | Terraform for the cron-job.org schedules. State is in Cloudflare R2, not in git. |
+| `zarf/infra/` | Terraform for the cron-job.org schedules. State is in Cloudflare R2, not in git. CI for this directory is `zarf/infra/scripts/`, not Make. |
 | `zarf/bruno/` | Bruno requests for manual HTTP calls |
 | `zarf/scripts/` | One-off scripts |
 
 ## Forbidden patterns
 
+- Do **not** call Make from CI. Make is the development machine. CI uses shell scripts (`zarf/infra/scripts/` for Terraform).
 - Do **not** use `Promise.all` for fan-out — use `Promise.allSettled`.
 - Do **not** silently default missing env vars to `""` or `undefined` — throw at startup.
 - Do **not** add two clients for the same platform (e.g. both OAuth 1.0a and 2.0 for X).

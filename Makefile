@@ -8,7 +8,7 @@ COLOR_OFF=$(shell printf '\033[0;1;0m')
 .PHONY: welcome \
         build run dev test docker-test lint typecheck \
         purge-containers purge-images \
-        tf-init tf-fmt tf-validate tf-plan tf-plan-summary tf-apply tf-import \
+        tf-init tf-fmt tf-validate tf-plan tf-plan-summary tf-apply \
         shellcheck \
 		commit-llm-generated push checkout
 
@@ -93,6 +93,8 @@ purge-images:
 	fi
 
 # ── Terraform (cron-job.org, state in Cloudflare R2) ────────────────────
+# Laptop only. These targets run Terraform in Docker. CI must not call them.
+# CI uses zarf/infra/scripts. See AGENTS.md.
 # Official image, pinned. Mount only zarf/infra. Credentials come from the
 # environment or a gitignored .env. They are not written into the image.
 
@@ -141,7 +143,10 @@ shellcheck:
 		-v $(CURDIR):/mnt \
 		-w /mnt \
 		$(SHELLCHECK_IMAGE) \
-		zarf/infra/scripts/deploy-prod.sh
+		zarf/infra/scripts/common.sh \
+		zarf/infra/scripts/fmt-validate.sh \
+		zarf/infra/scripts/plan.sh \
+		zarf/infra/scripts/apply.sh
 
 tf-fmt:
 	@$(TF_DOCKER) fmt -recursive $(if $(CHECK),-check -diff,)
@@ -170,69 +175,21 @@ tf-plan-summary:
 tf-apply:
 	@if [ ! -f zarf/infra/tfplan ]; then echo "Run make tf-plan first."; exit 1; fi
 	@$(load_tf_env); \
+	set -o pipefail; \
 	$(require_r2); \
 	$(require_cron); \
-	refuse_destroys() { \
-		summary="$$($(TF_DOCKER) show -no-color tfplan | sed -n 's/^Plan: //p')"; \
-		if [ -n "$$summary" ]; then echo "Plan: $$summary"; fi; \
-		destroys="$$(printf '%s\n' "$$summary" | sed -n 's/.* \([0-9][0-9]*\) to destroy.*/\1/p')"; \
-		if [ "$${destroys:-0}" != "0" ] && [ "$${TF_ALLOW_DESTROY:-}" != "1" ]; then \
-			echo "Refusing apply because the plan destroys $${destroys} resource(s). Set TF_ALLOW_DESTROY=1 to override."; \
-			exit 1; \
-		fi; \
-	}; \
-	attempt=1; \
-	max_attempts=5; \
-	while true; do \
-		refuse_destroys; \
-		log="$$(mktemp)"; \
-		set +e; \
-		$(TF_DOCKER) apply -input=false -lock-timeout=5m -parallelism=$(TF_PARALLELISM) tfplan >"$$log" 2>&1; \
-		status=$$?; \
-		set -e; \
-		cat "$$log"; \
-		if [ "$$status" -eq 0 ]; then rm -f "$$log"; exit 0; fi; \
-		if grep -q 'API error 429' "$$log" && [ "$$attempt" -lt "$$max_attempts" ]; then \
-			wait_s=$$((15 * attempt)); \
-			echo "cron-job.org returned 429. Waiting $${wait_s}s, then planning again (attempt $$((attempt + 1))/$${max_attempts})."; \
-			rm -f "$$log"; \
-			sleep "$$wait_s"; \
-			plan_attempt=1; \
-			while true; do \
-				log="$$(mktemp)"; \
-				set +e; \
-				$(TF_DOCKER) plan -input=false -lock-timeout=5m -parallelism=$(TF_PARALLELISM) -out=tfplan >"$$log" 2>&1; \
-				plan_status=$$?; \
-				set -e; \
-				cat "$$log"; \
-				if [ "$$plan_status" -eq 0 ]; then rm -f "$$log"; break; fi; \
-				if grep -q 'API error 429' "$$log" && [ "$$plan_attempt" -lt "$$max_attempts" ]; then \
-					wait_s=$$((15 * plan_attempt)); \
-					echo "Plan hit 429. Waiting $${wait_s}s (plan attempt $$((plan_attempt + 1))/$${max_attempts})."; \
-					rm -f "$$log"; \
-					sleep "$$wait_s"; \
-					plan_attempt=$$((plan_attempt + 1)); \
-					continue; \
-				fi; \
-				rm -f "$$log"; \
-				exit "$$plan_status"; \
-			done; \
-			attempt=$$((attempt + 1)); \
-			continue; \
-		fi; \
-		rm -f "$$log"; \
-		exit "$$status"; \
-	done
-
-tf-import:
-	@if [ -z "$(ADDR)" ] || [ -z "$(ID)" ]; then \
-		echo "Usage: make tf-import ADDR='cronjoborg_job.bot[\"urabot_stocks\"]' ID=<jobId>"; \
+	deletes="$$(docker run --rm --platform $(TF_PLATFORM) \
+		--user $(shell id -u):$(shell id -g) \
+		-v $(CURDIR)/zarf/infra:/workspace \
+		-w /workspace \
+		--entrypoint sh \
+		$(TF_IMAGE) \
+		-c 'terraform show -json tfplan | COUNT_DELETES=1 awk -f scripts/plan-actions.awk')"; \
+	if [ "$${deletes:-0}" != "0" ] && [ "$${TF_ALLOW_DESTROY:-}" != "1" ]; then \
+		echo "Refusing apply because the plan deletes $${deletes} resource(s). Set TF_ALLOW_DESTROY=1 to override."; \
 		exit 1; \
-	fi
-	@$(load_tf_env); \
-	$(require_r2); \
-	$(require_cron); \
-	$(TF_DOCKER) import -input=false '$(ADDR)' '$(ID)'
+	fi; \
+	$(TF_DOCKER) apply -input=false -lock-timeout=5m -parallelism=$(TF_PARALLELISM) tfplan
 
 # ── Git ─────────────────────────────────────────────────────────────────
 
