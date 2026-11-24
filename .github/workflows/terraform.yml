@@ -55,7 +55,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Format and validate
-        run: sh zarf/infra/scripts/fmt-validate.sh
+        run: bash zarf/infra/scripts/fmt-validate.sh
 
   plan:
     name: plan
@@ -83,7 +83,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Plan
-        run: sh zarf/infra/scripts/plan.sh
+        run: bash zarf/infra/scripts/plan.sh
 
       - name: Comment on the PR
         uses: actions/github-script@v7
@@ -147,4 +147,4 @@ jobs:
           terraform_wrapper: false
 
       - name: Plan and apply
-        run: sh zarf/infra/scripts/apply.sh
+        run: bash zarf/infra/scripts/apply.sh

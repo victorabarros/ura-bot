@@ -51,7 +51,7 @@ make tf-apply
 
 Fmt and validate run `scripts/fmt-validate.sh`. A same-repo pull request runs `scripts/plan.sh`. A push to `main`, or a manual run, runs `scripts/apply.sh`. A missing `CRON_JOB_API_KEY`, `API_KEY`, or R2 key fails the job.
 
-The Terraform jobs run on `ubuntu-24.04`. `actions/checkout` checks out the repo, and `hashicorp/setup-terraform` installs 1.17.2. `scripts/plan.sh` writes `plan-summary.txt` at the repo root with `jq`. That file lists addresses and actions only, and the plan job comments it on the pull request.
+The Terraform jobs run on `ubuntu-24.04`. `actions/checkout` checks out the repo, and `hashicorp/setup-terraform` installs 1.17.2. The workflow runs the scripts with bash. Ubuntu `/bin/sh` is dash and does not implement `pipefail`. `scripts/plan.sh` writes `plan-summary.txt` at the repo root with `jq`. That file lists addresses and actions only, and the plan job comments it on the pull request.
 
 cron-job.org allows one job create per second and five per minute. Plan and apply run with `-parallelism=1`. A 429 fails the job. Re-run it. The apply does not build a new plan on its own.
 
