@@ -71,6 +71,16 @@ https://x.com/UraniumStockBot/status/1928134273925828682
   </a>
 </p>
 
+## Static site
+
+`web/` is a static page: UraBot posts uranium-market stock quotes and news. It does not call the bot API.
+
+```sh
+make site
+```
+
+That runs nginx in Docker and serves `web/` at <http://localhost:8080>. Pass `SITE_PORT` to use another port (`make site SITE_PORT=9090`). Stop it with Ctrl-C. Nothing extra is installed on the machine.
+
 ## How to run
 
 You can find all commands on [Makefile](./Makefile)

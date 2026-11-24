@@ -1,5 +1,8 @@
 APP_NAME=ura-bot
 PORT?=8082
+# Static landing page. Override with `make site SITE_PORT=9090`.
+SITE_PORT?=8080
+NGINX_IMAGE:=nginx:1.27.5-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 
 
 YELLOW=$(shell printf '\033[0;1;33m')
@@ -8,6 +11,7 @@ COLOR_OFF=$(shell printf '\033[0;1;0m')
 .PHONY: welcome \
         build run dev test docker-test lint typecheck \
         purge-containers purge-images \
+        site \
         tf-init tf-fmt tf-validate tf-plan tf-plan-summary tf-apply \
         shellcheck \
 		commit-llm-generated push checkout
@@ -82,6 +86,15 @@ purge-containers:
 	else \
 		echo "No containers found for $(APP_NAME)."; \
 	fi
+
+# Serves web/ through nginx in Docker. Nothing to install on the host.
+# http://localhost:$(SITE_PORT) — default 8080. Stop with Ctrl-C.
+site:
+	@docker run --rm \
+		--name $(APP_NAME)-site \
+		-p $(SITE_PORT):80 \
+		-v $(CURDIR)/web:/usr/share/nginx/html:ro \
+		$(NGINX_IMAGE)
 
 purge-images:
 	@images=$$(docker images -q "$(APP_NAME)"); \

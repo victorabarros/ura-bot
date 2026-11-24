@@ -92,6 +92,7 @@ CI does not call Make. GitHub Actions run shell scripts on the Ubuntu runner. Te
 | Tests | `make test` |
 | Lint | `make lint` |
 | Typecheck | `make typecheck` |
+| Static landing page | `make site` (nginx in Docker, http://localhost:8080, override with `SITE_PORT`) |
 | Terraform fmt / validate / init / plan / apply | `make tf-fmt`, `make tf-validate`, `make tf-init`, `make tf-plan`, `make tf-apply` |
 
 The husky pre-commit hook still runs `npm run validate` on the host. Prefer the Make targets above.
@@ -102,6 +103,7 @@ Application code is `src/`. Operational files are `zarf/`:
 
 | Path | What it is |
 |---|---|
+| `web/` | Static landing page (HTML, CSS, and JS). `make site` serves it. It is not a bot route. |
 | `zarf/infra/` | Terraform for the cron-job.org schedules. State is in Cloudflare R2, not in git. CI for this directory is `zarf/infra/scripts/`, not Make. |
 | `zarf/bruno/` | Bruno requests for manual HTTP calls |
 | `zarf/scripts/` | One-off scripts |
