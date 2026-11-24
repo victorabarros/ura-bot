@@ -40,20 +40,20 @@ make tf-apply
 
 `make tf-fmt CHECK=1` fails when a file needs formatting. `make tf-validate` checks the configuration and does not talk to R2 or cron-job.org. `make tf-plan` writes `zarf/infra/tfplan` (gitignored). `make tf-apply` applies that plan. It stops if the plan would delete a job, unless you run `make tf-apply TF_ALLOW_DESTROY=1`.
 
+cron-job.org allows one job create per second and five per minute. Plan and apply run with `-parallelism=1`. If a create returns HTTP 429, apply waits and plans again (up to five tries). A saved plan is stale after a partial apply, so the retry builds a new plan. Jobs already in state are left as they are.
+
 `make tf-import ADDR='cronjoborg_job.bot["urabot_stocks"]' ID=12345` is available, but provider 1.1.2 cannot import. This cutover creates new jobs instead.
 
 ## Schedules
 
-All times are UTC. Weekdays are Monday=1 through Friday=5. `-1` means every hour or every day. Each job is POST, enabled, 120 second timeout, and sends `Authorization` from `API_KEY`. Failure and auto-disable notifications are on.
+All times are America/Sao_Paulo. Weekdays are Monday=1 through Friday=5. An empty hours or days list means every value. Each job is POST, enabled, 120 second timeout, and sends `Authorization` from `API_KEY`. Failure and auto-disable notifications are on. The disabled BrlBot console job is not in this file.
 
 | Key | URL | When |
 |---|---|---|
-| `urabot_stocks` | `/urabot/stocks` | Weekdays, 14:00–21:00 on the hour. Minute 0 hits the morning and evening greetings. |
-| `urabot_news` | `/urabot/news` | Weekdays at 15:30, 18:30, and 20:30. |
-| `urabot_reply_mentions` | `/urabot/reply-mentions` | Every hour at minute 10. The handler only sees the last hour of mentions. |
-| `bitcoinmetrx_price` | `/bitcoinmetrx/price` | Every day at 13:05 and 21:05. |
-
-These times are the schedules this stack will create. They are not a copy of the console. Edit `jobs.tf` if the live jobs differ, then plan again before you apply.
+| `urabot_stocks` | `/urabot/stocks` | Weekdays at 11:00, 14:00, and 18:00. |
+| `urabot_news` | `/urabot/news` | Weekdays at 07:00, 10:00, 13:00, 15:00, 17:00, and 21:00. |
+| `urabot_reply_mentions` | `/urabot/reply-mentions` | Every hour at minute 0. |
+| `bitcoinmetrx_price` | `/bitcoinmetrx/price` | Every day at 00:00, 04:00, 08:00, 12:00, 16:00, and 20:00. |
 
 Adding a bot is a new entry in the `jobs` map. Removing one needs the `prevent_destroy` lifecycle dropped in a reviewed change, then an apply allowed to destroy.
 

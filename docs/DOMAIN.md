@@ -59,7 +59,7 @@ Market-date logic uses **`America/New_York`**. Greeting windows are UTC, in
 | Friday close | The "Good Night" message also includes a weekend greeting on Fridays. |
 | Holiday (market closed) | See the Holiday behavior section below. |
 
-> The stock cron fires at minute 0, which lands inside both windows.
+> Stock posts at 11:00 and 18:00 America/Sao_Paulo are 14:00 and 21:00 UTC, inside these windows.
 
 ---
 
