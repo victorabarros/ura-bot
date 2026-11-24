@@ -40,6 +40,8 @@ make tf-apply
 
 `make tf-fmt CHECK=1` fails when a file needs formatting. `make tf-validate` checks the configuration and does not talk to R2 or cron-job.org. `make tf-plan` writes `zarf/infra/tfplan` (gitignored). `make tf-apply` applies that plan. It stops if the plan would delete a job, unless you run `make tf-apply TF_ALLOW_DESTROY=1`.
 
+cron-job.org allows one job create per second and five per minute. Plan and apply run with `-parallelism=1`. If a create returns HTTP 429, apply waits and plans again (up to five tries). A saved plan is stale after a partial apply, so the retry builds a new plan. Jobs already in state are left as they are.
+
 `make tf-import ADDR='cronjoborg_job.bot["urabot_stocks"]' ID=12345` is available, but provider 1.1.2 cannot import. This cutover creates new jobs instead.
 
 ## Schedules

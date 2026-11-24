@@ -97,6 +97,8 @@ purge-images:
 
 TF_IMAGE := hashicorp/terraform:1.17.2
 TF_PLATFORM := linux/amd64
+# cron-job.org allows 1 create per second and 5 per minute. One at a time.
+TF_PARALLELISM ?= 1
 
 TF_DOCKER = docker run --rm --platform $(TF_PLATFORM) \
 	--user $(shell id -u):$(shell id -g) \
@@ -150,7 +152,7 @@ tf-plan:
 	$(require_r2); \
 	$(require_cron); \
 	$(TF_DOCKER) init -input=false -reconfigure; \
-	$(TF_DOCKER) plan -input=false -lock-timeout=5m -out=tfplan
+	$(TF_DOCKER) plan -input=false -lock-timeout=5m -parallelism=$(TF_PARALLELISM) -out=tfplan
 
 tf-plan-summary:
 	@$(TF_DOCKER) show -json tfplan
@@ -160,14 +162,57 @@ tf-apply:
 	@$(load_tf_env); \
 	$(require_r2); \
 	$(require_cron); \
-	summary="$$($(TF_DOCKER) show -no-color tfplan | sed -n 's/^Plan: //p')"; \
-	if [ -n "$$summary" ]; then echo "Plan: $$summary"; fi; \
-	destroys="$$(printf '%s\n' "$$summary" | sed -n 's/.* \([0-9][0-9]*\) to destroy.*/\1/p')"; \
-	if [ "$${destroys:-0}" != "0" ] && [ "$${TF_ALLOW_DESTROY:-}" != "1" ]; then \
-		echo "Refusing apply because the plan destroys $${destroys} resource(s). Set TF_ALLOW_DESTROY=1 to override."; \
-		exit 1; \
-	fi; \
-	$(TF_DOCKER) apply -input=false -lock-timeout=5m tfplan
+	refuse_destroys() { \
+		summary="$$($(TF_DOCKER) show -no-color tfplan | sed -n 's/^Plan: //p')"; \
+		if [ -n "$$summary" ]; then echo "Plan: $$summary"; fi; \
+		destroys="$$(printf '%s\n' "$$summary" | sed -n 's/.* \([0-9][0-9]*\) to destroy.*/\1/p')"; \
+		if [ "$${destroys:-0}" != "0" ] && [ "$${TF_ALLOW_DESTROY:-}" != "1" ]; then \
+			echo "Refusing apply because the plan destroys $${destroys} resource(s). Set TF_ALLOW_DESTROY=1 to override."; \
+			exit 1; \
+		fi; \
+	}; \
+	attempt=1; \
+	max_attempts=5; \
+	while true; do \
+		refuse_destroys; \
+		log="$$(mktemp)"; \
+		set +e; \
+		$(TF_DOCKER) apply -input=false -lock-timeout=5m -parallelism=$(TF_PARALLELISM) tfplan >"$$log" 2>&1; \
+		status=$$?; \
+		set -e; \
+		cat "$$log"; \
+		if [ "$$status" -eq 0 ]; then rm -f "$$log"; exit 0; fi; \
+		if grep -q 'API error 429' "$$log" && [ "$$attempt" -lt "$$max_attempts" ]; then \
+			wait_s=$$((15 * attempt)); \
+			echo "cron-job.org returned 429. Waiting $${wait_s}s, then planning again (attempt $$((attempt + 1))/$${max_attempts})."; \
+			rm -f "$$log"; \
+			sleep "$$wait_s"; \
+			plan_attempt=1; \
+			while true; do \
+				log="$$(mktemp)"; \
+				set +e; \
+				$(TF_DOCKER) plan -input=false -lock-timeout=5m -parallelism=$(TF_PARALLELISM) -out=tfplan >"$$log" 2>&1; \
+				plan_status=$$?; \
+				set -e; \
+				cat "$$log"; \
+				if [ "$$plan_status" -eq 0 ]; then rm -f "$$log"; break; fi; \
+				if grep -q 'API error 429' "$$log" && [ "$$plan_attempt" -lt "$$max_attempts" ]; then \
+					wait_s=$$((15 * plan_attempt)); \
+					echo "Plan hit 429. Waiting $${wait_s}s (plan attempt $$((plan_attempt + 1))/$${max_attempts})."; \
+					rm -f "$$log"; \
+					sleep "$$wait_s"; \
+					plan_attempt=$$((plan_attempt + 1)); \
+					continue; \
+				fi; \
+				rm -f "$$log"; \
+				exit "$$plan_status"; \
+			done; \
+			attempt=$$((attempt + 1)); \
+			continue; \
+		fi; \
+		rm -f "$$log"; \
+		exit "$$status"; \
+	done
 
 tf-import:
 	@if [ -z "$(ADDR)" ] || [ -z "$(ID)" ]; then \

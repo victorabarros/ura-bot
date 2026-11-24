@@ -126,5 +126,6 @@ jobs:
             echo "::warning::Skipping apply until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set."
             exit 0
           fi
+          # tf-plan and tf-apply use -parallelism=1 and retry cron-job.org HTTP 429.
           make tf-plan
           make tf-apply
