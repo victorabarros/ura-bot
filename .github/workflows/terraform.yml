@@ -27,7 +27,7 @@ permissions:
 jobs:
   fmt-validate:
     name: fmt and validate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,7 +35,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.17.2
           terraform_wrapper: false
 
       - name: Format check
@@ -54,7 +53,7 @@ jobs:
     name: plan
     needs: fmt-validate
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       CRON_JOB_API_KEY: ${{ secrets.CRON_JOB_API_KEY }}
       TF_VAR_bot_api_key: ${{ secrets.API_KEY }}
@@ -67,7 +66,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.17.2
           terraform_wrapper: false
 
       - name: Plan
@@ -129,7 +127,7 @@ jobs:
     name: apply
     needs: fmt-validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       CRON_JOB_API_KEY: ${{ secrets.CRON_JOB_API_KEY }}
       TF_VAR_bot_api_key: ${{ secrets.API_KEY }}
@@ -139,71 +137,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.17.2
-          terraform_wrapper: false
-
       - name: Plan and apply
         run: |
           set -eu
-          export TF_IN_AUTOMATION=1
           if [ -z "$CRON_JOB_API_KEY" ] || [ -z "$TF_VAR_bot_api_key" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
             echo "::warning::Skipping apply until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set."
             exit 0
           fi
-          terraform -chdir=zarf/infra init -input=false -reconfigure
-          terraform -chdir=zarf/infra plan -input=false -lock-timeout=5m -parallelism=1 -out=tfplan
-          if [ ! -f zarf/infra/tfplan ]; then echo "Run terraform plan first."; exit 1; fi
-          refuse_destroys() {
-            summary="$(terraform -chdir=zarf/infra show -no-color tfplan | sed -n 's/^Plan: //p')"
-            if [ -n "$summary" ]; then echo "Plan: $summary"; fi
-            destroys="$(printf '%s\n' "$summary" | sed -n 's/.* \([0-9][0-9]*\) to destroy.*/\1/p')"
-            if [ "${destroys:-0}" != "0" ] && [ "${TF_ALLOW_DESTROY:-}" != "1" ]; then
-              echo "Refusing apply because the plan destroys ${destroys} resource(s). Set TF_ALLOW_DESTROY=1 to override."
-              exit 1
-            fi
-          }
-          attempt=1
-          max_attempts=5
-          while true; do
-            refuse_destroys
-            log="$(mktemp)"
-            set +e
-            terraform -chdir=zarf/infra apply -input=false -lock-timeout=5m -parallelism=1 tfplan >"$log" 2>&1
-            status=$?
-            set -e
-            cat "$log"
-            if [ "$status" -eq 0 ]; then rm -f "$log"; exit 0; fi
-            if grep -q 'API error 429' "$log" && [ "$attempt" -lt "$max_attempts" ]; then
-              wait_s=$((15 * attempt))
-              echo "cron-job.org returned 429. Waiting ${wait_s}s, then planning again (attempt $((attempt + 1))/${max_attempts})."
-              rm -f "$log"
-              sleep "$wait_s"
-              plan_attempt=1
-              while true; do
-                log="$(mktemp)"
-                set +e
-                terraform -chdir=zarf/infra plan -input=false -lock-timeout=5m -parallelism=1 -out=tfplan >"$log" 2>&1
-                plan_status=$?
-                set -e
-                cat "$log"
-                if [ "$plan_status" -eq 0 ]; then rm -f "$log"; break; fi
-                if grep -q 'API error 429' "$log" && [ "$plan_attempt" -lt "$max_attempts" ]; then
-                  wait_s=$((15 * plan_attempt))
-                  echo "Plan hit 429. Waiting ${wait_s}s (plan attempt $((plan_attempt + 1))/${max_attempts})."
-                  rm -f "$log"
-                  sleep "$wait_s"
-                  plan_attempt=$((plan_attempt + 1))
-                  continue
-                fi
-                rm -f "$log"
-                exit "$plan_status"
-              done
-              attempt=$((attempt + 1))
-              continue
-            fi
-            rm -f "$log"
-            exit "$status"
-          done
+          bash zarf/infra/scripts/deploy-prod.sh
