@@ -35,10 +35,6 @@ require_site_secrets() {
     echo "Set SITE_AWS_ACCESS_KEY_ID and SITE_AWS_SECRET_ACCESS_KEY." >&2
     exit 1
   fi
-  if [ -z "${GODADDY_API_KEY:-}" ] || [ -z "${GODADDY_API_SECRET:-}" ]; then
-    echo "Set GODADDY_API_KEY and GODADDY_API_SECRET." >&2
-    exit 1
-  fi
 }
 
 # Writes profiles r2 and site, then drops AWS_* so Terraform uses the file.

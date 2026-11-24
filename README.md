@@ -140,7 +140,7 @@ GitHub Actions does not call Make. It runs `zarf/infra/scripts/` and fails if on
 
 ## Site hosting
 
-`zarf/site/` publishes `web/` at <https://uraniumstockbot.com>. CloudFront terminates HTTPS and reads a public S3 website origin. DNS stays at GoDaddy. Details, the Make targets, and the GitHub secret names are in [zarf/site/README.md](zarf/site/README.md).
+`zarf/site/` publishes `web/` at <https://uraniumstockbot.com>. CloudFront terminates HTTPS and reads a public S3 website origin. DNS stays in Squarespace and is not managed by Terraform. Details, the Make targets, and the GitHub secret names are in [zarf/site/README.md](zarf/site/README.md).
 
 ```sh
 make site-tf-fmt
@@ -148,7 +148,7 @@ make site-tf-validate
 make site-tf-plan
 ```
 
-GitHub Actions does not call Make. It runs `zarf/site/scripts/`. Plan runs on pull requests. Apply runs on a push to `main`. Add `SITE_AWS_ACCESS_KEY_ID`, `SITE_AWS_SECRET_ACCESS_KEY`, `GODADDY_API_KEY`, and `GODADDY_API_SECRET` yourself. State reuses `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY`.
+GitHub Actions does not call Make. It runs `zarf/site/scripts/`. Plan runs on pull requests. Apply runs on a push to `main`. Add `SITE_AWS_ACCESS_KEY_ID` and `SITE_AWS_SECRET_ACCESS_KEY` yourself. State reuses `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY`.
 
 ## Endpoint
 

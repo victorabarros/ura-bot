@@ -1,28 +1,6 @@
 # This file is maintained automatically by "terraform init".
 # Manual edits may be lost in future updates.
 
-provider "registry.terraform.io/alikor/godaddy" {
-  version     = "0.3.3"
-  constraints = "0.3.3"
-  hashes = [
-    "h1:nml0FoXCtlOZqy1jaS5VC/GId9f6ckzjbSmyy19ITuc=",
-    "zh:0dfc2c42ce4f779e4823f1712c3e8f7454bab8803617d372058154bdc8982bb6",
-    "zh:1ddf2f5ad84474fd34df640cd566aef218c7a2668454b15edd36d208941c10f8",
-    "zh:26604e8ae24b0e9d92ee6877b158bd5a2f459054d9a1d2142d0fc0013ccebefd",
-    "zh:3e7a28fd23605dc154549580f94ffa0395433d99c36a35a3f2487a680b856411",
-    "zh:84c32d689c95156c37d70341a00f0c0960a8ae247477ca63025337f321ff0a43",
-    "zh:85451725b7ab22dcd390ab44f6b33f7b1f9125553fc3724976f441f4ed890fc7",
-    "zh:8bc970c956b59a99e0c19a7d3ebac92752cec51099a93b219f3ee5dfc175c7a1",
-    "zh:921df92ae365376d65b3679e563ddb01e94953c06b2313871fbaadfd0e4611c9",
-    "zh:b982961a69ae452fc86a09b917f5e7cb9b77a4b87ef2ee7a3078351f521e50f9",
-    "zh:d59a755b4c611127347f2d6e32cf8ddd334547435cbd6923cebf707b425c6fb6",
-    "zh:dad66f22fda41d4a41686c0849d868151c6ed5345a3d8a76dc4835245ce9915f",
-    "zh:dbb94224791ba2b4a71f92589cdbb0c19b8e3e00868ced5b75443ac2d7ea4333",
-    "zh:e2a67b2e3b7681a41d90c98fce6a1257558274d608a05abb122b7a9e8b9b905a",
-    "zh:f809ab383cca0a5f83072981c64208cbd7fa67e986a86ee02dd2c82333221e32",
-  ]
-}
-
 provider "registry.terraform.io/hashicorp/aws" {
   version     = "6.74.0"
   constraints = "6.74.0"

@@ -11,26 +11,15 @@ resource "aws_acm_certificate" "site" {
 resource "aws_acm_certificate_validation" "site" {
   certificate_arn         = aws_acm_certificate.site.arn
   validation_record_fqdns = [for record in aws_acm_certificate.site.domain_validation_options : record.resource_record_name]
-
-  depends_on = [godaddy_dns_record_set.acm]
-}
-
-# GoDaddy has no apex alias. Three static IPv4 addresses let the apex A
-# records point at this distribution. PriceClass_All is required for that
-# list, and IPv6 stays off because the list is IPv4-only.
-resource "aws_cloudfront_anycast_ip_list" "site" {
-  name     = "uraniumstockbot-apex"
-  ip_count = 3
 }
 
 resource "aws_cloudfront_distribution" "site" {
   enabled             = true
-  is_ipv6_enabled     = false
+  is_ipv6_enabled     = true
   comment             = local.domain
   price_class         = "PriceClass_All"
   default_root_object = "index.html"
   aliases             = [local.domain, "www.${local.domain}"]
-  anycast_ip_list_id  = aws_cloudfront_anycast_ip_list.site.id
 
   origin {
     domain_name = aws_s3_bucket_website_configuration.site.website_endpoint

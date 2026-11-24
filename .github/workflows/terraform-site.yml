@@ -73,8 +73,6 @@ jobs:
       R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
       SITE_AWS_ACCESS_KEY_ID: ${{ secrets.SITE_AWS_ACCESS_KEY_ID }}
       SITE_AWS_SECRET_ACCESS_KEY: ${{ secrets.SITE_AWS_SECRET_ACCESS_KEY }}
-      GODADDY_API_KEY: ${{ secrets.GODADDY_API_KEY }}
-      GODADDY_API_SECRET: ${{ secrets.GODADDY_API_SECRET }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -139,8 +137,6 @@ jobs:
       R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
       SITE_AWS_ACCESS_KEY_ID: ${{ secrets.SITE_AWS_ACCESS_KEY_ID }}
       SITE_AWS_SECRET_ACCESS_KEY: ${{ secrets.SITE_AWS_SECRET_ACCESS_KEY }}
-      GODADDY_API_KEY: ${{ secrets.GODADDY_API_KEY }}
-      GODADDY_API_SECRET: ${{ secrets.GODADDY_API_SECRET }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
