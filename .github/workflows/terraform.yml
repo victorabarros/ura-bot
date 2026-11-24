@@ -1,10 +1,6 @@
-# CI uses zarf/infra/scripts. Do not call Make. See AGENTS.md.
+# CI uses zarf/infra/scripts on the Ubuntu runner. Do not call Make. See AGENTS.md.
 # fmt/validate on infra changes. Plan on same-repo PRs. Apply on main.
 # cron-job.org allows 100 API requests/day, so this does not run on app-only changes.
-# Terraform jobs run inside the pinned HashiCorp image. The GitHub-hosted runner
-# stays ubuntu-24.04. actions/checkout and actions/github-script need Node, which
-# that image does not have, so checkout uses the image's git client and the plan
-# comment is a separate runner job.
 name: Terraform
 
 on:
@@ -48,21 +44,15 @@ jobs:
   fmt-validate:
     name: fmt and validate
     runs-on: ubuntu-24.04
-    container:
-      image: hashicorp/terraform:1.17.2@sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475
-      options: --entrypoint ""
     steps:
       - name: Checkout
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          set -eu
-          git init -q .
-          git config --global --add safe.directory "$PWD"
-          auth=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 | tr -d '\n')
-          git -c http.extraheader="AUTHORIZATION: basic ${auth}" fetch --depth 1 --no-tags \
-            "https://github.com/${GITHUB_REPOSITORY}.git" "$GITHUB_REF"
-          git checkout --force FETCH_HEAD
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.17.2
+          terraform_wrapper: false
 
       - name: Format and validate
         run: sh zarf/infra/scripts/fmt-validate.sh
@@ -74,11 +64,9 @@ jobs:
       - shellcheck
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
-    container:
-      image: hashicorp/terraform:1.17.2@sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475
-      options: --entrypoint ""
-    outputs:
-      summary: ${{ steps.plan.outputs.summary }}
+    permissions:
+      contents: read
+      pull-requests: write
     env:
       CRON_JOB_API_KEY: ${{ secrets.CRON_JOB_API_KEY }}
       TF_VAR_bot_api_key: ${{ secrets.API_KEY }}
@@ -86,51 +74,30 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
     steps:
       - name: Checkout
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          set -eu
-          git init -q .
-          git config --global --add safe.directory "$PWD"
-          auth=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 | tr -d '\n')
-          git -c http.extraheader="AUTHORIZATION: basic ${auth}" fetch --depth 1 --no-tags \
-            "https://github.com/${GITHUB_REPOSITORY}.git" "$GITHUB_REF"
-          git checkout --force FETCH_HEAD
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.17.2
+          terraform_wrapper: false
 
       - name: Plan
-        id: plan
-        run: |
-          set -eu
-          sh zarf/infra/scripts/plan.sh
-          {
-            echo "summary<<TF_PLAN_SUMMARY_END"
-            cat plan-summary.txt
-            echo "TF_PLAN_SUMMARY_END"
-          } >> "$GITHUB_OUTPUT"
+        run: sh zarf/infra/scripts/plan.sh
 
-  plan-comment:
-    name: comment
-    needs: plan
-    if: github.event_name == 'pull_request' && needs.plan.result == 'success'
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
       - name: Comment on the PR
         uses: actions/github-script@v7
-        env:
-          PLAN_SUMMARY: ${{ needs.plan.outputs.summary }}
         with:
           script: |
-            const summary = process.env.PLAN_SUMMARY || ""
+            const fs = require("fs")
+            const summary = fs.readFileSync("plan-summary.txt", "utf8").trim()
             const marker = "<!-- terraform-plan -->"
             const body = [
               marker,
               "#### Terraform plan",
               "",
               "```",
-              summary.trim(),
+              summary,
               "```",
               "",
               "Addresses and actions only. Header values are not included.",
@@ -164,9 +131,6 @@ jobs:
       - shellcheck
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
-    container:
-      image: hashicorp/terraform:1.17.2@sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475
-      options: --entrypoint ""
     env:
       CRON_JOB_API_KEY: ${{ secrets.CRON_JOB_API_KEY }}
       TF_VAR_bot_api_key: ${{ secrets.API_KEY }}
@@ -174,16 +138,13 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
     steps:
       - name: Checkout
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          set -eu
-          git init -q .
-          git config --global --add safe.directory "$PWD"
-          auth=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 | tr -d '\n')
-          git -c http.extraheader="AUTHORIZATION: basic ${auth}" fetch --depth 1 --no-tags \
-            "https://github.com/${GITHUB_REPOSITORY}.git" "$GITHUB_REF"
-          git checkout --force FETCH_HEAD
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.17.2
+          terraform_wrapper: false
 
       - name: Plan and apply
         run: sh zarf/infra/scripts/apply.sh

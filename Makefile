@@ -184,7 +184,7 @@ tf-apply:
 		-w /workspace \
 		--entrypoint sh \
 		$(TF_IMAGE) \
-		-c 'terraform show -json tfplan | COUNT_DELETES=1 awk -f scripts/plan-actions.awk')"; \
+		-c 'terraform show -json tfplan | awk "{ print gsub(/\"actions\":\\[[^]]*delete/, \"&\") }"')"; \
 	if [ "$${deletes:-0}" != "0" ] && [ "$${TF_ALLOW_DESTROY:-}" != "1" ]; then \
 		echo "Refusing apply because the plan deletes $${deletes} resource(s). Set TF_ALLOW_DESTROY=1 to override."; \
 		exit 1; \

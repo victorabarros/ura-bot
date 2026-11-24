@@ -84,7 +84,7 @@ All main local commands (run, test, lint, terraform, etc.) must be exposed as Ma
 
 Make targets are for the engineer machine. They run inside Docker so Terraform and the app toolchain are not installed on the host.
 
-CI does not call Make. GitHub Actions run shell scripts. Terraform CI is `zarf/infra/scripts/` inside the pinned `hashicorp/terraform:1.17.2` image. Do not point a workflow at a Make target, and do not have a Make target call a CI script, to collapse the two.
+CI does not call Make. GitHub Actions run shell scripts on the Ubuntu runner. Terraform CI installs 1.17.2 with `setup-terraform` and calls `zarf/infra/scripts/`. Do not point a workflow at a Make target, and do not have a Make target call a CI script, to collapse the two.
 
 | Task | Target |
 |---|---|

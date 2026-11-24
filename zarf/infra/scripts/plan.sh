@@ -13,6 +13,7 @@ SUMMARY="${ROOT}/plan-summary.txt"
 
 load_ci_env "${ROOT}"
 require_tf_secrets
+require_jq
 resolve_terraform
 
 cd "${INFRA}"
@@ -24,7 +25,7 @@ if [ ! -f tfplan ]; then
   exit 1
 fi
 
-"${TF}" show -json tfplan | awk -f "${ROOT}/zarf/infra/scripts/plan-actions.awk" > "${SUMMARY}"
+"${TF}" show -json tfplan | jq -r '.resource_changes[]? | "\(.address) \(.change.actions | join(","))"' > "${SUMMARY}"
 if [ ! -s "${SUMMARY}" ]; then
   printf '%s\n' "No changes." > "${SUMMARY}"
 fi

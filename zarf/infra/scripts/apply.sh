@@ -12,6 +12,7 @@ INFRA="${ROOT}/zarf/infra"
 
 load_ci_env "${ROOT}"
 require_tf_secrets
+require_jq
 resolve_terraform
 
 cd "${INFRA}"
@@ -24,7 +25,7 @@ if [ ! -f tfplan ]; then
 fi
 
 # Count resource changes whose actions include delete, including replace.
-deletes=$("${TF}" show -json tfplan | COUNT_DELETES=1 awk -f "${ROOT}/zarf/infra/scripts/plan-actions.awk")
+deletes=$("${TF}" show -json tfplan | jq '[.resource_changes[]? | select(.change.actions | index("delete"))] | length')
 if [ "${deletes}" != "0" ] && [ "${TF_ALLOW_DESTROY:-}" != "1" ]; then
   echo "Refusing apply because the plan deletes ${deletes} resource(s). Set TF_ALLOW_DESTROY=1 to override." >&2
   exit 1

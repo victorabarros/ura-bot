@@ -30,7 +30,7 @@ AWS_SECRET_ACCESS_KEY=
 
 Make is the laptop. CI does not call it. GitHub Actions call the shell scripts in `scripts/`. Do not point a workflow at Make, and do not have Make call those scripts, to collapse the two. See `AGENTS.md`.
 
-Both use Terraform 1.17.2. `versions.tf` requires that version exactly. The image is `hashicorp/terraform:1.17.2` pinned by digest `sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475`. That is HashiCorp's Alpine image. It already contains Terraform 1.17.2, `/bin/sh`, git, and CA certificates. The scripts refuse any other version. They do not download a binary.
+Both use Terraform 1.17.2. `versions.tf` requires that version exactly. The laptop image is `hashicorp/terraform:1.17.2` pinned by digest `sha256:6e9c1e647c31a960dc9b59e13272f9111d90010c10b717f77ffb324767660475`. CI installs that same version on the Ubuntu runner and does not download it from the scripts. The scripts refuse any other version.
 
 ## Laptop
 
@@ -51,7 +51,7 @@ make tf-apply
 
 Fmt and validate run `scripts/fmt-validate.sh`. A same-repo pull request runs `scripts/plan.sh`. A push to `main`, or a manual run, runs `scripts/apply.sh`. A missing `CRON_JOB_API_KEY`, `API_KEY`, or R2 key fails the job.
 
-The Terraform jobs run in the pinned image. `runs-on` stays `ubuntu-24.04`. The image entrypoint is `terraform`, so the workflow clears it. Checkout inside those jobs is `git fetch` of `GITHUB_REF`, because `actions/checkout` needs Node and this image has none. The plan comment is a separate job on the runner because `actions/github-script` needs Node. `scripts/plan.sh` writes `plan-summary.txt` at the repo root. That file lists addresses and actions only.
+The Terraform jobs run on `ubuntu-24.04`. `actions/checkout` checks out the repo, and `hashicorp/setup-terraform` installs 1.17.2. `scripts/plan.sh` writes `plan-summary.txt` at the repo root with `jq`. That file lists addresses and actions only, and the plan job comments it on the pull request.
 
 cron-job.org allows one job create per second and five per minute. Plan and apply run with `-parallelism=1`. A 429 fails the job. Re-run it. The apply does not build a new plan on its own.
 
