@@ -45,21 +45,21 @@ split into multiple sequential messages.
 ## Post schedule & time context
 
 The service does not own its own scheduler — an external cron caller triggers
-`POST /urabot/stocks` and `POST /urabot/news`. The message wording varies
+`POST /urabot/stocks` and `POST /urabot/news`. The schedules themselves are
+declared in [`zarf/infra/jobs.tf`](../zarf/infra/jobs.tf). The message wording varies
 depending on *when* the request arrives.
 
-All time logic uses **`America/New_York`** as the market timezone.
+Market-date logic uses **`America/New_York`**. Greeting windows are UTC, in
+`src/domain/marketTime.ts`.
 
 | Condition | Rule |
 |---|---|
-| First post of the day | Triggers when the call arrives at exactly **14:00 UTC** (≈ 09:00–10:00 ET, before NYSE open). Adds a "Good morning" greeting. |
-| Last post of the day | Triggers when the call arrives at exactly **21:00 UTC** (≈ 16:00–17:00 ET, after NYSE close). Adds a "Good night" sign-off. |
+| First post of the day | Call arrives in **14:00–14:04 UTC**. Adds a "Good morning" greeting. |
+| Last post of the day | Call arrives in **21:00–21:04 UTC**. Adds a "Good night" sign-off. |
 | Friday close | The "Good Night" message also includes a weekend greeting on Fridays. |
 | Holiday (market closed) | See the Holiday behavior section below. |
 
-> These times are tight equality checks (`hours === 14 && minutes === 0`), so
-> the cron *must* fire at exactly those minutes. The rewrite should consider
-> a time-window approach to be more resilient.
+> The stock cron fires at minute 0, which lands inside both windows.
 
 ---
 

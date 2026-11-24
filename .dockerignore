@@ -15,3 +15,11 @@ assets
 *.png
 *.excalidraw*
 Makefile
+
+# Terraform local state and var files. The builder stage copies zarf/.
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/tfplan
+**/inventory.json

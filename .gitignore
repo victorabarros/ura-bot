@@ -373,3 +373,20 @@ __pycache__/
 .DS_Store
 .pnpm-store/
 AGENTS.local.md
+
+# Terraform. Commit .terraform.lock.hcl. Do not commit state or var files.
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+*.auto.tfvars
+*.auto.tfvars.json
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+zarf/infra/tfplan
+zarf/infra/inventory.json

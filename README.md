@@ -101,6 +101,37 @@ make curl-ura-stocks
 make curl-ura-news
 ```
 
+## Cron schedules
+
+Posting times are Terraform in `zarf/infra/`, applied with Docker. You do not install Terraform. Details and the timetable are in [zarf/infra/README.md](zarf/infra/README.md).
+
+GitHub Actions secrets:
+
+| Secret | Purpose |
+|---|---|
+| `R2_ACCESS_KEY_ID` | Cloudflare R2 access key for Terraform state |
+| `R2_SECRET_ACCESS_KEY` | Cloudflare R2 secret key for Terraform state |
+| `CRON_JOB_API_KEY` | cron-job.org API key (console → Settings). Add this yourself. |
+| `API_KEY` | Value sent as the `Authorization` header. Same key the app expects. Add this yourself. |
+
+Locally, put those values in `.env` (see `.env.example`). The R2 keys can be named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+```sh
+make tf-fmt
+make tf-validate
+make tf-init
+make tf-plan
+make tf-apply
+```
+
+`make tf-plan` shows what will change. `make tf-apply` applies the last plan and refuses a plan that deletes a job unless `TF_ALLOW_DESTROY=1`.
+
+Cutover, once the plan only adds jobs:
+
+1. `make tf-apply` creates new cron-job.org jobs that are already enabled.
+2. In the cron-job.org console, disable the old jobs that call the same URLs before the next scheduled minute. Both sets fire until you do this.
+3. After a new job has succeeded, delete the old disabled job if you want. Terraform does not delete the old console jobs.
+
 ## Endpoint
 
 |     endpoint      |                   description                             |
