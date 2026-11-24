@@ -4,11 +4,10 @@
 - codecov https://app.codecov.io/gh/victorabarros/ura-bot
 -->
 
-## code debts
+## tech debts
 
 - change API data source https://x.com/UraniumStockBot/status/2013055122486542519?s=20
 - use /internal/... path to internal routes and improve this rule https://github.com/victorabarros/ura-bot/blob/71d7cf7950786f53748a59da57042cb7501db8b1/src/midleware.ts#L11 of oauth
-- use redis cache to isFirstPostOfDay and evenningMessage https://github.com/victorabarros/ura-bot/blob/01f61decb275db894bbe87b248038b04f41e2dbf/src/controller/Uranium.ts#L170
 
 ## code improvement
 
