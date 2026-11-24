@@ -44,6 +44,8 @@ cron-job.org allows one job create per second and five per minute. Plan and appl
 
 `make tf-import ADDR='cronjoborg_job.bot["urabot_stocks"]' ID=12345` is available, but provider 1.1.2 cannot import. This cutover creates new jobs instead.
 
+Local `make tf-*` runs Terraform 1.17.2 inside Docker. Pull-request fmt, validate, and plan in GitHub Actions use the latest Terraform. Apply on `main` runs `scripts/deploy-prod.sh`, which installs Terraform 1.17.2 if the runner has another version and stops if that pin is not what actually runs.
+
 ## Schedules
 
 All times are America/Sao_Paulo. Weekdays are Monday=1 through Friday=5. An empty hours or days list means every value. Each job is POST, enabled, 120 second timeout, and sends `Authorization` from `API_KEY`. Failure and auto-disable notifications are on. The disabled BrlBot console job is not in this file.
@@ -64,4 +66,4 @@ Adding a bot is a new entry in the `jobs` map. Removing one needs the `prevent_d
 3. In the cron-job.org console, disable each old job that calls the same URL. Do that before the next scheduled minute. Leave the new jobs enabled.
 4. After a new job has succeeded once, you can delete the old disabled job from the console. Terraform will not delete it for you.
 
-Merging to `main` runs the same plan and apply in GitHub Actions once the four secrets exist. Until `CRON_JOB_API_KEY` and `API_KEY` are set, that job skips. After you add them, start **Terraform** from the Actions tab (`workflow_dispatch`) or push a commit on `main`.
+Merging to `main` runs `scripts/deploy-prod.sh` in GitHub Actions once the four secrets exist. Until `CRON_JOB_API_KEY` and `API_KEY` are set, that job skips. After you add them, start **Terraform** from the Actions tab (`workflow_dispatch`) or push a commit on `main`.
