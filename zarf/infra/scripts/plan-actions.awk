@@ -51,6 +51,10 @@ function process_object(obj,    pos, addr, actions, action) {
     }
     pos++
   }
+  if (ENVIRON["COUNT_DELETES"] == "1") {
+    if (actions ~ /(^|,)delete(,|$)/) deletes++
+    return
+  }
   print addr " " actions
 }
 
@@ -62,7 +66,10 @@ BEGIN {
 }
 END {
   pos = find_key(json, "\"resource_changes\":", 1)
-  if (pos == 0) exit 0
+  if (pos == 0) {
+    if (ENVIRON["COUNT_DELETES"] == "1") print 0
+    exit 0
+  }
   n = length(json)
   depth = 0
   in_str = 0
@@ -94,4 +101,5 @@ END {
       if (depth == 0) break
     }
   }
+  if (ENVIRON["COUNT_DELETES"] == "1") print deletes + 0
 }

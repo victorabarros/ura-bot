@@ -126,11 +126,7 @@ make tf-apply
 
 `make tf-plan` shows what will change. `make tf-apply` applies the last plan and refuses a plan that deletes a job unless `TF_ALLOW_DESTROY=1`.
 
-Cutover, once the plan only adds jobs:
-
-1. `make tf-apply` creates new cron-job.org jobs that are already enabled.
-2. In the cron-job.org console, disable the old jobs that call the same URLs before the next scheduled minute. Both sets fire until you do this.
-3. After a new job has succeeded, delete the old disabled job if you want. Terraform does not delete the old console jobs.
+GitHub Actions does not call Make. It runs `zarf/infra/scripts/` and fails if one of those secrets is missing.
 
 ## Endpoint
 

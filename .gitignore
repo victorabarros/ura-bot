@@ -379,7 +379,6 @@ AGENTS.local.md
 *.tfstate
 *.tfstate.*
 *.tfvars
-!*.tfvars.example
 *.auto.tfvars
 *.auto.tfvars.json
 crash.log

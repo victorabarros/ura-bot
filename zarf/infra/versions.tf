@@ -1,7 +1,6 @@
 terraform {
-  # CI fmt/validate/plan use whatever Terraform GitHub Actions installs.
-  # Production apply is pinned to 1.17.2 in scripts/deploy-prod.sh.
-  required_version = ">= 1.17.2"
+  # Exact pin. The laptop Docker image and the CI scripts both use 1.17.2.
+  required_version = "1.17.2"
 
   required_providers {
     cronjoborg = {

@@ -84,7 +84,7 @@ See `docs/3rd-parties/replicate-ai.md`.
 
 ## Terraform (cron-job.org schedules)
 
-These are operator secrets for `make tf-*`. The Node process does not read them and does not require them at startup.
+These are operator secrets for `make tf-*` on a laptop and for `zarf/infra/scripts/` in CI. The Node process does not read them and does not require them at startup.
 
 | Variable | Required for Terraform | Description |
 |---|---|---|
