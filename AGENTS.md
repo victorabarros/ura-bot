@@ -84,7 +84,7 @@ All main local commands (run, test, lint, terraform, etc.) must be exposed as Ma
 
 Make targets are for the engineer machine. They run inside Docker so Terraform and the app toolchain are not installed on the host.
 
-CI does not call Make. GitHub Actions run shell scripts on the Ubuntu runner. Terraform CI installs 1.17.2 with `setup-terraform` and calls `zarf/infra/scripts/`. Do not point a workflow at a Make target, and do not have a Make target call a CI script, to collapse the two.
+CI does not call Make. GitHub Actions run shell scripts on the Ubuntu runner. Terraform CI installs 1.17.2 with `setup-terraform` and calls `zarf/infra/scripts/` or `zarf/site/scripts/`. Do not point a workflow at a Make target, and do not have a Make target call a CI script, to collapse the two.
 
 | Task | Target |
 |---|---|
@@ -94,6 +94,7 @@ CI does not call Make. GitHub Actions run shell scripts on the Ubuntu runner. Te
 | Typecheck | `make typecheck` |
 | Static landing page | `make site` (nginx in Docker, http://localhost:8080, override with `SITE_PORT`) |
 | Terraform fmt / validate / init / plan / apply | `make tf-fmt`, `make tf-validate`, `make tf-init`, `make tf-plan`, `make tf-apply` |
+| Site Terraform fmt / validate / init / plan / apply | `make site-tf-fmt`, `make site-tf-validate`, `make site-tf-init`, `make site-tf-plan`, `make site-tf-apply` |
 
 The husky pre-commit hook still runs `npm run validate` on the host. Prefer the Make targets above.
 
@@ -105,12 +106,13 @@ Application code is `src/`. Operational files are `zarf/`:
 |---|---|
 | `web/` | Static landing page (HTML, CSS, and JS). `make site` serves it. It is not a bot route. |
 | `zarf/infra/` | Terraform for the cron-job.org schedules. State is in Cloudflare R2, not in git. CI for this directory is `zarf/infra/scripts/`, not Make. |
+| `zarf/site/` | Terraform for the static site (public S3, CloudFront, ACM, GoDaddy DNS). Separate state object in the same R2 bucket. CI is `zarf/site/scripts/`, not Make. |
 | `zarf/bruno/` | Bruno requests for manual HTTP calls |
 | `zarf/scripts/` | One-off scripts |
 
 ## Forbidden patterns
 
-- Do **not** call Make from CI. Make is the development machine. CI uses shell scripts (`zarf/infra/scripts/` for Terraform).
+- Do **not** call Make from CI. Make is the development machine. CI uses shell scripts (`zarf/infra/scripts/` and `zarf/site/scripts/` for Terraform).
 - Do **not** use `Promise.all` for fan-out — use `Promise.allSettled`.
 - Do **not** silently default missing env vars to `""` or `undefined` — throw at startup.
 - Do **not** add two clients for the same platform (e.g. both OAuth 1.0a and 2.0 for X).
