@@ -82,6 +82,21 @@ See `docs/3rd-parties/replicate-ai.md`.
 
 ---
 
+## Terraform (cron-job.org schedules)
+
+These are operator secrets for `make tf-*`. The Node process does not read them and does not require them at startup.
+
+| Variable | Required for Terraform | Description |
+|---|---|---|
+| `CRON_JOB_API_KEY` | **Yes** | cron-job.org API key (console → Settings). Also the GitHub Actions secret of the same name. |
+| `API_KEY` | **Yes** | Reused as `TF_VAR_bot_api_key`, the `Authorization` header on scheduled calls. |
+| `AWS_ACCESS_KEY_ID` | **Yes** | Cloudflare R2 access key. In GitHub Actions this is secret `R2_ACCESS_KEY_ID`. |
+| `AWS_SECRET_ACCESS_KEY` | **Yes** | Cloudflare R2 secret key. In GitHub Actions this is secret `R2_SECRET_ACCESS_KEY`. |
+
+Non-secret schedule defaults live in `zarf/infra/jobs.tf`. State is in R2, not in git. See `zarf/infra/README.md`.
+
+---
+
 ## Production
 
 Do not commit `.env` with real secrets. Use the host's secret manager in production.

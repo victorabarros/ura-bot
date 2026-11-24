@@ -1,0 +1,130 @@
+# fmt/validate on infra changes. Plan on same-repo PRs. Apply on main.
+# cron-job.org allows 100 API requests/day, so this does not run on app-only changes.
+name: Terraform
+
+on:
+  pull_request:
+    paths:
+      - "zarf/infra/**"
+      - ".github/workflows/terraform.yml"
+      - "Makefile"
+  push:
+    branches: [main]
+    paths:
+      - "zarf/infra/**"
+      - ".github/workflows/terraform.yml"
+      - "Makefile"
+  workflow_dispatch:
+
+concurrency:
+  group: terraform-cronjoborg
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  fmt-validate:
+    name: fmt and validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Format check
+        run: make tf-fmt CHECK=1
+
+      - name: Validate
+        run: make tf-validate
+
+  plan:
+    name: plan
+    needs: fmt-validate
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      CRON_JOB_API_KEY: ${{ secrets.CRON_JOB_API_KEY }}
+      TF_VAR_bot_api_key: ${{ secrets.API_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Plan
+        id: plan
+        run: |
+          set -eu
+          if [ -z "$CRON_JOB_API_KEY" ] || [ -z "$TF_VAR_bot_api_key" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
+            printf '%s\n' "Plan skipped until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set." > plan-summary.txt
+            exit 0
+          fi
+          echo "skipped=false" >> "$GITHUB_OUTPUT"
+          make tf-plan
+          make tf-plan-summary | jq -r '.resource_changes[] | "\(.address) \(.change.actions | join(","))"' > plan-summary.txt
+
+      - name: Comment on the PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs")
+            const summary = fs.readFileSync("plan-summary.txt", "utf8").trim()
+            const marker = "<!-- terraform-plan -->"
+            const body = [
+              marker,
+              "#### Terraform plan",
+              "",
+              "```",
+              summary,
+              "```",
+              "",
+              "The first apply creates these jobs already enabled. Disable the old console jobs by hand before the next scheduled minute.",
+              "Addresses and actions only. Header values are not included.",
+            ].join("\n")
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const existing = comments.find((comment) => comment.body && comment.body.includes(marker))
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              })
+              return
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            })
+
+  apply:
+    name: apply
+    needs: fmt-validate
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    env:
+      CRON_JOB_API_KEY: ${{ secrets.CRON_JOB_API_KEY }}
+      TF_VAR_bot_api_key: ${{ secrets.API_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Plan and apply
+        run: |
+          set -eu
+          if [ -z "$CRON_JOB_API_KEY" ] || [ -z "$TF_VAR_bot_api_key" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+            echo "::warning::Skipping apply until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set."
+            exit 0
+          fi
+          make tf-plan
+          make tf-apply

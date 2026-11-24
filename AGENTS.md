@@ -60,11 +60,11 @@ Specific providers and SDKs are an implementation choice for the rewrite.
 # Install dependencies
 npm install
 
-# Type-check without emitting
-npm run typecheck      # or: make typecheck
+# Type-check without emitting (Docker)
+make typecheck
 
-# Lint
-npm run lint           # or: make lint
+# Lint (Docker)
+make lint
 
 # Pre-commit runs `npm run validate` (typecheck + eslint) automatically
 
@@ -77,6 +77,30 @@ npm run build          # or: make build
 # Run built output
 npm run start          # or: make start
 ```
+
+## Local commands
+
+All main local commands (run, test, lint, terraform, etc.) must be exposed as Makefile targets that run inside Docker; never require installing tools on the host. When you add a new tool or workflow, add its Makefile target too.
+
+| Task | Target |
+|---|---|
+| Run the app | `make run` |
+| Tests | `make test` |
+| Lint | `make lint` |
+| Typecheck | `make typecheck` |
+| Terraform fmt / validate / init / plan / apply | `make tf-fmt`, `make tf-validate`, `make tf-init`, `make tf-plan`, `make tf-apply` |
+
+The husky pre-commit hook still runs `npm run validate` on the host. Prefer the Make targets above.
+
+## Repository layout
+
+Application code is `src/`. Operational files are `zarf/`:
+
+| Path | What it is |
+|---|---|
+| `zarf/infra/` | Terraform for the cron-job.org schedules. State is in Cloudflare R2, not in git. |
+| `zarf/bruno/` | Bruno requests for manual HTTP calls |
+| `zarf/scripts/` | One-off scripts |
 
 ## Forbidden patterns
 

@@ -16,7 +16,7 @@ RUN npm run build
 # --- Test stage ---
 FROM builder AS test
 
-COPY jest.config.ts tsconfig.test.json ./
+COPY jest.config.ts tsconfig.test.json eslint.config.mjs ./
 COPY tests/ ./tests/
 
 CMD ["npm", "test"]
