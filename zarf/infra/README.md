@@ -33,18 +33,19 @@ From the repo root:
 ```sh
 make tf-fmt
 make tf-validate
+make shellcheck
 make tf-init
 make tf-plan
 make tf-apply
 ```
 
-`make tf-fmt CHECK=1` fails when a file needs formatting. `make tf-validate` checks the configuration and does not talk to R2 or cron-job.org. `make tf-plan` writes `zarf/infra/tfplan` (gitignored). `make tf-apply` applies that plan. It stops if the plan would delete a job, unless you run `make tf-apply TF_ALLOW_DESTROY=1`.
+`make tf-fmt CHECK=1` fails when a file needs formatting. `make tf-validate` checks the configuration and does not talk to R2 or cron-job.org. `make shellcheck` lints `scripts/deploy-prod.sh` with the `koalaman/shellcheck` image. `make tf-plan` writes `zarf/infra/tfplan` (gitignored). `make tf-apply` applies that plan. It stops if the plan would delete a job, unless you run `make tf-apply TF_ALLOW_DESTROY=1`.
 
 cron-job.org allows one job create per second and five per minute. Plan and apply run with `-parallelism=1`. If a create returns HTTP 429, apply waits and plans again (up to five tries). A saved plan is stale after a partial apply, so the retry builds a new plan. Jobs already in state are left as they are.
 
 `make tf-import ADDR='cronjoborg_job.bot["urabot_stocks"]' ID=12345` is available, but provider 1.1.2 cannot import. This cutover creates new jobs instead.
 
-Local `make tf-*` runs Terraform 1.17.2 inside Docker. Pull-request fmt, validate, and plan in GitHub Actions use the latest Terraform. Apply on `main` runs `scripts/deploy-prod.sh`, which installs Terraform 1.17.2 if the runner has another version and stops if that pin is not what actually runs.
+Local `make tf-*` runs Terraform 1.17.2 inside Docker. Pull-request fmt and validate in GitHub Actions use the latest Terraform and do not talk to R2. The pull-request plan job runs `scripts/deploy-prod.sh --plan-only` on `ubuntu-24.04`. That is the same pin, install, init, and plan as apply, and it stops before apply. Apply on `main` runs `scripts/deploy-prod.sh` with no flag. The script installs Terraform 1.17.2 when the runner has another version, refuses a captured path that is not a single executable file, and stops if that pin is not what actually runs. `bash zarf/infra/scripts/deploy-prod.sh --plan-only` is the same entry point locally. It needs the four credentials, writes `plan-summary.txt` at the repo root, and prints how many resources the plan would destroy.
 
 ## Schedules
 

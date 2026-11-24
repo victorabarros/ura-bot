@@ -32,6 +32,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Shellcheck
+        run: |
+          docker run --rm \
+            -v "${GITHUB_WORKSPACE}:/mnt" \
+            -w /mnt \
+            koalaman/shellcheck:stable \
+            zarf/infra/scripts/deploy-prod.sh
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -63,25 +71,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_wrapper: false
-
       - name: Plan
         id: plan
         run: |
           set -eu
-          export TF_IN_AUTOMATION=1
           if [ -z "$CRON_JOB_API_KEY" ] || [ -z "$TF_VAR_bot_api_key" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
             echo "skipped=true" >> "$GITHUB_OUTPUT"
             printf '%s\n' "Plan skipped until CRON_JOB_API_KEY, API_KEY, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are set." > plan-summary.txt
             exit 0
           fi
           echo "skipped=false" >> "$GITHUB_OUTPUT"
-          terraform -chdir=zarf/infra init -input=false -reconfigure
-          terraform -chdir=zarf/infra plan -input=false -lock-timeout=5m -parallelism=1 -out=tfplan
-          terraform -chdir=zarf/infra show -json tfplan | jq -r '.resource_changes[] | "\(.address) \(.change.actions | join(","))"' > plan-summary.txt
+          bash zarf/infra/scripts/deploy-prod.sh --plan-only
 
       - name: Comment on the PR
         uses: actions/github-script@v7
