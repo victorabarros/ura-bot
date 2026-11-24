@@ -105,12 +105,10 @@ These are operator secrets for `make site-tf-*` on a laptop and for `zarf/site/s
 |---|---|---|---|
 | `SITE_AWS_ACCESS_KEY_ID` | **Yes** | `SITE_AWS_ACCESS_KEY_ID` | AWS access key for S3, CloudFront, and ACM. Not the R2 key. |
 | `SITE_AWS_SECRET_ACCESS_KEY` | **Yes** | `SITE_AWS_SECRET_ACCESS_KEY` | AWS secret key paired with `SITE_AWS_ACCESS_KEY_ID`. |
-| `GODADDY_API_KEY` | **Yes** | `GODADDY_API_KEY` | GoDaddy API key. DNS stays at GoDaddy. |
-| `GODADDY_API_SECRET` | **Yes** | `GODADDY_API_SECRET` | GoDaddy API secret paired with `GODADDY_API_KEY`. |
 | `R2_ACCESS_KEY_ID` | **Yes** | `R2_ACCESS_KEY_ID` | Same R2 key as the cron stack. State object `site/terraform.tfstate`. |
 | `R2_SECRET_ACCESS_KEY` | **Yes** | `R2_SECRET_ACCESS_KEY` | Same R2 secret as the cron stack. |
 
-`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` still mean the R2 keys for the cron stack. Do not put the site AWS keys in those names. The domain, bucket name, and region are constants in `zarf/site/`. See `zarf/site/README.md`.
+`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` still mean the R2 keys for the cron stack. Do not put the site AWS keys in those names. The domain, bucket name, and region are constants in `zarf/site/`. DNS for `uraniumstockbot.com` is edited in Squarespace, not by Terraform. See `zarf/site/README.md`.
 
 ---
 

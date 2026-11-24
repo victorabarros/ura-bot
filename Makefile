@@ -230,10 +230,6 @@ require_site = \
 		echo "Set SITE_AWS_ACCESS_KEY_ID and SITE_AWS_SECRET_ACCESS_KEY."; \
 		exit 1; \
 	fi; \
-	if [ -z "$${GODADDY_API_KEY:-}" ] || [ -z "$${GODADDY_API_SECRET:-}" ]; then \
-		echo "Set GODADDY_API_KEY and GODADDY_API_SECRET."; \
-		exit 1; \
-	fi; \
 	site_aws_dir=$$(mktemp -d); \
 	trap 'rm -rf "$$site_aws_dir"' EXIT; \
 	umask 077; \
@@ -274,8 +270,6 @@ site-tf-init:
 		--user $(shell id -u):$(shell id -g) \
 		-e TF_IN_AUTOMATION=1 \
 		-e AWS_SHARED_CREDENTIALS_FILE=/tmp/aws/credentials \
-		-e GODADDY_API_KEY \
-		-e GODADDY_API_SECRET \
 		-v $(CURDIR)/zarf/site:/workspace \
 		-v $$site_aws_dir:/tmp/aws:ro \
 		-w /workspace \
@@ -289,8 +283,6 @@ site-tf-plan:
 		--user $(shell id -u):$(shell id -g) \
 		-e TF_IN_AUTOMATION=1 \
 		-e AWS_SHARED_CREDENTIALS_FILE=/tmp/aws/credentials \
-		-e GODADDY_API_KEY \
-		-e GODADDY_API_SECRET \
 		-v $(CURDIR)/zarf/site:/workspace \
 		-v $$site_aws_dir:/tmp/aws:ro \
 		-w /workspace \
@@ -300,8 +292,6 @@ site-tf-plan:
 		--user $(shell id -u):$(shell id -g) \
 		-e TF_IN_AUTOMATION=1 \
 		-e AWS_SHARED_CREDENTIALS_FILE=/tmp/aws/credentials \
-		-e GODADDY_API_KEY \
-		-e GODADDY_API_SECRET \
 		-v $(CURDIR)/zarf/site:/workspace \
 		-v $$site_aws_dir:/tmp/aws:ro \
 		-w /workspace \
@@ -328,8 +318,6 @@ site-tf-apply:
 		--user $(shell id -u):$(shell id -g) \
 		-e TF_IN_AUTOMATION=1 \
 		-e AWS_SHARED_CREDENTIALS_FILE=/tmp/aws/credentials \
-		-e GODADDY_API_KEY \
-		-e GODADDY_API_SECRET \
 		-v $(CURDIR)/zarf/site:/workspace \
 		-v $$site_aws_dir:/tmp/aws:ro \
 		-w /workspace \

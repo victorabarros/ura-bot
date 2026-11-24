@@ -106,7 +106,7 @@ Application code is `src/`. Operational files are `zarf/`:
 |---|---|
 | `web/` | Static landing page (HTML, CSS, and JS). `make site` serves it. It is not a bot route. |
 | `zarf/infra/` | Terraform for the cron-job.org schedules. State is in Cloudflare R2, not in git. CI for this directory is `zarf/infra/scripts/`, not Make. |
-| `zarf/site/` | Terraform for the static site (public S3, CloudFront, ACM, GoDaddy DNS). Separate state object in the same R2 bucket. CI is `zarf/site/scripts/`, not Make. |
+| `zarf/site/` | Terraform for the static site (public S3, CloudFront, ACM). DNS is manual in Squarespace. Separate state object in the same R2 bucket. CI is `zarf/site/scripts/`, not Make. |
 | `zarf/bruno/` | Bruno requests for manual HTTP calls |
 | `zarf/scripts/` | One-off scripts |
 

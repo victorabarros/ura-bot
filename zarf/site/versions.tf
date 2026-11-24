@@ -7,10 +7,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "6.74.0"
     }
-    godaddy = {
-      source  = "alikor/godaddy"
-      version = "0.3.3"
-    }
   }
 
   # Own state object. The cron-job stack uses cron-jobs/terraform.tfstate in
