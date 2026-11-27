@@ -2,18 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>UraBot</title>
+  <meta name="description" content="UraBot posts uranium-market stock quotes and news.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main>
-    <h1>UraBot</h1>
-    <p>UraBot posts uranium-market stock quotes and news.</p>
-    <ul>
-      <li><a href="https://x.com/UraniumStockBot">X</a></li>
-      <li><a href="https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps">Nostr</a></li>
-    </ul>
+    <header>
+      <div class="tile" aria-hidden="true">
+        <span class="z">92</span>
+        <span class="sym">U</span>
+        <span class="mass">238.03</span>
+      </div>
+      <h1>UraBot</h1>
+      <p class="tagline">Uranium-market stock quotes and news, posted automatically.</p>
+    </header>
+
+    <nav aria-label="Follow UraBot">
+      <ul>
+        <li>
+          <a href="https://x.com/UraniumStockBot">
+            <span class="name">X</span>
+            <span class="handle">@UraniumStockBot</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://snort.social/nprofile1qqsywtsnwnzf3syaahw559evnj6k0nlgdcm3kwsfyk39a7umx9mykmcdfu3ps">
+            <span class="name">Nostr</span>
+            <span class="handle">snort.social</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/victorabarros/ura-bot">
+            <span class="name">GitHub</span>
+            <span class="handle">victorabarros/ura-bot</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <section class="tracks" aria-label="Tracked tickers">
+      <p class="label">Tracking</p>
+      <ul class="tickers">
+        <li>CCJ</li>
+        <li>DNN</li>
+        <li>NXE</li>
+        <li>SMR</li>
+        <li>SRUUF</li>
+        <li>UEC</li>
+        <li>URA</li>
+        <li>URNM</li>
+        <li>UUUU</li>
+        <li>URNJ</li>
+        <li>UROY</li>
+      </ul>
+    </section>
+
+    <footer>
+      <span>Open source, MIT</span>
+      <a href="https://www.buymeacoffee.com/victorbarros">Buy me a coffee</a>
+    </footer>
   </main>
   <script src="main.js"></script>
 </body>
