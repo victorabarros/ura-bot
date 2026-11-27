@@ -83,7 +83,7 @@ That runs nginx in Docker and serves `web/` at <http://localhost:8080>. Pass `SI
 
 ## How to run
 
-You can find all commands on [Makefile](./Makefile)
+You can find all commands in [Makefile](./Makefile). The target definitions are grouped under [mk/](./mk) and included from there.
 
 write .env file similar to .env.example
 
